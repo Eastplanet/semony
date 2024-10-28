@@ -14,14 +14,14 @@ export default function Navigation() {
       {/* 네비게이션 열기/닫기 버튼 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-3 bg-gray-800 text-white fixed z-50 rounded-full shadow-md transition-all duration-300 hover:bg-gray-700 focus:outline-none  ${
+        className={`px-3 py-2 bg-gray-800 text-white fixed z-50 rounded-full shadow-md transition-all duration-300 hover:bg-gray-700 focus:outline-none  ${
           isOpen ? "top-4 left-[260px]" : "top-4 left-4"
         }`}
       >
         {isOpen ? (
-          <FontAwesomeIcon icon={faTimes} className="h-6 w-6" /> // 닫기 아이콘
+          <FontAwesomeIcon icon={faTimes} className="h-4" /> // 닫기 아이콘
         ) : (
-          <FontAwesomeIcon icon={faBars} className="h-6 w-6" /> // 메뉴 아이콘
+          <FontAwesomeIcon icon={faBars} className="h-4" /> // 메뉴 아이콘
         )}
       </button>
 
@@ -33,41 +33,41 @@ export default function Navigation() {
         style={{ width: "280px" }}
       >
         <div className="p-6">
-          <h2 className="text-3xl font-bold mb-10 border-b border-gray-700 pb-4 tracking-wide">
-           <Link href="/"> SEmony
+          <h2 className="text-xl font-bold mb-10 border-b border-gray-700 pb-4 tracking-wide">
+           <Link href="/" onClick={() => setIsOpen(!isOpen)}> SEmony 
           </Link></h2>
           <ul className="space-y-8">
             <li>
-              <Link
+              <Link onClick={() => setIsOpen(!isOpen)}
                 href="/main"
                 className="text-lg font-medium hover:text-blue-400 transition duration-300"
               >
-                main
+                wafer map 조회
               </Link>
             </li>
             <li>
-              <a
+              <Link onClick={() => setIsOpen(!isOpen)}
                 href="#"
                 className="text-lg font-medium hover:text-blue-400 transition duration-300"
               >
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link onClick={() => setIsOpen(!isOpen)}
                 href="#"
                 className="text-lg font-medium hover:text-blue-400 transition duration-300"
               >
                 Services
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link onClick={() => setIsOpen(!isOpen)}
                 href="#"
                 className="text-lg font-medium hover:text-blue-400 transition duration-300"
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

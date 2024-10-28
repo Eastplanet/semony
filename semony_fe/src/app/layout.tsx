@@ -34,9 +34,8 @@ export default function RootLayout({
       >
         {/* 네비게이션 컴포넌트 */}
         <Navigation />
-        <main className="ml-0 md:ml-[250px] transition-all duration-300">
-          {children}
-        </main>
+        
+        {children}
       </body>
     </html>
   );
