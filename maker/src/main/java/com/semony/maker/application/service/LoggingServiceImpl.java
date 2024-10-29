@@ -15,17 +15,6 @@ public class LoggingServiceImpl implements LoggingService {
     private final MongoTemplate mongoTemplate;
 
     @Transactional
-    public void logError(String message, String recipe, String moduleName,
-        LocalDateTime currentTime, LocalDate requestTime, String lotId, long lotSeq) {
-        saveLog("error", message, recipe, moduleName, currentTime, requestTime, lotId, lotSeq);
-    }
-
-    @Transactional
-    public void logSuccess(String message, String recipe, String moduleName,
-        LocalDateTime currentTime, LocalDate requestTime, String lotId, long lotSeq) {
-        saveLog("success", message, recipe, moduleName, currentTime, requestTime, lotId, lotSeq);
-    }
-
     public void saveLog(String status, String message, String recipe, String moduleName,
         LocalDateTime currentTime, LocalDate requestTime, String lotId, long lotSeq) {
         mongoTemplate.save(Map.of(
