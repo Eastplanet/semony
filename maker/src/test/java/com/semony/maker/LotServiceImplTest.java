@@ -41,7 +41,7 @@ class LotServiceImplTest {
 
         // Expected newLastLotId and formatted lotId
         Long expectedNewLastLotId = 123457L;
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH"));
         String expectedLotId = "LP2" + timestamp + "_PJ2@" + expectedNewLastLotId;
 
         // When
