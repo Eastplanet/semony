@@ -10,12 +10,13 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 요구사항: 기본 생성자는 protected로 선언
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "eqp_inspection_hst_alpha")
 public class EqpInspectionHstAlpha {
 
@@ -57,22 +58,21 @@ public class EqpInspectionHstAlpha {
     @Column(name = "create_by", length = 32)
     private String createBy;
 
-    public static EqpInspectionHstAlpha create(LocalDateTime eventDtts, String moduleId,
-        String lotId, BigDecimal lotSeq,
-        String slotNo, String flowRecipe, String processRecipe, String portNo,
-        Long defectCount, LocalDateTime createDtts, String createBy) {
-        EqpInspectionHstAlpha instance = new EqpInspectionHstAlpha();
-        instance.eventDtts = eventDtts;
-        instance.moduleId = moduleId;
-        instance.lotId = lotId;
-        instance.lotSeq = lotSeq;
-        instance.slotNo = slotNo;
-        instance.flowRecipe = flowRecipe;
-        instance.processRecipe = processRecipe;
-        instance.portNo = portNo;
-        instance.defectCount = defectCount;
-        instance.createDtts = createDtts;
-        instance.createBy = createBy;
-        return instance;
+    @Builder
+    private EqpInspectionHstAlpha(LocalDateTime eventDtts, String moduleId, String lotId,
+        BigDecimal lotSeq, String slotNo, String flowRecipe,
+        String processRecipe, String portNo, Long defectCount,
+        LocalDateTime createDtts, String createBy) {
+        this.eventDtts = eventDtts;
+        this.moduleId = moduleId;
+        this.lotId = lotId;
+        this.lotSeq = lotSeq;
+        this.slotNo = slotNo;
+        this.flowRecipe = flowRecipe;
+        this.processRecipe = processRecipe;
+        this.portNo = portNo;
+        this.defectCount = defectCount;
+        this.createDtts = createDtts;
+        this.createBy = createBy;
     }
 }
