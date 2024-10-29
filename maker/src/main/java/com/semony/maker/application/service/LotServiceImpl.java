@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LotServiceImpl implements LotService {
@@ -42,4 +43,12 @@ public class LotServiceImpl implements LotService {
 
         return newLastLotSeq;
     }
+
+    @Transactional
+    public void updateLastLotId(Long newLastLotId) {
+        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotIdDesc();
+        metadata.setLastLotId(newLastLotId);
+        lotMetadataRepository.save(metadata);
+    }
+
 }
