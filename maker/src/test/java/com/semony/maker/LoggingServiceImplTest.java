@@ -29,6 +29,7 @@ class LoggingServiceImplTest {
     @Test
     void testLogError() {
         // Given
+        String status = "error";
         String message = "Test error message";
         String recipe = "Test recipe";
         String moduleName = "TestModule";
@@ -38,12 +39,11 @@ class LoggingServiceImplTest {
         long lotSeq = 123456;
 
         // When
-        loggingService.logError(message, recipe, moduleName, currentTime, requestTime, lotId,
-            lotSeq);
+        loggingService.saveLog(status, message, recipe, moduleName, currentTime, requestTime, lotId, lotSeq);
 
         // Then
         verify(mongoTemplate).save(Map.of(
-            "status", "error",
+            "status", status,
             "message", message,
             "recipe", recipe,
             "module", moduleName,
@@ -57,6 +57,7 @@ class LoggingServiceImplTest {
     @Test
     void testLogSuccess() {
         // Given
+        String status = "success";
         String message = "Test success message";
         String recipe = "Test recipe";
         String moduleName = "TestModule";
@@ -66,12 +67,11 @@ class LoggingServiceImplTest {
         long lotSeq = 123456;
 
         // When
-        loggingService.logSuccess(message, recipe, moduleName, currentTime, requestTime, lotId,
-            lotSeq);
+        loggingService.saveLog(status, message, recipe, moduleName, currentTime, requestTime, lotId, lotSeq);
 
         // Then
         verify(mongoTemplate).save(Map.of(
-            "status", "success",
+            "status", status,
             "message", message,
             "recipe", recipe,
             "module", moduleName,
