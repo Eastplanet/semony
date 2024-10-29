@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LotServiceImpl implements LotService {
@@ -31,5 +30,16 @@ public class LotServiceImpl implements LotService {
         updateLastLotId(newLastLotId);
 
         return lotId;
+    }
+
+    @Override
+    public Long generateLotSeq() {
+        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
+
+        // lastLotSeq 업데이트 및 반환
+        Long newLastLotSeq = metadata.getLastLotSeq() + 1;
+        updateLastLotSeq(newLastLotSeq);
+
+        return newLastLotSeq;
     }
 }
