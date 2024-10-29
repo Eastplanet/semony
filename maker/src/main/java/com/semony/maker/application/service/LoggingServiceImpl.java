@@ -4,17 +4,15 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class LoggingServiceImpl implements LoggingService {
 
     private final MongoTemplate mongoTemplate;
-
-    public LoggingServiceImpl(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
 
     @Transactional
     public void logError(String message, String recipe, String moduleName,
