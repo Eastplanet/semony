@@ -10,4 +10,6 @@ public interface LoggingService {
     public void logSuccess(String message, String recipe, String moduleName,
         LocalDateTime currentTime,
         LocalDate requestTime, String lotId, long lotSeq);
+    public void saveLog(String status, String message, String recipe, String moduleName,
+        LocalDateTime currentTime, LocalDate requestTime, String lotId, long lotSeq);
 }
