@@ -51,4 +51,10 @@ public class LotServiceImpl implements LotService {
         lotMetadataRepository.save(metadata);
     }
 
+    @Transactional
+    public void updateLastLotSeq(Long newLastLotSeq) {
+        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
+        metadata.setLastLotSeq(newLastLotSeq);
+        lotMetadataRepository.save(metadata);
+    }
 }
