@@ -1,67 +1,72 @@
 package com.semony.maker;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.semony.maker.application.service.LotServiceImpl;
+import com.semony.maker.application.service.LotTransactionServiceImpl;
 import com.semony.maker.domain.document.LotMetadata;
 import com.semony.maker.domain.repository.LotMetadataRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
 class LotServiceImplTest {
 
     @Mock
     private LotMetadataRepository lotMetadataRepository;
 
+    @Mock
+    private LotTransactionServiceImpl lotTransactionServiceImpl;
+
     @InjectMocks
     private LotServiceImpl lotService;
 
-    private LotMetadata metadata;
-
     @BeforeEach
     void setUp() {
-        metadata = new LotMetadata();
-        metadata.setLastLotId(100L);
-        metadata.setLastLotSeq(200L);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testGenerateLotId() {
-        // Arrange
+        // Given
+        LotMetadata metadata = new LotMetadata();
+        metadata.setLastLotId(123456L);
         when(lotMetadataRepository.findTopByOrderByLastLotIdDesc()).thenReturn(metadata);
-        String expectedTimestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
-        String expectedLotId = "LP2" + expectedTimestamp + "_PJ2@" + (metadata.getLastLotId() + 1);
 
-        // Act
-        String lotId = lotService.generateLotId();
+        // Expected newLastLotId and formatted lotId
+        Long expectedNewLastLotId = 123457L;
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
+        String expectedLotId = "LP2" + timestamp + "_PJ2@" + expectedNewLastLotId;
 
-        // Assert
-        assertEquals(expectedLotId, lotId);
-        verify(lotMetadataRepository, times(1)).findTopByOrderByLastLotIdDesc();
-        verify(lotMetadataRepository, times(1)).save(any(LotMetadata.class));
+        // When
+        String actualLotId = lotService.generateLotId();
+
+        // Then
+        assertEquals(expectedLotId, actualLotId);
+        verify(lotTransactionServiceImpl).updateLastLotId(expectedNewLastLotId);
     }
 
     @Test
     void testGenerateLotSeq() {
-        // Arrange
+        // Given
+        LotMetadata metadata = new LotMetadata();
+        metadata.setLastLotSeq(789012L);
         when(lotMetadataRepository.findTopByOrderByLastLotSeqDesc()).thenReturn(metadata);
-        Long expectedLotSeq = metadata.getLastLotSeq() + 1;
 
-        // Act
-        Long lotSeq = lotService.generateLotSeq();
+        // Expected newLastLotSeq
+        Long expectedNewLastLotSeq = 789013L;
 
-        // Assert
-        assertEquals(expectedLotSeq, lotSeq);
-        verify(lotMetadataRepository, times(1)).findTopByOrderByLastLotSeqDesc();
-        verify(lotMetadataRepository, times(1)).save(any(LotMetadata.class));
+        // When
+        Long actualLotSeq = lotService.generateLotSeq();
+
+        // Then
+        assertEquals(expectedNewLastLotSeq, actualLotSeq);
+        verify(lotTransactionServiceImpl).updateLastLotSeq(expectedNewLastLotSeq);
     }
 }
