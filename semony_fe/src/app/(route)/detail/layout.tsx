@@ -15,9 +15,9 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 pt-1">
       {/* Header and Tabs Container */}
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center ">
         {/* Wafer Header */}
         <div>
           <WaferHeader
@@ -29,7 +29,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Tabs (aligned to the right, adjusted positioning) */}
-        <div className="flex space-x-2 -mb-28 mr-10">
+        <div className="flex space-x-2 -mb-4  mr-10">
           <button
             onClick={() => handleTabChange('waferMap')}
             className={`px-4 py-2 font-semibold rounded-t-lg ${activeTab === 'waferMap' ? 'bg-gray-300 border-2 border-gray-600' : 'bg-gray-200'}`}
