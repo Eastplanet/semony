@@ -1,14 +1,14 @@
-package com.semony.maker.application.service;
+package com.semony.maker.domain.provider;
 
 import com.semony.maker.domain.dto.RecipeCombination;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MappingTableServiceImpl implements MappingTableService {
+public class RecipeMappingProvider {
 
     private final Map<String, RecipeCombination> recipeMap;
 
-    public MappingTableServiceImpl() {
+    public RecipeMappingProvider() {
         recipeMap = new HashMap<>();
 
         // 16가지 고정된 조합을 미리 매핑
@@ -46,7 +46,6 @@ public class MappingTableServiceImpl implements MappingTableService {
             new RecipeCombination("MIW-7-52", "MIW-7-62", "EWIM2-46"));
     }
 
-    @Override
     public RecipeCombination generateCombination(String recipe) {
         return recipeMap.get(recipe);
     }
