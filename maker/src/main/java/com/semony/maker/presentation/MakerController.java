@@ -41,44 +41,49 @@ public class MakerController {
     @PostMapping("/make")
     public ResponseEntity<?> makeInspectionData(@RequestParam String recipe,
         @RequestParam LocalDate requestTime) {
-        // lotID와 lotSeq 조회
         String lotId = lotService.generateLotId();
         long lotSeq = lotService.generateLotSeq();
 
-        // RecipeCombination 가져오기 및 유효성 검사
-        RecipeCombination combination = mappingTableService.generateCombination(recipe);
+        RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId, lotSeq);
         if (combination == null) {
-            loggingService.logError("Invalid recipe", recipe, "N/A", LocalDateTime.now(),
-                requestTime, lotId, lotSeq);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid recipe: " + recipe);
+            throw new BusinessException(recipe, "recipe", ErrorCode.NOT_FOUND_RECIPE);
         }
 
-        // 각 모듈에 요청 보내기 및 로그 처리
-        try {
-            logModuleStatus(combination.in(), recipe, requestTime, lotId, lotSeq);
-            logModuleStatus(combination.out(), recipe, requestTime, lotId, lotSeq);
-            logModuleStatus(combination.ewim(), recipe, requestTime, lotId, lotSeq);
-        } catch (Exception e) {
-            loggingService.logError("Module request failed", recipe, "N/A", LocalDateTime.now(),
-                requestTime, lotId, lotSeq);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Module request failed");
+        if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq)) {
+            throw new BusinessException(recipe, "module", ErrorCode.NOT_FOUND_RECIPE);
         }
 
-        loggingService.logSuccess("Inspection data creation successful", recipe, "ALL_MODULES",
-            LocalDateTime.now(), requestTime, lotId, lotSeq);
-        return ResponseEntity.ok("Inspection data created successfully for recipe: " + recipe);
+        return ResponseEntity.ok(INSPECTION_DATA_CREATION_SUCCESS + recipe);
     }
 
-    private void logModuleStatus(String moduleName, String recipe, LocalDate requestTime,
+    private RecipeCombination validateAndGetRecipeCombination(String recipe, LocalDate requestTime,
+        String lotId, long lotSeq) {
+        RecipeCombination combination = recipeMappingProvider.generateCombination(recipe);
+        if (combination == null) {
+            loggingService.saveLog("error", LogMessage.INVALID_RECIPE.getMessage(), recipe,
+                "N/A", LocalDateTime.now(), requestTime, lotId, lotSeq);
+        }
+        return combination;
+    }
+
+    private boolean processModuleRequests(RecipeCombination combination, String recipe,
+        LocalDate requestTime, String lotId, long lotSeq) {
+        return sendAndLogModuleRequest(combination.in(), recipe, requestTime, lotId, lotSeq)
+            && sendAndLogModuleRequest(combination.out(), recipe, requestTime, lotId, lotSeq)
+            && sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq);
+    }
+
+    private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDate requestTime,
         String lotId, long lotSeq) {
         try {
             moduleRequestService.sendModuleRequest(moduleName, requestTime);
-            loggingService.logSuccess("Module request successful", recipe, moduleName,
-                LocalDateTime.now(), requestTime, lotId, lotSeq);
+            loggingService.saveLog("success", LogMessage.MODULE_REQUEST_SUCCESS.getMessage(),
+                recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+            return true;
         } catch (Exception e) {
-            loggingService.logError("Module request failed: " + e.getMessage(), recipe, moduleName,
-                LocalDateTime.now(), requestTime, lotId, lotSeq);
+            loggingService.saveLog("error", LogMessage.MODULE_REQUEST_FAILED.getMessage(), recipe,
+                moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+            return false;
         }
     }
 }
