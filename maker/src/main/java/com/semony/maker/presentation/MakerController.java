@@ -1,12 +1,20 @@
 package com.semony.maker.presentation;
 
+import static com.semony.maker.global.success.SuccessMessage.INSPECTION_DATA_CREATION_SUCCESS;
+
+import com.semony.maker.application.service.LoggingService;
 import com.semony.maker.application.service.LotService;
+import com.semony.maker.application.service.ModuleRequestService;
+import com.semony.maker.domain.dto.RecipeCombination;
+import com.semony.maker.domain.provider.RecipeMappingProvider;
+import com.semony.maker.global.error.ErrorCode;
+import com.semony.maker.global.error.LogMessage;
+import com.semony.maker.global.error.exception.BusinessException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class MakerController {
 
-    private final MappingTableService mappingTableService;
+    private final RecipeMappingProvider recipeMappingProvider;
     private final ModuleRequestService moduleRequestService;
     private final LoggingService loggingService;
     private final LotService lotService;
