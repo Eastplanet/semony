@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
-    NOT_FOUND_RECIPE("레시피를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
+    NOT_FOUND_RECIPE("레시피를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
+    MODULE_REQUEST_FAILED("모듈 요청에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String message;
     private final HttpStatus httpStatus;
