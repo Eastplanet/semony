@@ -23,7 +23,7 @@ public class EqpInspectionHstAlpha {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_eqp_inspection_hst_alpha")
     @SequenceGenerator(name = "seq_eqp_inspection_hst_alpha", sequenceName = "public.seq_eqp_inspection_hst_alpha", allocationSize = 1)
-    private Long rawid;
+    private Long rawId;
 
     @Column(name = "event_dtts", nullable = false)
     private LocalDateTime eventDtts;
@@ -55,14 +55,11 @@ public class EqpInspectionHstAlpha {
     @Column(name = "create_dtts")
     private LocalDateTime createDtts;
 
-    @Column(name = "create_by", length = 32)
-    private String createBy;
-
     @Builder
     private EqpInspectionHstAlpha(LocalDateTime eventDtts, String moduleId, String lotId,
         BigDecimal lotSeq, String slotNo, String flowRecipe,
         String processRecipe, String portNo, Long defectCount,
-        LocalDateTime createDtts, String createBy) {
+        LocalDateTime createDtts) {
         this.eventDtts = eventDtts;
         this.moduleId = moduleId;
         this.lotId = lotId;
@@ -73,6 +70,5 @@ public class EqpInspectionHstAlpha {
         this.portNo = portNo;
         this.defectCount = defectCount;
         this.createDtts = createDtts;
-        this.createBy = createBy;
     }
 }
