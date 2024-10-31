@@ -21,16 +21,16 @@ public class MakerController {
     private final LotService lotService;
 
     @Autowired
-    public MakerController(MappingTableService mappingTableService,
+    public MakerController(RecipeMappingProvider recipeMappingProvider,
         ModuleRequestService moduleRequestService,
         LoggingService loggingService, LotService lotService) {
-        this.mappingTableService = mappingTableService;
+        this.recipeMappingProvider = recipeMappingProvider;
         this.moduleRequestService = moduleRequestService;
         this.loggingService = loggingService;
         this.lotService = lotService;
     }
 
-    @GetMapping("/make")
+    @PostMapping("/make")
     public ResponseEntity<?> makeInspectionData(@RequestParam String recipe,
         @RequestParam LocalDate requestTime) {
         // lotID와 lotSeq 조회
