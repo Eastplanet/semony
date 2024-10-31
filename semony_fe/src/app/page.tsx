@@ -1,243 +1,269 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import Select from 'react-select';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
-import { WaferData } from '@/app/types';
+import React, { useState, useEffect, useRef,useLayoutEffect } from 'react';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
 import { mockData } from './mocks/mock_wafer';
 
-const searchColumns = ['ppid', 'lotId'] as (keyof WaferData)[];
-const sortColumns = [
-  'date', 'ppid', 'lotId', 'defectCount', 'step1', 'step2', 'step3', 'slotId', 'lotSeq'
-] as (keyof WaferData)[];
+const WaferTable = () => {
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
+  const [filters, setFilters] = useState<{ [key: string]: Set<string> }>({});
+  const [searchTerm, setSearchTerm] = useState<{ [key: string]: string }>({});
+  const [isFilterOpen, setIsFilterOpen] = useState<{ [key: string]: boolean }>({});
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
+  const [filteredValues, setFilteredValues] = useState<{ [key: string]: string[] }>({});
+  const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>({
+    ppid: 150,
+    lotId: 150,
+    lotSeq: 150,
+    slotId: 150,
+  });
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-const searchOptions = searchColumns.map((col) => ({ value: col, label: col.toUpperCase() }));
-const sortOptions = sortColumns.map((col) => ({ value: col, label: col.toUpperCase() }));
+  const columns = ['ppid', 'lotId', 'lotSeq', 'slotId'];
+  const minColumnWidths = useRef<{ [key: string]: number }>({});
 
-export default function WaferTable() {
-  const [isClient, setIsClient] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchColumn, setSearchColumn] = useState<keyof WaferData>('ppid');
-  const [sortColumn, setSortColumn] = useState<keyof WaferData>('date');
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [showTime, setShowTime] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // 기존 상태에 추가
-const [visibleColumns, setVisibleColumns] = useState<(keyof WaferData)[]>(sortColumns);
+  useLayoutEffect(() => {
+    columns.forEach((col) => {
+      const contentWidth = document.getElementById(`header-${col}`)?.offsetWidth || 150;
+      minColumnWidths.current[col] = contentWidth;
+    });
+  }, []);
 
 
   useEffect(() => {
-    setIsClient(true); // 클라이언트 사이드에서만 렌더링
-  }, []);
-
-  if (!isClient) return null; // 초기 서버 렌더링 시 아무것도 렌더링하지 않음
-
-  const filteredData = mockData
-    .filter((data) => {
-      const dataDate = new Date(data.date);
-      const isWithinDateRange = startDate && endDate
-        ? dataDate >= startDate && dataDate <= endDate
-        : true;
-      const matchesSearchQuery = `${data[searchColumn]}`.includes(searchQuery);
-      return isWithinDateRange && matchesSearchQuery;
-    })
-    .sort((a, b) => (a[sortColumn] < b[sortColumn] ? -1 : 1));
-
-  // 체크박스 클릭 핸들러
-    const toggleColumnSelection = (column: keyof WaferData) => {
-      setVisibleColumns((prev) =>
-        prev.includes(column)
-          ? prev.filter((col) => col !== column) // 컬럼이 이미 선택된 경우 제거
-          : [...prev, column] // 컬럼이 선택되지 않은 경우 추가
-      );
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsFilterOpen({});
+      }
     };
-
-
-  const customSelectStyles = {
-    control: (base) => ({
-      ...base,
-      backgroundColor: 'white',
-      borderRadius: '9999px',
-      padding: '4px 8px',
-      borderColor: '#85B6FF',
-      boxShadow: '0 0 5px rgba(133, 182, 255, 0.4)',
-      cursor: 'pointer',
-    }),
-    option: (base, { isFocused }) => ({
-      ...base,
-      backgroundColor: isFocused ? '#E0F2FE' : 'white',
-      color: '#333',
-      padding: '8px 12px',
-    }),
-    singleValue: (base) => ({
-      ...base,
-      color: '#1E3A8A',
-      fontWeight: '500',
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      color: '#85B6FF',
-    }),
-    menu: (base) => ({
-      ...base,
-      borderRadius: '12px',
-      overflow: 'hidden',
-      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    }),
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  const handleResize = (column: string, newWidth: number) => {
+    setColumnWidths((prev) => ({
+      ...prev,
+      [column]: Math.max(newWidth, minColumnWidths.current[column] || 100),
+    }));
   };
 
+  // 필터 열기/닫기 토글, 드롭다운 위치 설정
+  const toggleFilter = (column: string, event: React.MouseEvent) => {
+    setIsFilterOpen({ [column]: !isFilterOpen[column] });
+
+    // 드롭다운을 화면 최상단에 고정시키기 위한 위치 설정
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    setDropdownPosition({ top: rect.top + window.scrollY, left: rect.left });
+
+    // 검색어 초기화 및 필터링된 값 리스트 초기화
+    setSearchTerm({ [column]: '' });
+    setFilteredValues({ [column]: uniqueValues(column) });
+  };
+
+  // 선택된 필터 값 변경
+  const handleFilterChange = (column: string, value: string, checked: boolean) => {
+    setFilters((prev) => {
+      const newSet = new Set(prev[column] || []);
+      if (checked) newSet.add(value);
+      else newSet.delete(value);
+      return { ...prev, [column]: newSet };
+    });
+  };
+
+  // 검색어 변경
+  const handleSearchTermChange = (column: string, term: string) => {
+    setSearchTerm((prev) => ({ ...prev, [column]: term }));
+    setFilteredValues({
+      [column]: uniqueValues(column).filter((value) =>
+        value.toLowerCase().includes(term.toLowerCase())
+      ),
+    });
+  };
+
+  // '모두 선택' 토글
+  const toggleSelectAll = (column: string, values: string[], selectAll: boolean) => {
+    setFilters((prev) => ({
+      ...prev,
+      [column]: new Set(selectAll ? values : []),
+    }));
+  };
+
+  // 정렬 토글 함수
+  const handleSort = (column: string) => {
+    const nextOrder = sortColumn === column
+      ? (sortOrder === 'asc' ? 'desc' : sortOrder === 'desc' ? 'none' : 'asc')
+      : 'asc';
+    setSortColumn(nextOrder === 'none' ? null : column);
+    setSortOrder(nextOrder);
+  };
+
+  // 각 열의 고유한 값 가져오기
+  const uniqueValues = (column: string) => {
+    return Array.from(new Set(mockData.map((data) => data[column as keyof typeof data]?.toString() || '')));
+  };
+
+  // 필터 적용 버튼 클릭 시 필터를 적용
+  const applyFilter = () => {
+    setIsFilterOpen({});
+  };
+
+  // 데이터 필터링 및 정렬
+  const filteredData = mockData
+    .filter((data) => {
+      return columns.every((col) => {
+        const value = data[col as keyof typeof data]?.toString() || '';
+        const searchTermMatches = searchTerm[col] ? value.includes(searchTerm[col]) : true;
+        const filterMatches = filters[col] ? filters[col].has(value) : true;
+        return searchTermMatches && filterMatches;
+      });
+    })
+    .sort((a, b) => {
+      if (!sortColumn || sortOrder === 'none') return 0;
+      const aValue = a[sortColumn as keyof typeof a];
+      const bValue = b[sortColumn as keyof typeof a];
+      return (aValue > bValue ? 1 : -1) * (sortOrder === 'asc' ? 1 : -1);
+    });
+
+ 
+
   return (
-    <div className="p-8">
-      {/* 검색바 */}
-      <div className="flex items-center gap-4 mb-8 justify-center py-3 px-4 max-w-lg mx-auto">
-        <Select
-          value={searchOptions.find((opt) => opt.value === searchColumn)}
-          onChange={(selectedOption) => setSearchColumn(selectedOption?.value as keyof WaferData)}
-          options={searchOptions}
-          className="max-w-32 text-sm w-full"
-          styles={customSelectStyles}
-        />
-        <div className="flex items-center bg-white rounded-full px-4 py-3 w-96 border border-blue-400 shadow-sm hover:shadow-md transition-shadow duration-300">
-          <input
-            type="text"
-            placeholder="검색어 입력"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent focus:outline-none text-gray-700 w-full text-sm"
-          />
-          <button className="text-blue-400 hover:text-blue-500 transition-colors ml-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-              <path d="M21 21l-4.35-4.35M2.75 11.5A8.75 8.75 0 1011.5 2.75 8.75 8.75 0 002.75 11.5z" stroke="#85B6FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* 정렬, 날짜 범위 필터, 컬럼 선택 */}
-      <div className="flex items-center gap-4 mb-4 justify-center">
-        <Select
-          value={sortOptions.find((opt) => opt.value === sortColumn)}
-          onChange={(selectedOption) => setSortColumn(selectedOption?.value as keyof WaferData)}
-          options={sortOptions}
-          className="max-w-xs text-sm"
-          styles={customSelectStyles}
-        />
-
-        {/* 날짜 범위 필터 */}
-        <div className="flex items-center gap-2">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-            showTimeSelect={showTime}
-            timeFormat="HH:mm"
-            timeIntervals={30}
-            dateFormat={showTime ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd"}
-            placeholderText="시작 날짜"
-            locale="ko"
-            className="px-4 py-2 border rounded text-gray-700 text-sm w-36"
-          />
-          <span>~</span>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            minDate={startDate}
-            showTimeSelect={showTime}
-            timeFormat="HH:mm"
-            timeIntervals={30}
-            dateFormat={showTime ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd"}
-            placeholderText="종료 날짜"
-            locale="ko"
-            className="px-4 py-2 border rounded text-gray-700 text-sm w-36"
-          />
-        </div>
-
-        {/* 시간대 포함 옵션 */}
-        <label className="flex items-center text-sm text-gray-700 gap-1">
-          <input
-            type="checkbox"
-            checked={showTime}
-            onChange={() => setShowTime(!showTime)}
-            className="mr-2"
-          />
-          시간대 포함
-        </label>
-
-        {/* 컬럼 선택 모달 열기 버튼 */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          컬럼 선택
-        </button>
-      </div>
-
-      {/* 테이블 */}
-      <table className="min-w-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+    <div className="p-8 text-center relative">
+      <table className="mt-10 min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
         <thead>
           <tr className="bg-blue-600 text-white uppercase text-sm tracking-wider">
-            {visibleColumns.map((col) => (
-              <th key={col} className="p-4 text-left font-semibold border-b border-gray-200">
-                {col.toUpperCase()}
+            {columns.map((col) => (
+              <th
+                key={col}
+                className="font-semibold border-b border-gray-200 relative"
+                id={`header-${col}`}
+                
+              >
+               <ResizableBox
+                  width={columnWidths[col]}
+                  height={40}
+                  axis="x"
+                  resizeHandles={['e']}
+                  minConstraints={[minColumnWidths.current[col] || 100, 40]}
+                  maxConstraints={[500, 40]}
+                  onResize={(e, { size }) => handleResize(col, size.width)}
+                  className="flex items-center justify-center resizable-header"
+                >
+                  <div
+                    className="flex items-center justify-center gap-1 cursor-pointer"
+                    style={{ width: columnWidths[col], position: 'relative' }}
+                    onClick={() => handleSort(col)}
+                  >
+                    {col.toUpperCase()}
+                    {sortColumn === col && (
+                      <span>{sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : ''}</span>
+                    )}
+                  </div>
+                </ResizableBox>
+                {/* 필터 버튼 */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFilter(col, e);
+                  }}
+                  className="ml-1 text-xs text-gray-400 hover:text-gray-200"
+                >
+                  ▼
+                </button>
+
+                {/* 필터 드롭다운 */}
+                {isFilterOpen[col] && dropdownPosition && (
+                  <div
+                    ref={dropdownRef}
+                    className="fixed text-gray-500 font-normal text-xs bg-white border border-gray-300 p-2 rounded shadow-lg z-50 w-48"
+                    style={{ top: dropdownPosition.top + 30, left: dropdownPosition.left }}
+                  >
+                    <button
+                      className="absolute p-2 top-1 right-1 text-xs text-gray-400 hover:text-gray-600"
+                      onClick={(e) => toggleFilter(col, e)}
+                    >
+                      ✕
+                    </button>
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchTerm[col] || ''}
+                      onChange={(e) => handleSearchTermChange(col, e.target.value)}
+                      className="w-full p-1 border border-gray-300 rounded text-sm mb-2"
+                    />
+                    <div className="flex items-center gap-2 mb-1">
+                      <input
+                        type="checkbox"
+                        checked={filters[col]?.size === uniqueValues(col).length}
+                        onChange={(e) => toggleSelectAll(col, filteredValues[col], e.target.checked)}
+                      />
+                      <label className="">(모두 선택)</label>
+                    </div>
+                    <div className="max-h-32 overflow-y-auto">
+                      {filteredValues[col]?.map((value) => (
+                        <div key={value} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={filters[col]?.has(value) || false}
+                            onChange={(e) => handleFilterChange(col, value, e.target.checked)}
+                          />
+                          <label className="">{value}</label>
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      onClick={applyFilter}
+                      className="mt-2 bg-blue-500 text-white text-xs py-1 px-2 rounded"
+                    >
+                      적용
+                    </button>
+                  </div>
+                )}
               </th>
             ))}
+            <th className="p-4 font-semibold border-b border-gray-200 border-r-2" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+              TOTAL DEFECT
+            </th>
+            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+              MODULE ID
+            </th>
+            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+              DEFECT
+            </th>
+            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+              EVENT DTTS
+            </th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((data, index) => (
-            <tr key={index} className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} hover:bg-blue-100 transition-colors`}>
-              {visibleColumns.map((col) => (
-                <td key={col} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
-                  {data[col]}
-                </td>
-              ))}
-            </tr>
+            data.modules.map((module, moduleIndex) => (
+              <tr
+                key={`${index}-${moduleIndex}`}
+                className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} hover:bg-blue-100 transition-colors`}
+              >
+                {moduleIndex === 0 && (
+                  <>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" style={{ width: columnWidths['ppid'] }}>{data.ppid}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" style={{ width: columnWidths['lotId'] }}>{data.lotId}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" style={{ width: columnWidths['lotSeq'] }}>{data.lotSeq}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" style={{ width: columnWidths['slotId'] }}>{data.slotId}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">{data.defectCount}</td>
+                  </>
+                )}
+                <td className="px-4 py-1 text-gray-700 text-xs">{module.module_id}</td>
+                <td className="px-4 py-1 text-gray-700 text-xs">{module.defect}</td>
+                <td className="px-4 py-1 text-gray-700 text-xs">{module.event_dtts}</td>
+              </tr>
+            ))
           ))}
         </tbody>
       </table>
-
-      {/* 컬럼 선택 모달 */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-md">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b border-gray-300 pb-2">
-              컬럼 선택
-            </h2>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {sortColumns.map((col) => (
-                // 컬럼 선택 모달 체크박스 연결
-              <label key={col} className="flex items-center text-gray-700 text-sm">
-                <input
-                  type="checkbox"
-                  checked={visibleColumns.includes(col)}
-                  onChange={() => toggleColumnSelection(col)}
-                  className="mr-2 h-4 w-4 accent-blue-500"
-                />
-                {col.toUpperCase()}
-              </label>
-
-              ))}
-            </div>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                확인
-              </button>
-            
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
-}
+};
+
+export default WaferTable;

@@ -1,14 +1,22 @@
+// src/types.ts
+export interface ModuleData {
+  module_id: string;
+  defect: string;
+  event_dtts: string;
+}
+
 export interface WaferData {
-    date: string;
-    ppid: string;
-    lotId: string;
-    lotSeq: string;
-    defectCount: number;
-    step1: number;
-    step2: number;
-    step3: number;
-    slotId: string;
-  }
+  date: string;
+  ppid: string;
+  lotId: string;
+  defectCount: number;
+  step1: number;
+  step2: number;
+  step3: number;
+  slotId: string;
+  lotSeq: string;
+  modules: ModuleData[]; // modules 속성 추가
+}
   
 export interface DieLocation {
     XINDEX: number;

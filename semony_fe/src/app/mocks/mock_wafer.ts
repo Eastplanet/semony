@@ -1,4 +1,5 @@
 import { WaferData } from "../types";
+
 export const mockData: WaferData[] = [
   {
     date: '2024-10-03 4:11:01 PM',
@@ -10,6 +11,11 @@ export const mockData: WaferData[] = [
     step3: 2,
     slotId: 'A123',
     lotSeq: 'SEQ001',
+    modules: [
+      { module_id: "MOD1", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
+      { module_id: "MOD2", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
+      { module_id: "MOD3", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+    ],
   },
   {
     date: '2024-10-03 5:23:15 PM',
@@ -21,6 +27,11 @@ export const mockData: WaferData[] = [
     step3: 1,
     slotId: 'B234',
     lotSeq: 'SEQ002',
+    modules: [
+      { module_id: "MOD1", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
+      { module_id: "MOD2", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
+      { module_id: "MOD3", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+    ],
   },
   {
     date: '2024-10-04 1:15:09 PM',
@@ -32,6 +43,11 @@ export const mockData: WaferData[] = [
     step3: 1,
     slotId: 'C345',
     lotSeq: 'SEQ003',
+    modules: [
+      { module_id: "MOD1", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
+      { module_id: "MOD2", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
+      { module_id: "MOD3", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+    ],
   },
   {
     date: '2024-10-04 2:49:32 PM',
@@ -43,6 +59,11 @@ export const mockData: WaferData[] = [
     step3: 1,
     slotId: 'D456',
     lotSeq: 'SEQ004',
+    modules: [
+      { module_id: "MOD1", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
+      { module_id: "MOD2", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
+      { module_id: "MOD3", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+    ],
   },
   {
     date: '2024-10-05 3:05:42 PM',
@@ -54,5 +75,89 @@ export const mockData: WaferData[] = [
     step3: 1,
     slotId: 'E567',
     lotSeq: 'SEQ005',
+    modules: [
+      { module_id: "MOD1", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
+      { module_id: "MOD2", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
+      { module_id: "MOD3", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+    ],
+  },{
+    date: '2024-10-03 4:11:01 PM',
+    ppid: 'OTT_EWIM_NO_CHHP',
+    lotId: 'LP20224100315_PJ2 @89654577',
+    defectCount: 4,
+    step1: 2,
+    step2: 0,
+    step3: 2,
+    slotId: 'A123',
+    lotSeq: 'SEQ001',
+    modules: [
+      { module_id: "MOD1", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
+      { module_id: "MOD2", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
+      { module_id: "MOD3", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+    ],
+  },
+  {
+    date: '2024-10-03 5:23:15 PM',
+    ppid: 'OTT_XYZT_NO_ABCD',
+    lotId: 'LP20224100415_PJ3 @89654580',
+    defectCount: 5,
+    step1: 3,
+    step2: 1,
+    step3: 1,
+    slotId: 'B234',
+    lotSeq: 'SEQ002',
+    modules: [
+      { module_id: "MOD1", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
+      { module_id: "MOD2", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
+      { module_id: "MOD3", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+    ],
+  },
+  {
+    date: '2024-10-04 1:15:09 PM',
+    ppid: 'OTT_ABCD_NO_WXYZ',
+    lotId: 'LP20224100515_PJ4 @89654583',
+    defectCount: 2,
+    step1: 1,
+    step2: 0,
+    step3: 1,
+    slotId: 'C345',
+    lotSeq: 'SEQ003',
+    modules: [
+      { module_id: "MOD1", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
+      { module_id: "MOD2", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
+      { module_id: "MOD3", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+    ],
+  },
+  {
+    date: '2024-10-04 2:49:32 PM',
+    ppid: 'OTT_QWER_NO_ASDF',
+    lotId: 'LP20224100615_PJ5 @89654586',
+    defectCount: 6,
+    step1: 3,
+    step2: 2,
+    step3: 1,
+    slotId: 'D456',
+    lotSeq: 'SEQ004',
+    modules: [
+      { module_id: "MOD1", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
+      { module_id: "MOD2", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
+      { module_id: "MOD3", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+    ],
+  },
+  {
+    date: '2024-10-05 3:05:42 PM',
+    ppid: 'OTT_ZXCV_NO_QWER',
+    lotId: 'LP20224100715_PJ6 @89654589',
+    defectCount: 3,
+    step1: 2,
+    step2: 0,
+    step3: 1,
+    slotId: 'E567',
+    lotSeq: 'SEQ005',
+    modules: [
+      { module_id: "MOD1", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
+      { module_id: "MOD2", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
+      { module_id: "MOD3", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+    ],
   },
 ];
