@@ -6,7 +6,6 @@ export interface ModuleData {
 }
 
 export interface WaferData {
-  date: string;
   ppid: string;
   lotId: string;
   defectCount: number;
