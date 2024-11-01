@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class WaferInspectionDTO {
+
     private String fileVersion;
     private String fileTimestamp;
     private List<String> inspectionStationID;
@@ -33,6 +34,7 @@ public class WaferInspectionDTO {
 
     @Data
     public static class DieLocation {
+
         private int xIndex;
         private int yIndex;
     }
@@ -40,6 +42,7 @@ public class WaferInspectionDTO {
     @Data
     @Builder
     public static class DefectRecord {
+
         private int defectID;
         private double xRel;
         private double yRel;
@@ -61,6 +64,7 @@ public class WaferInspectionDTO {
     @Data
     @Builder
     public static class SummarySpec {
+
         private int testNo;
         private int nDefect;
         private double defDensity;
