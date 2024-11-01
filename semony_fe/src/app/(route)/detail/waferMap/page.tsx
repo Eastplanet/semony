@@ -88,7 +88,7 @@ export default function MainPage() {
 
       <div className="flex items-start justify-center  p-8 gap-8">
         {/* 좌측 WaferGrid 영역 */}
-        <div className="w-1/3">
+        <div className="w-3/5">
           <WaferGrid
             dieLocations={dieLocations}
             defectRecords={currentStepData?.defects || []}
@@ -100,7 +100,7 @@ export default function MainPage() {
         </div>
 
         {/* 우측 리스트 컴포넌트 영역 */}
-        <div className="w-2/3 font-normal">
+        <div className="w-2/5 font-normal">
           <StepList defects={currentStepData?.defects || []} />
         </div>
       </div>
