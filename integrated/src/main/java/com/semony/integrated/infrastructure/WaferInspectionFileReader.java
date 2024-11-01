@@ -1,7 +1,6 @@
 package com.semony.integrated.infrastructure;
 
 import com.semony.integrated.domain.dto.WaferInspectionDTO;
-
 import com.semony.integrated.domain.dto.WaferInspectionDTO.DefectRecord;
 import com.semony.integrated.domain.dto.WaferInspectionDTO.SummarySpec;
 import java.io.BufferedReader;
@@ -32,7 +31,8 @@ public class WaferInspectionFileReader {
                 } else if (line.startsWith("FileTimestamp")) {
                     dto.setFileTimestamp(line.substring(line.indexOf(" ") + 1));
                 } else if (line.startsWith("InspectionStationID")) {
-                    dto.setInspectionStationID(parseStringList(line.substring(line.indexOf(" ") + 1)));
+                    dto.setInspectionStationID(
+                        parseStringList(line.substring(line.indexOf(" ") + 1)));
                 } else if (line.startsWith("SampleType")) {
                     dto.setSampleType(line.split(" ")[1]);
                 } else if (line.startsWith("ResultTimestamp")) {
@@ -41,7 +41,8 @@ public class WaferInspectionFileReader {
                     dto.setLotID(line.split(" ")[1].replace("\"", ""));
                 } else if (line.startsWith("SampleSize")) {
                     String[] values = line.substring(line.indexOf(" ") + 1).split(" ");
-                    dto.setSampleSize(Arrays.asList(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                    dto.setSampleSize(
+                        Arrays.asList(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                 } else if (line.startsWith("SetupID")) {
                     dto.setSetupID(Arrays.asList(line.substring(line.indexOf(" ") + 1).split(" ")));
                 } else if (line.startsWith("StepID")) {
@@ -56,20 +57,24 @@ public class WaferInspectionFileReader {
                     dto.setOrientationMarkLocation(line.split(" ")[1]);
                 } else if (line.startsWith("DiePitch")) {
                     String[] values = line.substring(line.indexOf(" ") + 1).split(" ");
-                    dto.setDiePitch(Arrays.asList(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                    dto.setDiePitch(Arrays.asList(Double.parseDouble(values[0]),
+                        Double.parseDouble(values[1])));
                 } else if (line.startsWith("ShotComposition")) {
                     String[] values = line.substring(line.indexOf(" ") + 1).split(" ");
-                    dto.setShotComposition(Arrays.asList(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                    dto.setShotComposition(
+                        Arrays.asList(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                 } else if (line.startsWith("DieOrigin")) {
                     String[] values = line.substring(line.indexOf(" ") + 1).split(" ");
-                    dto.setDieOrigin(Arrays.asList(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                    dto.setDieOrigin(Arrays.asList(Double.parseDouble(values[0]),
+                        Double.parseDouble(values[1])));
                 } else if (line.startsWith("WaferID")) {
                     dto.setWaferID(line.split(" ")[1].replace("\"", ""));
                 } else if (line.startsWith("Slot")) {
                     dto.setSlot(Integer.parseInt(line.split(" ")[1]));
                 } else if (line.startsWith("SampleCenterLocation")) {
                     String[] values = line.substring(line.indexOf(" ") + 1).split(" ");
-                    dto.setSampleCenterLocation(Arrays.asList(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                    dto.setSampleCenterLocation(Arrays.asList(Double.parseDouble(values[0]),
+                        Double.parseDouble(values[1])));
                 } else if (line.startsWith("InspectionTest")) {
                     dto.setInspectionTest(Integer.parseInt(line.split(" ")[1]));
                 } else if (line.startsWith("SampleTestPlan")) {
@@ -88,7 +93,9 @@ public class WaferInspectionFileReader {
                     // DefectRecord entries
                     line = br.readLine();
                     String[] values = line.split(" ");
-                    if(values[0].equals("SummarySpec")) continue;
+                    if (values[0].equals("SummarySpec")) {
+                        continue;
+                    }
                     DefectRecord defectRecord = getDefectRecord(values);
 
                     defectRecords.add(defectRecord);
