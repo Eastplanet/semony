@@ -22,7 +22,7 @@ public class WaferController {
         @RequestParam(value = "lotId") String lotId,
         @RequestParam(value = "lotSeq") BigDecimal lotSeq,
         @RequestParam(value = "slotNo") String slotNo) {
-        SummaryWaferDto waferSummaryList = waferService.getWaferSummaryList(lotId, lotSeq, ppid,
+        SummaryWaferDto waferSummaryList = waferService.getWaferSummary(lotId, lotSeq, ppid,
             slotNo);
         return ResponseEntity.ok(waferSummaryList);
     }

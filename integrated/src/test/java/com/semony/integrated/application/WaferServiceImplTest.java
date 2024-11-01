@@ -30,7 +30,7 @@ public class WaferServiceImplTest {
 
     @Test
     @DisplayName("waferSummaryList 조회 기능 성공 테스트")
-    void testGetWaferSummaryList() {
+    void waferSummaryList조회기능성공테스트() {
 
         // Given
         String lotId = "LP22024100315_PJ2@89654577";
@@ -87,7 +87,7 @@ public class WaferServiceImplTest {
         SummaryWaferDto expected = EqpInspectionHstAlphaConvertor.convert(mockList, flowRecipe);
         // When
 
-        SummaryWaferDto result = waferService.getWaferSummaryList(lotId, lotSeq, flowRecipe,
+        SummaryWaferDto result = waferService.getWaferSummary(lotId, lotSeq, flowRecipe,
             slotNo);
 
         // Then
