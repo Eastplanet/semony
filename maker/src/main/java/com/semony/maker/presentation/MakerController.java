@@ -67,10 +67,17 @@ public class MakerController {
     }
 
     private boolean processModuleRequests(RecipeCombination combination, String recipe,
-        LocalDate requestTime, String lotId, long lotSeq) {
-        return sendAndLogModuleRequest(combination.in(), recipe, requestTime, lotId, lotSeq)
-            && sendAndLogModuleRequest(combination.out(), recipe, requestTime, lotId, lotSeq)
-            && sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq);
+        LocalDate requestTime, String lotId, long lotSeq, int slotId) {
+        String selectModule = randomSelectModule();
+        return
+            sendAndLogModuleRequest(combination.in() + " (IN)", recipe, requestTime, lotId, lotSeq, slotId,
+                "C:/root/in", "Macro[Inspection]", selectModule)
+                && sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq,
+                slotId, "C:/root/ewim", "Macro[Inspection]", selectModule)
+                && sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq,
+                slotId, "C:/root/ewim", "EBR", selectModule)
+                && sendAndLogModuleRequest(combination.out() + " (OUT)", recipe, requestTime, lotId, lotSeq,
+                slotId, "C:/root/out", "Macro[Inspection]", selectModule);
     }
 
     private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDate requestTime,
