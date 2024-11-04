@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# FastAPI / Python environment settings
+.env
+*.env
+.env.*
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# macOS files
+.DS_Store
+
+# Editor and IDE settings
+.vscode/
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Log files
+*.log
+
+# Testing outputs
+.coverage
+htmlcov/
+*.cover
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.coveragerc
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Pylint
+.pylint.d/
+
+# Local development files
+local_settings.py
+
+# PyInstaller
+# Usually these files are written by a Python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# dist, build, egg and wheel files
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+
+# Cython
+*.c
+*.cpp
+
+# Pyre type checker
+.pyre/
+
+# FastAPI specific
+instance/
+generated/
+staticfiles/
+media/
+uploads/
+__pypackages__/
