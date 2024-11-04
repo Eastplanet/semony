@@ -1,7 +1,7 @@
 import random
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from services import process_and_modify_in_module_data
+from service import process_and_modify_in_module_data
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ class RequestModel(BaseModel):
   slotNo: str
   local_folder_path: str
   macro_folder: str
+  selected_subfolder: str
 
 @app.post("/modules/data")
 async def create_and_modify_macro_module_data(request: RequestModel):
@@ -27,8 +28,9 @@ async def create_and_modify_macro_module_data(request: RequestModel):
     selected_subfolder = random.choice(subfolder_options)
 
     # local_folder_path에 랜덤 하위 폴더 및 매크로 폴더 추가
-    full_local_folder_path = f"{request.local_folder_path}/{selected_subfolder}/{request.macro_folder}"
-
+    full_local_folder_path = f"{request.local_folder_path}/{request.selected_subfolder}/{request.macro_folder}"
+    # print(request)
+    # print(full_local_folder_path)
     # 파일 복사 및 변조 수행
     response = await process_and_modify_in_module_data(
         request.module_name,
