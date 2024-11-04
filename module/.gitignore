@@ -1,3 +1,14 @@
+# .idea 폴더 및 모든 하위 파일, XML 포함해서 제외
+.idea/
+.idea/**
+
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# 다른 파일 설정
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -6,30 +17,30 @@ __pycache__/
 # C extensions
 *.so
 
-# FastAPI / Python environment settings
+# 환경 변수 설정 파일
 .env
 *.env
 .env.*
 
-# Virtual environments
+# 가상 환경
 venv/
 .venv/
 env/
 ENV/
 
-# macOS files
+# macOS 파일
 .DS_Store
 
-# Editor settings (excluding .idea)
+# 편집기 설정 (.idea 제외)
 .vscode/
 
-# Jupyter Notebook checkpoints
+# Jupyter 노트북 체크포인트
 .ipynb_checkpoints
 
-# Log files
+# 로그 파일
 *.log
 
-# Testing outputs
+# 테스트 및 커버리지 파일
 .coverage
 htmlcov/
 *.cover
@@ -46,14 +57,10 @@ coverage.xml
 # Pylint
 .pylint.d/
 
-# Local development files
+# 로컬 설정 파일
 local_settings.py
 
-# PyInstaller
-*.manifest
-*.spec
-
-# dist, build, egg and wheel files
+# 빌드와 패키징 파일
 dist/
 build/
 *.egg-info/
@@ -64,10 +71,10 @@ build/
 *.c
 *.cpp
 
-# Pyre type checker
+# Pyre 타입 검사기
 .pyre/
 
-# FastAPI specific
+# FastAPI 프로젝트 특정 파일
 instance/
 generated/
 staticfiles/
