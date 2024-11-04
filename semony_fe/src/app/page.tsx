@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import 'react-resizable/css/styles.css';
 import { mockData } from './mocks/mock_wafer';
 import Image from 'next/image';
+import request from './apis/request';
 
 const WaferTable = () => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -19,6 +20,25 @@ const WaferTable = () => {
 
 
   useEffect(() => {
+    const now = new Date();
+
+    // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
+    const formatDateTime = (date: Date): string => {
+      const pad = (num: number): string => num.toString().padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    };
+    
+
+    const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
+    const endDate = formatDateTime(now); // 현재 시간
+
+    // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
+    request(`wafer?startDate=${startDate}&endDate=${endDate}`)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsFilterOpen({});
