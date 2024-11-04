@@ -78,3 +78,23 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq, slo
   )
   os.makedirs(target_folder_path, exist_ok=True)
   return target_folder_path
+
+
+async def process_and_modify_in_module_data(
+    module_name: str, date: str, lotId: str, flow_recipe: str, lotSeq: str, slotNo: str, local_folder_path: str, macro_folder: str
+):
+  """
+  매개변수에 따라 파일을 로컬에서 복사하고 이름과 데이터를 변경하는 메인 함수
+  """
+  # lot_id를 생성
+  lot_id = f"LP2{date}_PJ2@{lotId}"
+  print(macro_folder)
+  # 대상 폴더 경로 생성
+  target_folder_path = create_target_folder_path(
+      module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
+  )
+
+  # 복사 및 변조 작업 실행
+  process_files_from_local(local_folder_path, target_folder_path, flow_recipe, lot_id, date, slotNo)
+
+  return {"folder": target_folder_path, "local_folder": local_folder_path}
