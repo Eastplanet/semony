@@ -2,7 +2,8 @@ package com.semony.integrated.presentation;
 
 import com.semony.integrated.application.WaferService;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +19,10 @@ public class WaferController {
     private final WaferService waferService;
 
     @GetMapping()
-    public ResponseEntity<?> waferList(@RequestParam(value = "ppid") String ppid,
-        @RequestParam(value = "lotId") String lotId,
-        @RequestParam(value = "lotSeq") BigDecimal lotSeq,
-        @RequestParam(value = "slotNo") String slotNo) {
-        SummaryWaferDto waferSummaryList = waferService.getWaferSummary(lotId, lotSeq, ppid,
-            slotNo);
+    public ResponseEntity<List<SummaryWaferDto>> waferList(@RequestParam LocalDateTime startDate,
+        @RequestParam LocalDateTime endDate) {
+        List<SummaryWaferDto> waferSummaryList = waferService.getWaferSummaryList(startDate, endDate);
         return ResponseEntity.ok(waferSummaryList);
     }
+
 }
