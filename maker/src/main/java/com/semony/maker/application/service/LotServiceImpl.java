@@ -24,8 +24,8 @@ public class LotServiceImpl implements LotService {
 
         Long newLastLotId = metadata.getLastLotId() + 1;
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH"));
-        String lotId = "LP2" + timestamp + "_PJ2@" + newLastLotId;
-
+        //String lotId = "LP2" + timestamp + "_PJ2@" + newLastLotId;
+        String lotId = ""+newLastLotId;
         lotTransactionService.updateLastLotId(newLastLotId);
 
         return lotId;
