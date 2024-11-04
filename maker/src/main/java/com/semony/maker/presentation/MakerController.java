@@ -81,15 +81,45 @@ public class MakerController {
     }
 
     private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDate requestTime,
-        String lotId, long lotSeq) {
+        String lotId, long lotSeq, int slotId, String localFolderPath, String macroFolder, String selectModule) {
         try {
-            moduleRequestService.sendModuleRequest(moduleName, requestTime);
-            loggingService.saveLog("success", LogMessage.MODULE_REQUEST_SUCCESS.getMessage(),
-                recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+            // moduleRequestService에 필요한 모든 매개변수를 전달
+            moduleRequestService.sendModuleRequest(
+                moduleName,
+                requestTime,
+                lotId,
+                recipe,
+                lotSeq,
+                slotId,
+                localFolderPath,
+                macroFolder,
+                selectModule
+            );
+
+            // 성공 로그 저장
+            loggingService.saveLog(
+                "success",
+                LogMessage.MODULE_REQUEST_SUCCESS.getMessage(),
+                recipe,
+                moduleName,
+                LocalDateTime.now(),
+                requestTime,
+                lotId,
+                lotSeq
+            );
             return true;
         } catch (Exception e) {
-            loggingService.saveLog("error", LogMessage.MODULE_REQUEST_FAILED.getMessage(), recipe,
-                moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+            // 실패 로그 저장
+            loggingService.saveLog(
+                "error",
+                LogMessage.MODULE_REQUEST_FAILED.getMessage(),
+                recipe,
+                moduleName,
+                LocalDateTime.now(),
+                requestTime,
+                lotId,
+                lotSeq
+            );
             return false;
         }
     }
