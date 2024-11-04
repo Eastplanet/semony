@@ -12,6 +12,10 @@ import com.semony.maker.global.error.LogMessage;
 import com.semony.maker.global.error.exception.BusinessException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +31,7 @@ public class MakerController {
     private final ModuleRequestService moduleRequestService;
     private final LoggingService loggingService;
     private final LotService lotService;
+    private static final Logger logger = LoggerFactory.getLogger(MakerController.class);
 
     @Autowired
     public MakerController(RecipeMappingProvider recipeMappingProvider,
@@ -40,16 +45,18 @@ public class MakerController {
 
     @PostMapping("/make")
     public ResponseEntity<?> makeInspectionData(@RequestParam String recipe,
-        @RequestParam LocalDate requestTime) {
+        @RequestParam LocalDate requestTime, @RequestParam int slotId) {
         String lotId = lotService.generateLotId();
         long lotSeq = lotService.generateLotSeq();
 
-        RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId, lotSeq);
+        RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId,
+            lotSeq);
+        System.out.println(String.valueOf(combination));
         if (combination == null) {
             throw new BusinessException(recipe, "recipe", ErrorCode.NOT_FOUND_RECIPE);
         }
 
-        if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq)) {
+        if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq, slotId)) {
             throw new BusinessException(recipe, "module", ErrorCode.NOT_FOUND_RECIPE);
         }
 
@@ -122,5 +129,11 @@ public class MakerController {
             );
             return false;
         }
+    }
+    public String randomSelectModule(){
+        // 하위 폴더 랜덤 선택
+        List<String> subfolderOptions = List.of("006", "010", "018", "022");
+        return subfolderOptions.get(
+            new Random().nextInt(subfolderOptions.size()));
     }
 }
