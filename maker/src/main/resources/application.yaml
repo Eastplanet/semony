@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create  # 스키마 자동 업데이트
+      ddl-auto: update  # 스키마 자동 업데이트
     database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL용 Hibernate 방언
 
   data:
