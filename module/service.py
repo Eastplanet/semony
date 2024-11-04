@@ -64,3 +64,17 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
 
       except Exception as e:
         print(f"Error processing file '{file_name}': {e}")
+
+def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder):
+  """
+  동적으로 폴더 경로를 생성하고 반환
+  """
+  # folder_id를 요구된 형식으로 생성
+  folder_id = f"LP2{date}_PJ2@{lotId}[{flow_recipe}]-{lotSeq}"
+
+  # 최종 폴더 경로를 구성, 마지막에 macro_folder 추가
+  target_folder_path = os.path.join(
+      ROOT_PATH, module_name, "InVision", "SaveData", date, folder_id, slotNo, macro_folder
+  )
+  os.makedirs(target_folder_path, exist_ok=True)
+  return target_folder_path
