@@ -146,10 +146,15 @@ const WaferTable = () => {
                
                   <div
                     className="flex items-center justify-center gap-1 cursor-pointer"
-                    onClick={() => handleSort(col)}
+                    
                   >
-                    <Image src="/icons/arrowUp.png" alt="정렬" width={10} height={10} />
-                    {sortColumn === col && (
+                <button
+                  className="px-2 py-[1px] m-1 rounded-lg bg-opacity-60 bg-white text-gray-700 text-[10px] font-normal hover:bg-blue-300 transition-colors" onClick={() => handleSort(col)}
+                  style={{ borderRadius: '4px' }} // 둥근 모서리
+                >
+                  정렬
+                </button>                    
+                {sortColumn === col && (
                       sortOrder === 'asc' ? (<span>▲</span>) : sortOrder === 'desc' ? (<span>▼</span>): 
                       ''
                     )}
