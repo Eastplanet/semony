@@ -57,7 +57,7 @@ const WaferTable = () => {
     // 드롭다운을 화면 최상단에 고정시키기 위한 위치 설정
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
-    setDropdownPosition({ top: rect.top + window.scrollY, left: rect.left });
+    setDropdownPosition({ top: rect.top, left: rect.left });
 
     // 검색어 초기화 및 필터링된 값 리스트 초기화
     setSearchTerm({ [column]: '' });
@@ -131,16 +131,17 @@ const WaferTable = () => {
  
 
   return (
-    <div className="p-8 text-center relative">
-      <table className="mt-10 min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
+    <div className="p-8 text-center relative pt-20 ">
+      <div className="overflow-y-auto h-[80vh]  rounded-2xl"> {/* 높이 제한과 오버플로우 설정 */}
+      <table className=" min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
         <thead>
-          <tr className="bg-blue-600 text-white uppercase text-sm ">
+          <tr className="bg-blue-600 text-white uppercase text-sm "
+          style={{ position: 'sticky', top: 0, zIndex: 10 }}>
             {columns.map((col) => (
               <th
                 key={col}
                 className="font-semibold border-b  border-gray-200 relative"
                 id={`header-${col}`}
-                style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}
               >
                
                   <div
@@ -219,21 +220,21 @@ const WaferTable = () => {
                 )}
               </th>
             ))}
-            <th className="p-4 font-semibold border-b border-gray-200 border-r-2" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+            <th className="p-4 font-semibold border-b border-gray-200 border-r-2" >
               TOTAL DEFECT
             </th>
-            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+            <th className="p-4 font-semibold border-b border-gray-200">
               MODULE ID
             </th>
-            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+            <th className="p-4 font-semibold border-b border-gray-200" >
               DEFECT
             </th>
-            <th className="p-4 font-semibold border-b border-gray-200" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgb(37, 99, 235)' }}>
+            <th className="p-4 font-semibold border-b border-gray-200" >
               EVENT DTTS
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='pt-2'>
           {filteredData.map((data, index) => (
             data.modules.map((module, moduleIndex) => (
               <tr
@@ -257,6 +258,7 @@ const WaferTable = () => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };

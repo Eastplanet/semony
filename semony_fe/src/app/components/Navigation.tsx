@@ -15,7 +15,7 @@ export default function Navigation() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`px-3 py-2 bg-gray-800 text-white fixed z-50 rounded-full shadow-md transition-all duration-300 hover:bg-gray-700 focus:outline-none  ${
-          isOpen ? "top-4 left-[260px]" : "top-4 left-4"
+          isOpen ? "top-4 left-[230px] bg-gray-900" : "top-4 left-4"
         }`}
       >
         {isOpen ? (
