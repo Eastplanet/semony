@@ -15,14 +15,14 @@ public class LotTransactionServiceImpl implements LotTransactionService{
     @Transactional
     public void updateLastLotId(Long newLastLotId) {
         LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotIdDesc();
-        metadata.setLastLotId(newLastLotId);
+        metadata.updateLastLotId(newLastLotId);
         lotMetadataRepository.save(metadata);
     }
 
     @Transactional
     public void updateLastLotSeq(Long newLastLotSeq) {
         LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
-        metadata.setLastLotSeq(newLastLotSeq);
+        metadata.updateLastLotSeq(newLastLotSeq);
         lotMetadataRepository.save(metadata);
     }
 }

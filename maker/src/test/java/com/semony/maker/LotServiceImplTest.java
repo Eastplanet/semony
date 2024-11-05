@@ -36,7 +36,7 @@ class LotServiceImplTest {
     void testGenerateLotId() {
         // Given
         LotMetadata metadata = new LotMetadata();
-        metadata.setLastLotId(123456L);
+        metadata.updateLastLotId(123456L);
         when(lotMetadataRepository.findTopByOrderByLastLotIdDesc()).thenReturn(metadata);
 
         // Expected newLastLotId and formatted lotId
@@ -56,7 +56,7 @@ class LotServiceImplTest {
     void testGenerateLotSeq() {
         // Given
         LotMetadata metadata = new LotMetadata();
-        metadata.setLastLotSeq(789012L);
+        metadata.updateLastLotSeq(789012L);
         when(lotMetadataRepository.findTopByOrderByLastLotSeqDesc()).thenReturn(metadata);
 
         // Expected newLastLotSeq
