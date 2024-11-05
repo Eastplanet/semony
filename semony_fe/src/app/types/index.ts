@@ -1,8 +1,8 @@
 // src/types.ts
 export interface ModuleData {
-  module_id: string;
+  moduleId: string;
   defect: string;
-  event_dtts: string;
+  eventDtts: string;
 }
 
 export interface WaferData {

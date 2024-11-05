@@ -8,9 +8,9 @@ export const mockData: WaferData[] = [
     slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
     ],
   },
   {
@@ -20,9 +20,9 @@ export const mockData: WaferData[] = [
     slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
-      { module_id: "EWIM1-36", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
+      { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
     ],
   },
   {
@@ -32,9 +32,9 @@ export const mockData: WaferData[] = [
     slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
-      { module_id: "EWIM1-36", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
-      { module_id: "MIW7-61", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
+      { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
+      { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
     ],
   },
   {
@@ -44,9 +44,9 @@ export const mockData: WaferData[] = [
     slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
     ],
   },
   {
@@ -56,9 +56,9 @@ export const mockData: WaferData[] = [
     slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
-      { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
-      { module_id: "EWIM1-36", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+      { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
+      { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
     ],
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
@@ -67,9 +67,9 @@ export const mockData: WaferData[] = [
     slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
     ],
   },
   {
@@ -79,9 +79,9 @@ export const mockData: WaferData[] = [
     slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
-      { module_id: "EWIM1-36", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
+      { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
     ],
   },
   {
@@ -91,9 +91,9 @@ export const mockData: WaferData[] = [
     slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
-      { module_id: "EWIM1-36", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
-      { module_id: "MIW7-61", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
+      { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
+      { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
     ],
   },
   {
@@ -103,9 +103,9 @@ export const mockData: WaferData[] = [
     slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
     ],
   },
   {
@@ -115,9 +115,9 @@ export const mockData: WaferData[] = [
     slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
-      { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
-      { module_id: "EWIM1-36", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+      { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
+      { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
     ],
   },
   {
@@ -127,9 +127,9 @@ export const mockData: WaferData[] = [
     slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
     ],
   },
   {
@@ -139,9 +139,9 @@ export const mockData: WaferData[] = [
     slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
-      { module_id: "EWIM1-36", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
+      { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
     ],
   },
   {
@@ -151,9 +151,9 @@ export const mockData: WaferData[] = [
     slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
-      { module_id: "EWIM1-36", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
-      { module_id: "MIW7-61", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
+      { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
+      { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
     ],
   },
   {
@@ -163,9 +163,9 @@ export const mockData: WaferData[] = [
     slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
     ],
   },
   {
@@ -175,9 +175,9 @@ export const mockData: WaferData[] = [
     slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
-      { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
-      { module_id: "EWIM1-36", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+      { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
+      { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
     ],
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
@@ -186,9 +186,9 @@ export const mockData: WaferData[] = [
     slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-03 4:13 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 4:14 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
     ],
   },
   {
@@ -198,9 +198,9 @@ export const mockData: WaferData[] = [
     slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
-      { module_id: "EWIM1-36", defect: "2", event_dtts: "2024-10-03 5:25 PM" },
-      { module_id: "MIW7-61", defect: "3", event_dtts: "2024-10-03 5:26 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
+      { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
+      { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
     ],
   },
   {
@@ -210,9 +210,9 @@ export const mockData: WaferData[] = [
     slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
-      { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
-      { module_id: "EWIM1-36", defect: "4", event_dtts: "2024-10-04 1:17 PM" },
-      { module_id: "MIW7-61", defect: "5", event_dtts: "2024-10-04 1:18 PM" },
+      { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
+      { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
+      { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
     ],
   },
   {
@@ -222,9 +222,9 @@ export const mockData: WaferData[] = [
     slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
-      { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
-      { module_id: "EWIM1-36", defect: "1", event_dtts: "2024-10-04 2:51 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-04 2:52 PM" },
+      { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
+      { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
     ],
   },
   {
@@ -234,9 +234,9 @@ export const mockData: WaferData[] = [
     slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
-      { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
-      { module_id: "EWIM1-36", defect: "3", event_dtts: "2024-10-05 3:07 PM" },
-      { module_id: "MIW7-61", defect: "2", event_dtts: "2024-10-05 3:08 PM" },
+      { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
+      { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
+      { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
     ],
   },
 ];

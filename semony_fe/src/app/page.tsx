@@ -5,6 +5,7 @@ import 'react-resizable/css/styles.css';
 import { mockData } from './mocks/mock_wafer';
 import Image from 'next/image';
 import request from './apis/request';
+import {WaferData} from '@/app/types';
 
 const WaferTable = () => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -15,10 +16,21 @@ const WaferTable = () => {
   const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
   const [filteredValues, setFilteredValues] = useState<{ [key: string]: string[] }>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const [listData, setListData] = useState<WaferData[]>([]);
+  const [startDate, setStartDate] = useState('2024-10-03T00:00:00');
+  const [endDate, setEndDate] = useState('2024-10-03T19:00:00');
+  
   const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
-
+  const fetchData = () => {
+      request(`wafer?startDate=${startDate}&endDate=${endDate}`)
+        .then((data) => {
+          console.log(data);
+          setListData(data);
+        })
+        .catch((err) => console.error(err));
+    };
+    
   useEffect(() => {
     const now = new Date();
 
@@ -29,15 +41,17 @@ const WaferTable = () => {
     };
     
 
-    const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
-    const endDate = formatDateTime(now); // 현재 시간
+    // const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
+    // const endDate = formatDateTime(now); // 현재 시간
 
-    // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
-    request(`wafer?startDate=${startDate}&endDate=${endDate}`)
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => console.error(err));
+    // // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
+    // request(`wafer?startDate=2024-10-03T00:00:00&endDate=2024-10-03T19:00:00`)
+    //   .then((data) => {
+    //     console.log(data);
+    //     setListData(data);
+    //   })
+    //   .catch((err) => console.error(err));
+    fetchData();
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -49,6 +63,8 @@ const WaferTable = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  
 
   // 필터 열기/닫기 토글, 드롭다운 위치 설정
   const toggleFilter = (column: string, event: React.MouseEvent) => {
@@ -103,7 +119,7 @@ const WaferTable = () => {
 
   // 각 열의 고유한 값 가져오기
   const uniqueValues = (column: string) => {
-    return Array.from(new Set(mockData.map((data) => data[column as keyof typeof data]?.toString() || '')));
+    return Array.from(new Set(listData.map((data) => data[column as keyof typeof data]?.toString() || '')));
   };
 
   // 필터 적용 버튼 클릭 시 필터를 적용
@@ -112,7 +128,7 @@ const WaferTable = () => {
   };
 
   // 데이터 필터링 및 정렬
-  const filteredData = mockData
+  const filteredData = listData
     .filter((data) => {
       return columns.every((col) => {
         const value = data[col as keyof typeof data]?.toString() || '';
@@ -132,6 +148,33 @@ const WaferTable = () => {
 
   return (
     <div className="p-8 text-center relative pt-20 ">
+      <div className="flex justify-end items-center mb-4">
+        <div className='mr-12'>
+          <label className="mr-2">시작 시간:</label>
+          <input
+            type="datetime-local"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="p-2 border rounded"
+          />
+        </div>
+        <div>
+          <label className="mr-2">끝 시간:</label>
+          <input
+            type="datetime-local"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="p-2 border rounded"
+          />
+        </div>
+        <button
+          onClick={fetchData} // 검색 버튼 클릭 시 fetchData 호출
+          className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          검색
+  </button>
+      </div>
+
       <div className="overflow-y-auto h-[80vh]  rounded-2xl"> {/* 높이 제한과 오버플로우 설정 */}
       <table className=" min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
         <thead>
@@ -240,27 +283,38 @@ const WaferTable = () => {
           </tr>
         </thead>
         <tbody className='pt-2'>
-          {filteredData.map((data, index) => (
-            data.modules.map((module, moduleIndex) => (
-              <tr
-                key={`${index}-${moduleIndex}`}
-                className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} transition-colors`}
-              >
-                {moduleIndex === 0 && (
-                  <>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.ppid}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.lotId}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.lotSeq}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.slotNo}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">{data.totalDefectCount}</td>
-                  </>
-                )}
-                <td className="px-4 py-1 text-gray-700 text-xs">{module.module_id}</td>
-                <td className="px-4 py-1 text-gray-700 text-xs">{module.defect}</td>
-                <td className="px-4 py-1 text-gray-700 text-xs">{module.event_dtts}</td>
-              </tr>
-            ))
-          ))}
+        {filteredData.map((data, index) => (
+  data.modules.map((module, moduleIndex) => (
+    <tr
+      key={`${index}-${moduleIndex}`}
+      className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} transition-colors`}
+    >
+      {moduleIndex === 0 && (
+        <>
+          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
+            {data.ppid}
+          </td>
+          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
+            {data.lotId}
+          </td>
+          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
+            {data.lotSeq}
+          </td>
+          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
+            {data.slotNo}
+          </td>
+          <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">
+            {data.totalDefectCount}
+          </td>
+        </>
+      )}
+      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.moduleId : '-'}</td>
+      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.defect : '-'}</td>
+      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.eventDtts : '-'}</td>
+    </tr>
+  ))
+))}
+
         </tbody>
       </table>
       </div>
