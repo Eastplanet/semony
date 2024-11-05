@@ -16,7 +16,7 @@ const WaferTable = () => {
   const [filteredValues, setFilteredValues] = useState<{ [key: string]: string[] }>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const columns = ['ppid', 'lotId', 'lotSeq', 'slotId'];
+  const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
 
   useEffect(() => {
@@ -251,8 +251,8 @@ const WaferTable = () => {
                     <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.ppid}</td>
                     <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.lotId}</td>
                     <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.lotSeq}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.slotId}</td>
-                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">{data.defectCount}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm" >{data.slotNo}</td>
+                    <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">{data.totalDefectCount}</td>
                   </>
                 )}
                 <td className="px-4 py-1 text-gray-700 text-xs">{module.module_id}</td>

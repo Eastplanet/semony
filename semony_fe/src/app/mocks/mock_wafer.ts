@@ -4,11 +4,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
-    defectCount: 4,
-    step1: 2,
-    step2: 0,
-    step3: 2,
-    slotId: 'A123',
+    totalDefectCount: 4,
+    slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
@@ -19,11 +16,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_XYZT_NO_ABCD',
     lotId: 'LP20224100415_PJ3 @89654580',
-    defectCount: 5,
-    step1: 3,
-    step2: 1,
-    step3: 1,
-    slotId: 'B234',
+    totalDefectCount: 5,
+    slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
@@ -34,11 +28,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
     lotId: 'LP20224100515_PJ4 @89654583',
-    defectCount: 2,
-    step1: 1,
-    step2: 0,
-    step3: 1,
-    slotId: 'C345',
+    totalDefectCount: 2,
+    slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
@@ -49,11 +40,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_QWER_NO_ASDF',
     lotId: 'LP20224100615_PJ5 @89654586',
-    defectCount: 6,
-    step1: 3,
-    step2: 2,
-    step3: 1,
-    slotId: 'D456',
+    totalDefectCount: 6,
+    slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
@@ -64,11 +52,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ZXCV_NO_QWER',
     lotId: 'LP20224100715_PJ6 @89654589',
-    defectCount: 3,
-    step1: 2,
-    step2: 0,
-    step3: 1,
-    slotId: 'E567',
+    totalDefectCount: 3,
+    slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
       { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
@@ -78,11 +63,8 @@ export const mockData: WaferData[] = [
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
-    defectCount: 4,
-    step1: 2,
-    step2: 0,
-    step3: 2,
-    slotId: 'A123',
+    totalDefectCount: 4,
+    slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
@@ -93,11 +75,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_XYZT_NO_ABCD',
     lotId: 'LP20224100415_PJ3 @89654580',
-    defectCount: 5,
-    step1: 3,
-    step2: 1,
-    step3: 1,
-    slotId: 'B234',
+    totalDefectCount: 5,
+    slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
@@ -108,11 +87,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
     lotId: 'LP20224100515_PJ4 @89654583',
-    defectCount: 2,
-    step1: 1,
-    step2: 0,
-    step3: 1,
-    slotId: 'C345',
+    totalDefectCount: 2,
+    slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
@@ -123,11 +99,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_QWER_NO_ASDF',
     lotId: 'LP20224100615_PJ5 @89654586',
-    defectCount: 6,
-    step1: 3,
-    step2: 2,
-    step3: 1,
-    slotId: 'D456',
+    totalDefectCount: 6,
+    slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
@@ -138,11 +111,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ZXCV_NO_QWER',
     lotId: 'LP20224100715_PJ6 @89654589',
-    defectCount: 3,
-    step1: 2,
-    step2: 0,
-    step3: 1,
-    slotId: 'E567',
+    totalDefectCount: 3,
+    slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
       { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
@@ -153,11 +123,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
-    defectCount: 4,
-    step1: 2,
-    step2: 0,
-    step3: 2,
-    slotId: 'A123',
+    totalDefectCount: 4,
+    slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
@@ -168,11 +135,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_XYZT_NO_ABCD',
     lotId: 'LP20224100415_PJ3 @89654580',
-    defectCount: 5,
-    step1: 3,
-    step2: 1,
-    step3: 1,
-    slotId: 'B234',
+    totalDefectCount: 5,
+    slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
@@ -183,11 +147,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
     lotId: 'LP20224100515_PJ4 @89654583',
-    defectCount: 2,
-    step1: 1,
-    step2: 0,
-    step3: 1,
-    slotId: 'C345',
+    totalDefectCount: 2,
+    slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
@@ -198,11 +159,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_QWER_NO_ASDF',
     lotId: 'LP20224100615_PJ5 @89654586',
-    defectCount: 6,
-    step1: 3,
-    step2: 2,
-    step3: 1,
-    slotId: 'D456',
+    totalDefectCount: 6,
+    slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
@@ -213,11 +171,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ZXCV_NO_QWER',
     lotId: 'LP20224100715_PJ6 @89654589',
-    defectCount: 3,
-    step1: 2,
-    step2: 0,
-    step3: 1,
-    slotId: 'E567',
+    totalDefectCount: 3,
+    slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
       { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },
@@ -227,11 +182,8 @@ export const mockData: WaferData[] = [
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
-    defectCount: 4,
-    step1: 2,
-    step2: 0,
-    step3: 2,
-    slotId: 'A123',
+    totalDefectCount: 4,
+    slotNo: 'A123',
     lotSeq: 'SEQ001',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-03 4:12 PM" },
@@ -242,11 +194,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_XYZT_NO_ABCD',
     lotId: 'LP20224100415_PJ3 @89654580',
-    defectCount: 5,
-    step1: 3,
-    step2: 1,
-    step3: 1,
-    slotId: 'B234',
+    totalDefectCount: 5,
+    slotNo: 'B234',
     lotSeq: 'SEQ002',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-03 5:24 PM" },
@@ -257,11 +206,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
     lotId: 'LP20224100515_PJ4 @89654583',
-    defectCount: 2,
-    step1: 1,
-    step2: 0,
-    step3: 1,
-    slotId: 'C345',
+    totalDefectCount: 2,
+    slotNo: 'C345',
     lotSeq: 'SEQ003',
     modules: [
       { module_id: "MIW7-51", defect: "1", event_dtts: "2024-10-04 1:16 PM" },
@@ -272,11 +218,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_QWER_NO_ASDF',
     lotId: 'LP20224100615_PJ5 @89654586',
-    defectCount: 6,
-    step1: 3,
-    step2: 2,
-    step3: 1,
-    slotId: 'D456',
+    totalDefectCount: 6,
+    slotNo: 'D456',
     lotSeq: 'SEQ004',
     modules: [
       { module_id: "MIW7-51", defect: "2", event_dtts: "2024-10-04 2:50 PM" },
@@ -287,11 +230,8 @@ export const mockData: WaferData[] = [
   {
     ppid: 'OTT_ZXCV_NO_QWER',
     lotId: 'LP20224100715_PJ6 @89654589',
-    defectCount: 3,
-    step1: 2,
-    step2: 0,
-    step3: 1,
-    slotId: 'E567',
+    totalDefectCount: 3,
+    slotNo: 'E567',
     lotSeq: 'SEQ005',
     modules: [
       { module_id: "MIW7-51", defect: "4", event_dtts: "2024-10-05 3:06 PM" },

@@ -4,7 +4,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WaferGrid from '@/app/components/WaferGrid';
-import StepList from '@/app/components/StepList';
 import { DefectRecord } from '@/app/types';
 
 interface DieLocation {
@@ -102,7 +101,6 @@ export default function MainPage() {
 
         {/* 우측 리스트 컴포넌트 영역 */}
         <div className="w-2/3 font-normal">
-          <StepList defects={currentStepData?.defects || []} />
         </div>
       </div>
     </div>

@@ -8,11 +8,8 @@ export interface ModuleData {
 export interface WaferData {
   ppid: string;
   lotId: string;
-  defectCount: number;
-  step1: number;
-  step2: number;
-  step3: number;
-  slotId: string;
+  totalDefectCount: number;
+  slotNo: string;
   lotSeq: string;
   modules: ModuleData[]; // modules 속성 추가
 }

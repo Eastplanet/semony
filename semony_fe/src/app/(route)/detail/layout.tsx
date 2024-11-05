@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import WaferHeader from './WaferHeader';
 import { useRouter } from 'next/navigation';
+import { DataProvider } from './DataContext';
 
 const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   const [activeTab, setActiveTab] = useState('waferMap');
@@ -15,6 +16,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
+    <DataProvider>
     <div className="p-6 pt-1">
       {/* Header and Tabs Container */}
       <div className="flex justify-between items-center ">
@@ -62,6 +64,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
     </div>
+    </DataProvider>
   );
 };
 
