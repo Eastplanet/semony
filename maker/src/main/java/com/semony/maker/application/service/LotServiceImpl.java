@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class LotServiceImpl implements LotService {
 
     private final LotMetadataRepository lotMetadataRepository;
-    private final LotTransactionServiceImpl lotTransactionServiceImpl;
+    private final LotTransactionService lotTransactionService;
 
     /**
      * LotId를 가져오고 새로 갱신합니다.
@@ -24,9 +24,9 @@ public class LotServiceImpl implements LotService {
 
         Long newLastLotId = metadata.getLastLotId() + 1;
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH"));
-        String lotId = "LP2" + timestamp + "_PJ2@" + newLastLotId;
-
-        lotTransactionServiceImpl.updateLastLotId(newLastLotId);
+        //String lotId = "LP2" + timestamp + "_PJ2@" + newLastLotId;
+        String lotId = ""+newLastLotId;
+        lotTransactionService.updateLastLotId(newLastLotId);
 
         return lotId;
     }
@@ -40,7 +40,7 @@ public class LotServiceImpl implements LotService {
         LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
 
         Long newLastLotSeq = metadata.getLastLotSeq() + 1;
-        lotTransactionServiceImpl.updateLastLotSeq(newLastLotSeq);
+        lotTransactionService.updateLastLotSeq(newLastLotSeq);
 
         return newLastLotSeq;
     }

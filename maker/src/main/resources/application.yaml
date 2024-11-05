@@ -1,2 +1,25 @@
 server:
-  port: 8080
+  port: 8080  # 개발 환경의 기본 포트 번호
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/semony  # PostgreSQL 데이터베이스 URL
+    driver-class-name: org.postgresql.Driver             # PostgreSQL JDBC 드라이버
+    username: postgres  # PostgreSQL 사용자 이름
+    password: rootpassword  # PostgreSQL 비밀번호
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # 스키마 자동 업데이트
+    database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL용 Hibernate 방언
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dev_database  # MongoDB 연결 URI (로컬 개발 환경)
+      database: dev_database
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+
