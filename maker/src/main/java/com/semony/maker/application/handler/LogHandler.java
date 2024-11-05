@@ -15,13 +15,13 @@ public class LogHandler {
         this.loggingService = loggingService;
     }
 
-    public void logSuccess(String status, String message, String recipe, String moduleName,
+    public void logSuccess(String message, String recipe, String moduleName,
         LocalDate requestTime, String lotId, long lotSeq) {
-        loggingService.saveLog(status, message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+        loggingService.saveLog("success", message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
     }
 
-    public void logError(String status, String message, String recipe, String moduleName,
+    public void logError(String message, String recipe, String moduleName,
         LocalDate requestTime, String lotId, long lotSeq) {
-        loggingService.saveLog(status, message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+        loggingService.saveLog("error", message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
     }
 }

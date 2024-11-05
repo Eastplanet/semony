@@ -58,7 +58,7 @@ public class InspectionProcessor {
         String lotId, long lotSeq) {
         RecipeCombination combination = recipeMappingProvider.generateCombination(recipe);
         if (combination == null) {
-            logHandler.logError("error", ERROR_INVALID_RECIPE_COMBINATION, recipe, "N/A",
+            logHandler.logError(ERROR_INVALID_RECIPE_COMBINATION, recipe, "N/A",
                 requestTime, lotId, lotSeq);
             throw new BusinessException(recipe, "recipe", ErrorCode.NOT_FOUND_RECIPE);
         }
@@ -90,11 +90,11 @@ public class InspectionProcessor {
         try {
             moduleRequestService.sendModuleRequest(moduleName, requestTime, lotId, recipe, lotSeq,
                 slotId, localFolderPath, macroFolder, selectedModule);
-            logHandler.logSuccess("success", SUCCESS_MODULE_REQUEST, recipe, moduleName,
+            logHandler.logSuccess(SUCCESS_MODULE_REQUEST, recipe, moduleName,
                 requestTime, lotId, lotSeq);
             return true;
         } catch (Exception e) {
-            logHandler.logError("error", ERROR_MODULE_REQUEST, recipe, moduleName, requestTime,
+            logHandler.logError(ERROR_MODULE_REQUEST, recipe, moduleName, requestTime,
                 lotId, lotSeq);
             return false;
         }
