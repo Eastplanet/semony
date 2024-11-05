@@ -1,8 +1,10 @@
 package com.semony.maker.application.service;
 
-import com.semony.maker.global.constants.ModuleConstants;
+import com.semony.maker.domain.dto.ModuleRequestPayload;
+import com.semony.maker.global.constants.Constants;
+import com.semony.maker.global.error.ErrorCode;
+import com.semony.maker.global.error.exception.BusinessException;
 import java.time.LocalDate;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -10,42 +12,46 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ModuleRequestServiceImpl implements ModuleRequestService {
 
     private final WebClient webClient;
+    private static final String MODULE_DATA_URI = "/modules/data";
 
     public ModuleRequestServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
     }
 
     public void sendModuleRequest(String moduleName, LocalDate date, String lotId,
-        String flowRecipe,
-        long lotSeq, int slotNo, String localFolderPath, String macroFolder,
-        String selectedSubfolder) {
-//        System.out.println(moduleName);
+        String flowRecipe, long lotSeq, int slotNo,
+        String localFolderPath, String macroFolder, String selectedSubfolder) {
+
         // 모듈 IP 확인
-        String moduleIp = ModuleConstants.MODULE_IPS.get(moduleName);
-//        System.out.println(moduleIp);
+        String moduleIp = Constants.MODULE_IPS.get(moduleName);
         if (moduleIp == null) {
-            throw new IllegalArgumentException("Invalid module name: " + moduleName);
+            throw new BusinessException(moduleName, "moduleName", ErrorCode.MODULE_IP_NOT_FOUND);
         }
-        Map<String, Object> requestBody = Map.of(
-            "module_name", moduleName,
-            "date", date.toString().replace("-", ""),
-            "lotId", lotId,
-            "flow_recipe", flowRecipe,
-            "lotSeq", String.valueOf(lotSeq),  // Ensure lotSeq is a String
-            "slotNo", String.valueOf(slotNo),  // Ensure slotNo is a String
-            "local_folder_path", localFolderPath,
-            "macro_folder", macroFolder,
-            "selected_subfolder", selectedSubfolder
-        );
 
-//        System.out.println("Request Body: " + requestBody);
+        ModuleRequestPayload payload = ModuleRequestPayload.builder()
+            .moduleName(moduleName)
+            .date(date.toString().replace("-", ""))
+            .lotId(lotId)
+            .flowRecipe(flowRecipe)
+            .lotSeq(String.valueOf(lotSeq))
+            .slotNo(String.valueOf(slotNo))
+            .localFolderPath(localFolderPath)
+            .macroFolder(macroFolder)
+            .selectedSubfolder(selectedSubfolder)
+            .build();
+        System.out.println(
+            payload.toString());
 
-        // WebClient로 POST 요청 전송
-        webClient.post()
-            .uri("/modules/data")
-            .bodyValue(requestBody)
-            .retrieve()
-            .toBodilessEntity()
-            .block();
+        try {
+            webClient.post()
+                .uri(MODULE_DATA_URI)
+                .bodyValue(payload)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        } catch (Exception e) {
+            throw new BusinessException(moduleName, "moduleRequest",
+                ErrorCode.MODULE_REQUEST_FAILED);
+        }
     }
 }
