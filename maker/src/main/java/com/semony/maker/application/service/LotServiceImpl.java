@@ -1,5 +1,7 @@
 package com.semony.maker.application.service;
 
+import static com.semony.maker.global.constants.Constants.TIMESTAMP_PATTERN;
+
 import com.semony.maker.domain.document.LotMetadata;
 import com.semony.maker.domain.repository.LotMetadataRepository;
 import java.time.LocalDateTime;
@@ -14,34 +16,31 @@ public class LotServiceImpl implements LotService {
     private final LotMetadataRepository lotMetadataRepository;
     private final LotTransactionService lotTransactionService;
 
-    /**
-     * LotId를 가져오고 새로 갱신합니다.
-     * @return
-     */
     @Override
     public String generateLotId() {
-        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotIdDesc();
-
-        Long newLastLotId = metadata.getLastLotId() + 1;
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH"));
-        //String lotId = "LP2" + timestamp + "_PJ2@" + newLastLotId;
-        String lotId = ""+newLastLotId;
+        Long newLastLotId = getNextLotId();
         lotTransactionService.updateLastLotId(newLastLotId);
-
-        return lotId;
+        return String.valueOf(newLastLotId);
     }
 
-    /**
-     * LotSeq를 가져오고 새로 갱신합니다.
-     * @return
-     */
     @Override
     public Long generateLotSeq() {
-        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
-
-        Long newLastLotSeq = metadata.getLastLotSeq() + 1;
+        Long newLastLotSeq = getNextLotSeq();
         lotTransactionService.updateLastLotSeq(newLastLotSeq);
-
         return newLastLotSeq;
+    }
+
+    private Long getNextLotId() {
+        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotIdDesc();
+        return (metadata != null) ? metadata.getLastLotId() + 1 : 1L;
+    }
+
+    private Long getNextLotSeq() {
+        LotMetadata metadata = lotMetadataRepository.findTopByOrderByLastLotSeqDesc();
+        return (metadata != null) ? metadata.getLastLotSeq() + 1 : 1L;
+    }
+
+    private String getCurrentTimestamp() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(TIMESTAMP_PATTERN));
     }
 }
