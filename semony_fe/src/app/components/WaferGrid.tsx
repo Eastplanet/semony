@@ -44,7 +44,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
 
   return (
     <div
-      className="relative w-96 h-96 border-2 border-orange-500 rounded-full overflow-hidden grid"
+      className="relative w-[500px] h-[500px] border-2 border-orange-500 rounded-full overflow-hidden grid"
       style={{
         gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
         gridTemplateRows: `repeat(${totalRows}, 1fr)`,
