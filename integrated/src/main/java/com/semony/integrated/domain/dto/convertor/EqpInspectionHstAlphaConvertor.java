@@ -1,5 +1,6 @@
-package com.semony.integrated.domain.dto;
+package com.semony.integrated.domain.dto.convertor;
 
+import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.entity.EqpInspectionHstAlpha;
 import com.semony.integrated.domain.entity.FlowRecipe;
 import java.util.List;
