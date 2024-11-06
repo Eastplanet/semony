@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import 'react-resizable/css/styles.css';
-import { mockData } from './mocks/mock_wafer';
 import Image from 'next/image';
 import request from './apis/request';
 import {WaferData} from '@/app/types';
@@ -32,13 +31,13 @@ const WaferTable = () => {
     };
     
   useEffect(() => {
-    const now = new Date();
+    // const now = new Date();
 
-    // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
-    const formatDateTime = (date: Date): string => {
-      const pad = (num: number): string => num.toString().padStart(2, '0');
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    };
+    // // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
+    // const formatDateTime = (date: Date): string => {
+    //   const pad = (num: number): string => num.toString().padStart(2, '0');
+    //   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    // };
     
 
     // const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간

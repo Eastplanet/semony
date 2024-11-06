@@ -3,7 +3,7 @@ import Image from 'next/image';
 const DetailPage: React.FC = () => {
 
   return (
-      <div className="rounded-3xl shadow-lg w-[100%] flex items-center justify-center h-[80%] overflow-hidden">
+      <div className="rounded-3xl shadow-lg w-[100%] flex items-center justify-center overflow-hidden h-[80vh]">
         <Image
           src="/mocks/ebr/EBR_RESULT.BMP"
           alt="ebr"

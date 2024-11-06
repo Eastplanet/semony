@@ -2,51 +2,52 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import WaferGrid from '@/app/components/WaferGrid';
-import StepList from '@/app/components/StepList';
 import { DefectRecord } from '@/app/types';
+import request from '@/app/apis/request';
+import { DieLocation } from '@/app/types';
+import SummarySection from './SummarySection';
+import { defectInfos, summary } from '@/app/mocks/wafer_map';
+import ImageGallery from './ImageGallery';
 
-interface DieLocation {
-  XINDEX: number;
-  YINDEX: number;
-}
-
-
-export default function MainPage() {
+ export default function MainPage() {
   const [dieLocations, setDieLocations] = useState<DieLocation[]>([]);
   const [defectRecordsStep1, setDefectRecordsStep1] = useState<DefectRecord[]>([]);
   const [defectRecordsStep2, setDefectRecordsStep2] = useState<DefectRecord[]>([]);
   const [defectRecordsStep3, setDefectRecordsStep3] = useState<DefectRecord[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState(1);
 
+  const fetchData = () => {
+    request(`wafer/detail?ppid=0TT_EWIM_NO_CHHP&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&slotNo=24`).then((data) => {
+      setDieLocations(data.DieLocations || []);
+      setDefectRecordsStep1(data.waferInspections[0].defectRecordSpec || []);
+      setDefectRecordsStep2(data.waferInspections[1].defectRecordSpec || []);
+      setDefectRecordsStep3(data.waferInspections[2].defectRecordSpec || []);
+    })
+  }
+
   useEffect(() => {
-    axios
-      .get("http://192.168.30.204/data")
-      .then((res) => {
-        setDieLocations(res.data.DieLocations || []);
-        setDefectRecordsStep1(res.data.DefectRecordSpec || []);
-        setDefectRecordsStep2(res.data.DefectRecordSpec || []);
-        setDefectRecordsStep3(res.data.DefectRecordSpec || []);
-      })
-      .catch((err) => setError(err.message));
+   fetchData();
   }, []);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const images = [
+    {src: '/mocks/macro/0001_golden.TIF', label: "GOLDEN"},
+    {src: '/mocks/macro/0001_ins.TIF', label: "INSPECTION"},
+    {src: '/mocks/macro/0001_bin.TIF', label: "BINARIZE"},
+    {src: '/mocks/macro/0001_psm.TIF', label: "PSM"},
+  ];
 
-  if (!dieLocations.length) {
-    return <div>Loading...</div>;
-  }
+
+
+  // if (!dieLocations.length) {
+  //   return <div>Loading...</div>;
+  // }
 
   const stepData = [
     { step: 1, defects: defectRecordsStep1 },
     { step: 2, defects: defectRecordsStep2 },
     { step: 3, defects: defectRecordsStep3 },
   ];
-  console.log(dieLocations)
 
   const currentStepData = stepData.find((data) => data.step === activeStep);
 
@@ -69,40 +70,25 @@ export default function MainPage() {
 
   const totalRows = maxY - minY + 1;
   const totalCols = maxX - minX + 1;
-
+ 
   return (
-    <div className="p-8">
+    <div className="p-8 pt-0">
       
-      {/* 스텝별 탭 버튼 */}
-      <div className="flex justify-center mb-4 space-x-4">
-        {[1, 2, 3].map((step) => (
-          <button
-            key={step}
-            className={`px-4 py-2 rounded ${activeStep === step ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-            onClick={() => setActiveStep(step)}
-          >
-            Step {step}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex items-start justify-center  p-8 gap-8">
+      <SummarySection summaryData={summary} defectData={defectInfos}/>
+      
+      <div className=" mx-24 flex items-start p-8 gap-8 justify-between">
         {/* 좌측 WaferGrid 영역 */}
-        <div className="w-3/5">
-          <WaferGrid
-            dieLocations={dieLocations}
-            defectRecords={currentStepData?.defects || []}
-            totalRows={totalRows}
-            totalCols={totalCols}
-            minX={minX}
-            minY={minY}
-          />
-        </div>
+        <WaferGrid
+          dieLocations={dieLocations}
+          defectRecords={currentStepData?.defects || []}
+          totalRows={totalRows}
+          totalCols={totalCols}
+          minX={minX}
+          minY={minY}
+        />
 
-        {/* 우측 리스트 컴포넌트 영역 */}
-        <div className="w-2/5 font-normal">
-          <StepList defects={currentStepData?.defects || []} />
-        </div>
+        {/* 우측 이미지 갤러리 영역 */}
+        <ImageGallery images={images} />
       </div>
     </div>
   );
