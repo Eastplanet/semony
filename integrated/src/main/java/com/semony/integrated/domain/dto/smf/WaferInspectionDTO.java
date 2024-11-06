@@ -1,11 +1,12 @@
-package com.semony.integrated.domain.dto;
+package com.semony.integrated.domain.dto.smf;
 
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class WaferInspectionDTO {
+public class
+WaferInspectionDTO {
 
     private String fileVersion;
     private String fileTimestamp;
@@ -31,6 +32,8 @@ public class WaferInspectionDTO {
     private List<DieLocation> dieLocations;
     private List<DefectRecord> defectRecordSpec;
     private SummarySpec summarySpec;
+    private Integer defectCnt;
+    private Integer defectDieCnt;
 
     @Data
     public static class DieLocation {
