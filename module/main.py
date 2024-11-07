@@ -44,7 +44,8 @@ async def create_and_modify_macro_module_data(request: RequestModel):
         request.macroFolder,
         request.selectedSubfolder
     )
-    return {"status": "success", "data": response}
+    return defectImpo
+    # return {"status": "success", "data": response}
   except Exception as e:
     print(f"Error: {e}")  # 디버깅용 출력
     raise HTTPException(status_code=500, detail=str(e))
