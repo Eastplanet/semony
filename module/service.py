@@ -103,8 +103,10 @@ async def process_and_modify_in_module_data(
   """
   # lot_id를 생성
   lot_id = f"LP2{date}_PJ2@{lotId}"
-  print(macro_folder)
-  # 대상 폴더 경로 생성
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{macro_folder}"
+  # print(macro_folder)
+  target_folder_path = None
+  # 기본 대상 폴더 경로 생성
   target_folder_path = create_target_folder_path(
       module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
   )
