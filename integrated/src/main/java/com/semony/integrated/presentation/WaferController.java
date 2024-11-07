@@ -1,9 +1,11 @@
 package com.semony.integrated.presentation;
 
 import com.semony.integrated.application.WaferService;
+import com.semony.integrated.application.image.ImageEncoder;
 import com.semony.integrated.application.parser.JsonParser;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
+import com.semony.integrated.domain.dto.image.ImageSet;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
 import com.semony.integrated.domain.dto.json.ResultJson;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WaferController {
 
     private final WaferService waferService;
+    private final ImageEncoder imageEncoder;
 
     @GetMapping()
     public ResponseEntity<List<SummaryWaferDto>> waferList(@RequestParam LocalDateTime startDate,
@@ -44,5 +47,12 @@ public class WaferController {
 
         return ResponseEntity.ok(waferDetail);
     }
+
+    @GetMapping("/images")
+    public ResponseEntity<?> getImages(){
+        ImageSet encode = imageEncoder.encode("1", BigDecimal.ONE, "1", "1");
+        return ResponseEntity.ok(encode);
+    }
+
 }
 
