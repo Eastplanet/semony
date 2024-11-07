@@ -1,5 +1,6 @@
 package com.semony.integrated.domain.dto.smf;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,8 @@ import lombok.Data;
 public class
 WaferInspectionDTO {
 
+    private String moduleId;
+    private LocalDateTime eventDtts;
     private String fileVersion;
     private String fileTimestamp;
     private List<String> inspectionStationID;

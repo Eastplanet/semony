@@ -10,5 +10,5 @@ import lombok.Data;
 public class WaferDetailDTO {
     public List<DieLocation> dieLocations;
     public List<WaferInspectionDTO> waferInspections;
-//    public WaferInspectionSummaryDTO waferInspectionSummaryDTO;
+    public List<WaferInspectionSummaryDTO> waferInspectionSummaryDTO;
 }
