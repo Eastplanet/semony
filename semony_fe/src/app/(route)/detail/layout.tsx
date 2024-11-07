@@ -67,7 +67,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   </div>
 
   {/* Content Area */}
-  <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-[85vh]">
+  <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-fit">
     {children}
   </div>
 </div>

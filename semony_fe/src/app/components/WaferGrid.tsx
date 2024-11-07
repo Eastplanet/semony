@@ -68,6 +68,14 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
     setTooltip(null);
   };
 
+
+  const getNormalizedDefectSize = (area: number) => {
+    const minSize = 5;  // 최소 크기 (픽셀)
+    const maxSize = 20; // 최대 크기 (픽셀)
+    const scaledSize = Math.sqrt(area) * 0.5; // 크기를 루트 스케일로 줄임
+    return Math.min(Math.max(scaledSize, minSize), maxSize);
+  };
+
   return (
     <div
       className="relative w-[500px] h-[500px] border-2 border-orange-500 rounded-full overflow-hidden grid"
@@ -93,8 +101,8 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
                 <div
                   className="absolute bg-red-500 rounded-full"
                   style={{
-                    width: `${Math.sqrt(defectArea) * 0.8}px`, // defectArea에 비례한 크기 설정
-                    height: `${Math.sqrt(defectArea) * 0.8}px`,
+                    width: `${getNormalizedDefectSize(defectArea)}px`, // defectArea에 비례한 크기 설정
+                    height: `${getNormalizedDefectSize(defectArea)}px`,
                     left: `${(xrel / DIE_WIDTH) * 100}%`, // xrel을 die 크기에 대한 비율로 변환하여 위치 설정
                     top: `${(yrel / DIE_HEIGHT) * 100}%`, // yrel을 die 크기에 대한 비율로 변환하여 위치 설정
                     transform: 'translate(-50%, -50%)', // 점 중앙 정렬
@@ -103,6 +111,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
               </div>
             );
           }
+          
 
           // 활성화된 die 위치 설정
           return (
