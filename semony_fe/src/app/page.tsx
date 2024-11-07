@@ -176,7 +176,7 @@ const WaferTable = () => {
   </button>
       </div>
 
-      <div className="overflow-y-auto h-[80vh]  rounded-2xl"> {/* 높이 제한과 오버플로우 설정 */}
+      <div className="overflow-y-auto h-[85vh]  rounded-2xl"> {/* 높이 제한과 오버플로우 설정 */}
       <table className="min-w-full table-auto bg-white rounded-lg shadow-lg border border-gray-200">
       <thead className="bg-blue-700 text-white text-xs" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
   <tr>

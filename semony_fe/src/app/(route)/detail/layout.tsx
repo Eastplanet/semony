@@ -36,7 +36,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <DataProvider>
-    <div className="p-4 md:p-6 pt-1">
+    <div className="p-4 md:p-6 pt-1 ">
   <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
     {/* Wafer Header */}
     <div className="mb-4 md:mb-0">
@@ -67,7 +67,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   </div>
 
   {/* Content Area */}
-  <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-full">
+  <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-[85vh]">
     {children}
   </div>
 </div>
