@@ -7,15 +7,16 @@ app = FastAPI()
 
 # 요청 스키마 정의
 class RequestModel(BaseModel):
-  module_name: str
+  moduleName: str
   date: str
   lotId: str
-  flow_recipe: str
+  flowRecipe: str
   lotSeq: str
   slotNo: str
-  local_folder_path: str
-  macro_folder: str
-  selected_subfolder: str
+  localFolderPath: str
+  macroFolder: str
+  selectedSubfolder: str
+
 
 @app.post("/modules/data")
 async def create_and_modify_macro_module_data(request: RequestModel):
