@@ -91,7 +91,8 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
 
 async def process_and_modify_in_module_data(
     module_name: str, date: str, lotId: str, flow_recipe: str, lotSeq: str,
-    slotNo: str, local_folder_path: str, macro_folder: str
+    slotNo: str, local_folder_path: str, macro_folder: str,
+    selectedSubfolder: str
 ):
   """
   매개변수에 따라 파일을 로컬에서 복사하고 이름과 데이터를 변경하는 메인 함수
