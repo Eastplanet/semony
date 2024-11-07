@@ -110,41 +110,40 @@ public class WaferServiceImpl implements WaferService {
         }
 
         // 12, 13, 23 선택 시 defectArea 계산
-        Set<DiePos> tmp = new HashSet<>();
-        tmp.addAll(sets[1]);
-        tmp.addAll(sets[2]);
+        Set<DiePos> selectedSet = new HashSet<>();
+        selectedSet.addAll(sets[1]);
+        selectedSet.addAll(sets[2]);
         WaferInspectionSummaryDTO dto = new WaferInspectionSummaryDTO();
-        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setDefectArea((double) selectedSet.size() / dieSize);
         dto.setChecked(12);
         list.add(dto);
 
-        tmp = new HashSet<>();
-        tmp.addAll(sets[1]);
-        tmp.addAll(sets[3]);
+        selectedSet = new HashSet<>();
+        selectedSet.addAll(sets[1]);
+        selectedSet.addAll(sets[3]);
         dto = new WaferInspectionSummaryDTO();
-        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setDefectArea((double) selectedSet.size() / dieSize);
         dto.setChecked(13);
         list.add(dto);
 
-        tmp = new HashSet<>();
-        tmp.addAll(sets[2]);
-        tmp.addAll(sets[3]);
+        selectedSet = new HashSet<>();
+        selectedSet.addAll(sets[2]);
+        selectedSet.addAll(sets[3]);
         dto = new WaferInspectionSummaryDTO();
-        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setDefectArea((double) selectedSet.size() / dieSize);
         dto.setChecked(23);
         list.add(dto);
 
         // 123 선택 시 defectArea 개선
-        tmp = new HashSet<>();
-        tmp.addAll(sets[1]);
-        tmp.addAll(sets[2]);
-        tmp.addAll(sets[3]);
+        selectedSet = new HashSet<>();
+        selectedSet.addAll(sets[1]);
+        selectedSet.addAll(sets[2]);
+        selectedSet.addAll(sets[3]);
         dto = new WaferInspectionSummaryDTO();
-        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setDefectArea((double) selectedSet.size() / dieSize);
         dto.setChecked(123);
         list.add(dto);
-
-
+        
         return list;
     }
 
