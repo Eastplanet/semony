@@ -16,20 +16,12 @@ public class JsonParser {
         ObjectMapper objectMapper = new ObjectMapper();
         // JavaTimeModule 등록
         objectMapper.registerModule(new JavaTimeModule());
-//        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO 8601 포맷으로 사용
 
         try {
-            // JSON 파일을 읽고 ResultJson 클래스로 변환
-            ResultJson resultJson = objectMapper.readValue(new File(filePath), ResultJson.class);
-
-            System.out.println("JSON 파일이 성공적으로 파싱되었습니다!");
-//            System.out.println(resultJson);
-
-            return resultJson;
+            return objectMapper.readValue(new File(filePath), ResultJson.class);
         } catch (IOException e) {
-            System.err.println("JSON 파일을 읽는 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
-        return null;
     }
 }

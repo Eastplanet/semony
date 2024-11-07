@@ -27,27 +27,20 @@ public class WaferServiceImpl implements WaferService {
 
     private final EqpInspectionHstAlphaRepository repository;
 
-    public SummaryWaferDto getWaferSummary(String lotId, BigDecimal lotSeq, String flowRecipe,
-        String slotNo) {
+    public SummaryWaferDto getWaferSummary(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo) {
 
-        List<EqpInspectionHstAlpha> list = repository.findByLotIdAndLotSeqAndFlowRecipeAndSlotNo(
-            lotId, lotSeq, flowRecipe, slotNo);
-
+        List<EqpInspectionHstAlpha> list = repository.findByLotIdAndLotSeqAndFlowRecipeAndSlotNo(lotId, lotSeq, flowRecipe, slotNo);
         return EqpInspectionHstAlphaConvertor.convert(list, flowRecipe);
     }
 
     @Override
-    public List<SummaryWaferDto> getWaferSummaryList(LocalDateTime startDate,
-        LocalDateTime endDate) {
+    public List<SummaryWaferDto> getWaferSummaryList(LocalDateTime startDate, LocalDateTime endDate) {
 
-        List<WaferSpecificationValueDto> inspectionHistory = repository.findInspectionHistory(
-            startDate, endDate);
-
+        List<WaferSpecificationValueDto> inspectionHistory = repository.findInspectionHistory(startDate, endDate);
         List<SummaryWaferDto> summaryWaferDtoList = new ArrayList<>();
 
         for (WaferSpecificationValueDto inspection : inspectionHistory) {
-            SummaryWaferDto waferSummary = getWaferSummary(inspection.getLotId(),
-                inspection.getLotSeq(), inspection.getFlowRecipe(), inspection.getSlotNo());
+            SummaryWaferDto waferSummary = getWaferSummary(inspection.getLotId(), inspection.getLotSeq(), inspection.getFlowRecipe(), inspection.getSlotNo());
             summaryWaferDtoList.add(waferSummary);
         }
 
@@ -55,21 +48,20 @@ public class WaferServiceImpl implements WaferService {
     }
 
     @Override
-    public WaferDetailDTO getWaferDetail(String lotId, BigDecimal lotSeq, String flowRecipe,
-        String slotNo) throws IOException {
+    public WaferDetailDTO getWaferDetail(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo) throws IOException {
 
         WaferDetailDTO data = new WaferDetailDTO();
         data.setWaferInspections(new ArrayList<>());
 
         Set<DiePos>[] sets = new HashSet[4];
-        for(int i=1;i<=3;i++){
+        for (int i = 1; i <= 3; i++) {
             sets[i] = new HashSet<>();
         }
 
         WaferInspectionSummaryDTO waferInspectionSummaryDTO = new WaferInspectionSummaryDTO();
 //        List<SummaryData> summaryDataList = new ArrayList<>();
         // 여기에 각 모듈 별 서머리 넣는 중이었음
-        
+
         for (int i = 1; i <= 3; i++) {
             WaferInspectionDTO waferInspectionDTO = WaferInspectionFileReader.readFile(
                 "static/module" + i + ".smf");
@@ -79,6 +71,7 @@ public class WaferServiceImpl implements WaferService {
             int defectCnt = 0;
             // die cnt 계산
             List<DefectRecord> defectRecordSpec = waferInspectionDTO.getDefectRecordSpec();
+
             for (DefectRecord defectRecord : defectRecordSpec) {
                 DiePos diePos = new DiePos();
                 diePos.setXIndex(defectRecord.getXIndex());
@@ -92,8 +85,6 @@ public class WaferServiceImpl implements WaferService {
 
             data.getWaferInspections().add(waferInspectionDTO);
         }
-
-
 
         return data;
     }
