@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 public class WaferInspectionSummaryDTO {
-//    private List<CalcArea> calcAreaList;
+    private Integer checked;
+    private Double defectArea;
 }
 
 

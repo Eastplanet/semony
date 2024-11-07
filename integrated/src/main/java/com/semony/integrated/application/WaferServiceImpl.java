@@ -50,6 +50,9 @@ public class WaferServiceImpl implements WaferService {
     @Override
     public WaferDetailDTO getWaferDetail(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo) throws IOException {
 
+        SummaryWaferDto waferSummary = getWaferSummary(lotId, lotSeq, flowRecipe, slotNo);
+
+
         WaferDetailDTO data = new WaferDetailDTO();
         data.setWaferInspections(new ArrayList<>());
 
@@ -58,10 +61,7 @@ public class WaferServiceImpl implements WaferService {
             sets[i] = new HashSet<>();
         }
 
-        WaferInspectionSummaryDTO waferInspectionSummaryDTO = new WaferInspectionSummaryDTO();
-//        List<SummaryData> summaryDataList = new ArrayList<>();
-        // 여기에 각 모듈 별 서머리 넣는 중이었음
-
+        // @Todo : 모듈 별 순서에 맞춰 읽어야 함.
         for (int i = 1; i <= 3; i++) {
             WaferInspectionDTO waferInspectionDTO = WaferInspectionFileReader.readFile(
                 "static/module" + i + ".smf");
@@ -82,10 +82,70 @@ public class WaferServiceImpl implements WaferService {
 
             waferInspectionDTO.setDefectCnt(defectCnt);
             waferInspectionDTO.setDefectDieCnt(sets[i].size());
+            waferInspectionDTO.setModuleId(waferSummary.getModules()[i-1].getModuleId());
+            waferInspectionDTO.setEventDtts(waferSummary.getModules()[i-1].getEventDtts());
 
             data.getWaferInspections().add(waferInspectionDTO);
+
         }
+
+        List<WaferInspectionSummaryDTO> calcWaferInspectionSummary = getCalcWaferInspectionSummary(sets);
+        data.setWaferInspectionSummaryDTO(calcWaferInspectionSummary);
 
         return data;
     }
+
+    private List<WaferInspectionSummaryDTO> getCalcWaferInspectionSummary(Set<DiePos>[] sets) {
+        List<WaferInspectionSummaryDTO> list = new ArrayList<>();
+
+        int dieSize = 1543;
+
+        // 1, 2, 3 선택 시 defectArea 계산
+        for (int i = 1; i <= 3; i++) {
+            Set<DiePos> set = sets[i];
+            WaferInspectionSummaryDTO dto = new WaferInspectionSummaryDTO();
+            dto.setDefectArea((double) set.size() / dieSize);
+            dto.setChecked(i);
+            list.add(dto);
+        }
+
+        // 12, 13, 23 선택 시 defectArea 계산
+        Set<DiePos> tmp = new HashSet<>();
+        tmp.addAll(sets[1]);
+        tmp.addAll(sets[2]);
+        WaferInspectionSummaryDTO dto = new WaferInspectionSummaryDTO();
+        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setChecked(12);
+        list.add(dto);
+
+        tmp = new HashSet<>();
+        tmp.addAll(sets[1]);
+        tmp.addAll(sets[3]);
+        dto = new WaferInspectionSummaryDTO();
+        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setChecked(13);
+        list.add(dto);
+
+        tmp = new HashSet<>();
+        tmp.addAll(sets[2]);
+        tmp.addAll(sets[3]);
+        dto = new WaferInspectionSummaryDTO();
+        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setChecked(23);
+        list.add(dto);
+
+        // 123 선택 시 defectArea 개선
+        tmp = new HashSet<>();
+        tmp.addAll(sets[1]);
+        tmp.addAll(sets[2]);
+        tmp.addAll(sets[3]);
+        dto = new WaferInspectionSummaryDTO();
+        dto.setDefectArea((double) tmp.size() / dieSize);
+        dto.setChecked(123);
+        list.add(dto);
+
+
+        return list;
+    }
+
 }
