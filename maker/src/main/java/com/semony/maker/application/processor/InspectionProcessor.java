@@ -11,6 +11,7 @@ import static com.semony.maker.global.constants.Constants.SUBFOLDER_OPTIONS;
 import static com.semony.maker.global.constants.Constants.SUCCESS_MODULE_REQUEST;
 
 import com.semony.maker.application.handler.LogHandler;
+import com.semony.maker.application.service.EqpInspectionHstAlphaService;
 import com.semony.maker.application.service.LotService;
 import com.semony.maker.application.service.ModuleRequestService;
 import com.semony.maker.domain.dto.RecipeCombination;
@@ -19,9 +20,9 @@ import com.semony.maker.global.error.ErrorCode;
 import com.semony.maker.global.error.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Random;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class InspectionProcessor {
@@ -31,25 +32,28 @@ public class InspectionProcessor {
     private final ModuleRequestService moduleRequestService;
     private final LogHandler logHandler;
     private final LotService lotService;
+    private final EqpInspectionHstAlphaService eqpInspectionHstAlphaService;
 
     public InspectionProcessor(RecipeMappingProvider recipeMappingProvider,
         ModuleRequestService moduleRequestService,
         LogHandler logHandler,
-        LotService lotService) {
+        LotService lotService, EqpInspectionHstAlphaService eqpInspectionHstAlphaService) {
         this.recipeMappingProvider = recipeMappingProvider;
         this.moduleRequestService = moduleRequestService;
         this.logHandler = logHandler;
         this.lotService = lotService;
+        this.eqpInspectionHstAlphaService = eqpInspectionHstAlphaService;
     }
 
     @Transactional
     public void processInspection(String recipe, LocalDate requestTime, int slotId) {
         String lotId = lotService.generateLotId();
         long lotSeq = lotService.generateLotSeq();
-
+        String selectRootSlot = randomSelectRootSlot();
         RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId,
             lotSeq);
-        if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq, slotId)) {
+        if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq, slotId,
+            selectRootSlot)) {
             throw new BusinessException(recipe, "module", ErrorCode.NOT_FOUND_RECIPE);
         }
     }
@@ -67,31 +71,35 @@ public class InspectionProcessor {
 
     private boolean processModuleRequests(RecipeCombination combination, String recipe,
         LocalDate requestTime,
-        String lotId, long lotSeq, int slotId) {
-        String selectedModule = randomSelectModule();
+        String lotId, long lotSeq, int slotId, String selectedModule) {
+
         return
             sendAndLogModuleRequest(combination.in() + " (IN)", recipe, requestTime, lotId, lotSeq,
                 slotId,
-                IN_FOLDER_PATH, MACRO_INSPECTION, selectedModule) &&
+                IN_FOLDER_PATH, MACRO_INSPECTION, selectedModule, "MACRO_ON") &&
                 sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq,
                     slotId,
-                    EWIM_FOLDER_PATH, MACRO_INSPECTION, selectedModule) &&
-                sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq,
-                    slotId,
-                    EWIM_FOLDER_PATH, EBR, selectedModule) &&
+                    EWIM_FOLDER_PATH, EBR, selectedModule, "EBR") &&
                 sendAndLogModuleRequest(combination.out() + " (OUT)", recipe, requestTime, lotId,
                     lotSeq, slotId,
-                    OUT_FOLDER_PATH, MACRO_INSPECTION, selectedModule);
+                    OUT_FOLDER_PATH, MACRO_INSPECTION, selectedModule, "MACRO_ON");
     }
 
     private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDate requestTime,
         String lotId, long lotSeq, int slotId, String localFolderPath,
-        String macroFolder, String selectedModule) {
+        String macroFolder, String selectedModule, String processRecipe) {
         try {
-            moduleRequestService.sendModuleRequest(moduleName, requestTime, lotId, recipe, lotSeq,
+            Map<String, Long> defectImpo = moduleRequestService.sendModuleRequest(moduleName,
+                requestTime, lotId, recipe, lotSeq,
                 slotId, localFolderPath, macroFolder, selectedModule);
+            long defectCount = defectImpo.get("defectCount");
+            long defectDieCount = defectImpo.get("defectDieCount");
+
             logHandler.logSuccess(SUCCESS_MODULE_REQUEST, recipe, moduleName,
                 requestTime, lotId, lotSeq);
+            eqpInspectionHstAlphaService.saveInspection(moduleName, recipe, requestTime, lotId,
+                lotSeq, slotId, processRecipe, defectCount, defectDieCount);
+
             return true;
         } catch (Exception e) {
             logHandler.logError(ERROR_MODULE_REQUEST, recipe, moduleName, requestTime,
@@ -100,7 +108,7 @@ public class InspectionProcessor {
         }
     }
 
-    private String randomSelectModule() {
+    private String randomSelectRootSlot() {
         return SUBFOLDER_OPTIONS.get(new Random().nextInt(SUBFOLDER_OPTIONS.size()));
     }
 }
