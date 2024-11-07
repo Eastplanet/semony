@@ -110,12 +110,29 @@ async def process_and_modify_in_module_data(
   target_folder_path = create_target_folder_path(
       module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
   )
+  # print("asasapp"+macro_folder)
+  # macro_folder가 "EBR"인 경우
+  if macro_folder == "EBR":
+    # 첫 번째 process_files_from_local 실행
+    defect_data = process_files_from_local(full_local_folder_path,
+                                           target_folder_path,
+                                           flow_recipe, lot_id, date, slotNo)
 
-  # 복사 및 변조 작업 실행
-  process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
-                           lot_id, date, slotNo)
+    # target_folder_path를 "Macro[Inspection]"으로 다시 설정
+    # print("sasa"+str(defect_data))
+    target_folder_path = create_target_folder_path(
+        module_name, date, lotId, flow_recipe, lotSeq, slotNo,
+        "Macro[Inspection]"
+    )
+    # print("target: " + target_folder_path)
+  # print("target: " + target_folder_path)
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{"Macro[Inspection]"}"
+  defect_data = process_files_from_local(full_local_folder_path,
+                                         target_folder_path,
+                                         flow_recipe, lot_id, date, slotNo)
 
-  return {"folder": target_folder_path, "local_folder": local_folder_path}
+  return defect_data
+  # print(f"defect_data: {defect_data}")
 
 
 def modify_file_data(file_path, date, lot_id, flow_recipe, slot_no):
