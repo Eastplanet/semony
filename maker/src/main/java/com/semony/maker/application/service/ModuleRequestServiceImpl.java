@@ -5,8 +5,11 @@ import com.semony.maker.global.constants.Constants;
 import com.semony.maker.global.error.ErrorCode;
 import com.semony.maker.global.error.exception.BusinessException;
 import java.time.LocalDate;
+import java.util.Map;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class ModuleRequestServiceImpl implements ModuleRequestService {
@@ -18,7 +21,7 @@ public class ModuleRequestServiceImpl implements ModuleRequestService {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
     }
 
-    public void sendModuleRequest(String moduleName, LocalDate date, String lotId,
+    public Map<String, Long> sendModuleRequest(String moduleName, LocalDate date, String lotId,
         String flowRecipe, long lotSeq, int slotNo,
         String localFolderPath, String macroFolder, String selectedSubfolder) {
 
@@ -39,16 +42,16 @@ public class ModuleRequestServiceImpl implements ModuleRequestService {
             .macroFolder(macroFolder)
             .selectedSubfolder(selectedSubfolder)
             .build();
-        System.out.println(
-            payload.toString());
 
         try {
-            webClient.post()
+            Mono<Map<String, Long>> defectDataMono = webClient.post()
                 .uri(MODULE_DATA_URI)
                 .bodyValue(payload)
                 .retrieve()
-                .toBodilessEntity()
-                .block();
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Long>>() {
+                });
+
+            return defectDataMono.block();
         } catch (Exception e) {
             throw new BusinessException(moduleName, "moduleRequest",
                 ErrorCode.MODULE_REQUEST_FAILED);
