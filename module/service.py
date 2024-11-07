@@ -1,5 +1,6 @@
 import os
 import shutil
+import json
 from constants import ROOT_PATH
 
 
@@ -24,6 +25,8 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
   """
   로컬 폴더에서 파일 및 폴더를 지정된 경로로 복사하고 필요에 따라 변조
   """
+  defect_data = None
+  #print("local" + local_folder_path)
   if not os.path.exists(local_folder_path):
     raise FileNotFoundError(
         f"Local folder path '{local_folder_path}' does not exist.")
@@ -35,41 +38,42 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
 
     for file_name in files:
       original_file_path = os.path.join(root, file_name)
-      # print(f"Original file path: {original_file_path}")  # 디버깅용 출력
+      print(f"Original file path: {original_file_path}")  # 디버깅용 출력
 
       if not os.path.isfile(original_file_path):
-        # print(f"Skipping '{original_file_path}': Not a file.")
         continue  # 파일이 아닌 경우 건너뜁니다.
 
       try:
+        if "Result" in file_name:
+          # result.json 파일일 경우 데이터 읽어오기 함수 실행 및 JSON 리턴
+          defect_data = get_defect_data(original_file_path)
+
         if "tempSmf" in file_name:
-          # .smf 파일 처리 - 이름과 내부 데이터 변경, 확장자는 .smf로 설정
           smf_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                              case="smf") + ".smf"
           modified_data = modify_file_data(original_file_path, date, lot,
                                            flow_recipe, slot_no)
           modified_file_path = os.path.join(target_root, smf_file_name)
-
           with open(modified_file_path, "wb") as modified_file:
             modified_file.write(modified_data)
 
         elif "tempThumbnail" in file_name:
-          # .BMP 파일로 이름만 변경하여 복사
           thumbnail_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                                    case="thumbnail") + ".BMP"
           target_file_path = os.path.join(target_root, thumbnail_file_name)
-
           shutil.copy(original_file_path, target_file_path)
 
         else:
-          # 나머지 파일은 원본 이름으로 변경 없이 복사
           target_file_path = os.path.join(target_root, file_name)
-          print(
-              f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")  # 디버깅용 출력
+          # print(f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")
           shutil.copy(original_file_path, target_file_path)
+
 
       except Exception as e:
         print(f"Error processing file '{file_name}': {e}")
+
+  # print("ppaa" + str(defect_data))
+  return defect_data
 
 
 def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
