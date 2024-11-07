@@ -1,5 +1,6 @@
 import os
 import shutil
+import json
 from constants import ROOT_PATH
 
 
@@ -15,7 +16,7 @@ def generate_file_name(flow_recipe, lot, slot_no, case="default"):
   else:
     file_name = f"DefaultFile_{flow_recipe}_{lot}_{slot_no}"
 
-  print(f"Generated file name ({case}): {file_name}")
+  # print(f"Generated file name ({case}): {file_name}")
   return file_name
 
 
@@ -24,6 +25,8 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
   """
   로컬 폴더에서 파일 및 폴더를 지정된 경로로 복사하고 필요에 따라 변조
   """
+  defect_data = None
+  #print("local" + local_folder_path)
   if not os.path.exists(local_folder_path):
     raise FileNotFoundError(
         f"Local folder path '{local_folder_path}' does not exist.")
@@ -35,41 +38,42 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
 
     for file_name in files:
       original_file_path = os.path.join(root, file_name)
-      # print(f"Original file path: {original_file_path}")  # 디버깅용 출력
+      print(f"Original file path: {original_file_path}")  # 디버깅용 출력
 
       if not os.path.isfile(original_file_path):
-        # print(f"Skipping '{original_file_path}': Not a file.")
         continue  # 파일이 아닌 경우 건너뜁니다.
 
       try:
+        if "Result" in file_name:
+          # result.json 파일일 경우 데이터 읽어오기 함수 실행 및 JSON 리턴
+          defect_data = get_defect_data(original_file_path)
+
         if "tempSmf" in file_name:
-          # .smf 파일 처리 - 이름과 내부 데이터 변경, 확장자는 .smf로 설정
           smf_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                              case="smf") + ".smf"
           modified_data = modify_file_data(original_file_path, date, lot,
                                            flow_recipe, slot_no)
           modified_file_path = os.path.join(target_root, smf_file_name)
-
           with open(modified_file_path, "wb") as modified_file:
             modified_file.write(modified_data)
 
         elif "tempThumbnail" in file_name:
-          # .BMP 파일로 이름만 변경하여 복사
           thumbnail_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                                    case="thumbnail") + ".BMP"
           target_file_path = os.path.join(target_root, thumbnail_file_name)
-
           shutil.copy(original_file_path, target_file_path)
 
         else:
-          # 나머지 파일은 원본 이름으로 변경 없이 복사
           target_file_path = os.path.join(target_root, file_name)
-          print(
-              f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")  # 디버깅용 출력
+          # print(f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")
           shutil.copy(original_file_path, target_file_path)
+
 
       except Exception as e:
         print(f"Error processing file '{file_name}': {e}")
+
+  # print("ppaa" + str(defect_data))
+  return defect_data
 
 
 def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
@@ -91,24 +95,44 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
 
 async def process_and_modify_in_module_data(
     module_name: str, date: str, lotId: str, flow_recipe: str, lotSeq: str,
-    slotNo: str, local_folder_path: str, macro_folder: str
+    slotNo: str, local_folder_path: str, macro_folder: str,
+    selectedSubfolder: str
 ):
   """
   매개변수에 따라 파일을 로컬에서 복사하고 이름과 데이터를 변경하는 메인 함수
   """
-  # lot_id를 생성
+  # lot_id 생성
   lot_id = f"LP2{date}_PJ2@{lotId}"
-  print(macro_folder)
-  # 대상 폴더 경로 생성
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{macro_folder}"
+  # print(macro_folder)
+  target_folder_path = None
+  # 기본 대상 폴더 경로 생성
   target_folder_path = create_target_folder_path(
       module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
   )
+  # print("asasapp"+macro_folder)
+  # macro_folder가 "EBR"인 경우
+  if macro_folder == "EBR":
+    # 첫 번째 process_files_from_local 실행
+    defect_data = process_files_from_local(full_local_folder_path,
+                                           target_folder_path,
+                                           flow_recipe, lot_id, date, slotNo)
 
-  # 복사 및 변조 작업 실행
-  process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
-                           lot_id, date, slotNo)
+    # target_folder_path를 "Macro[Inspection]"으로 다시 설정
+    # print("sasa"+str(defect_data))
+    target_folder_path = create_target_folder_path(
+        module_name, date, lotId, flow_recipe, lotSeq, slotNo,
+        "Macro[Inspection]"
+    )
+    # print("target: " + target_folder_path)
+  # print("target: " + target_folder_path)
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{"Macro[Inspection]"}"
+  defect_data = process_files_from_local(full_local_folder_path,
+                                         target_folder_path,
+                                         flow_recipe, lot_id, date, slotNo)
 
-  return {"folder": target_folder_path, "local_folder": local_folder_path}
+  return defect_data
+  # print(f"defect_data: {defect_data}")
 
 
 def modify_file_data(file_path, date, lot_id, flow_recipe, slot_no):
@@ -145,3 +169,24 @@ def modify_file_data(file_path, date, lot_id, flow_recipe, slot_no):
 
   # print(f"Modified text in SMF file: {file_path}")  # 디버깅용 출력
   return "".join(modified_lines).encode('utf-8')
+
+
+def get_defect_data(file_path):
+  # result.json 파일에서 TotalDefectCount와 TotalDefectDieCount 값 읽기
+  try:
+    with open(file_path, "r") as file:
+      data = json.load(file)
+      defect_count = data.get("TotalDefectCount", 0)
+      defect_die_count = data.get("TotalDefectDieCount", 0)
+
+      # 결과 출력
+      # print(f"Defect count: {defect_count}")
+      # print(f"Defect die count: {defect_die_count}")
+
+      return {"defectCount": defect_count, "defectDieCount": defect_die_count}
+  except FileNotFoundError:
+    # print(f"File not found: {file_path}")
+    return {"defectCount": 0, "defectDieCount": 0}
+  except json.JSONDecodeError:
+    # print(f"Error decoding JSON from file: {file_path}")
+    return {"defectCount": 0, "defectDieCount": 0}

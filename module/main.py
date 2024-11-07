@@ -7,15 +7,16 @@ app = FastAPI()
 
 # 요청 스키마 정의
 class RequestModel(BaseModel):
-  module_name: str
+  moduleName: str
   date: str
   lotId: str
-  flow_recipe: str
+  flowRecipe: str
   lotSeq: str
   slotNo: str
-  local_folder_path: str
-  macro_folder: str
-  selected_subfolder: str
+  localFolderPath: str
+  macroFolder: str
+  selectedSubfolder: str
+
 
 @app.post("/modules/data")
 async def create_and_modify_macro_module_data(request: RequestModel):
@@ -28,21 +29,23 @@ async def create_and_modify_macro_module_data(request: RequestModel):
     selected_subfolder = random.choice(subfolder_options)
 
     # local_folder_path에 랜덤 하위 폴더 및 매크로 폴더 추가
-    full_local_folder_path = f"{request.local_folder_path}/{request.selected_subfolder}/{request.macro_folder}"
+    # full_local_folder_path = f"{request.localFolderPath}/{request.selectedSubfolder}/{request.macroFolder}"
     # print(request)
     # print(full_local_folder_path)
     # 파일 복사 및 변조 수행
-    response = await process_and_modify_in_module_data(
-        request.module_name,
+    defectImpo = await process_and_modify_in_module_data(
+        request.moduleName,
         request.date,
         request.lotId,
-        request.flow_recipe,
+        request.flowRecipe,
         request.lotSeq,
         request.slotNo,
-        full_local_folder_path,
-        request.macro_folder
+        request.localFolderPath,
+        request.macroFolder,
+        request.selectedSubfolder
     )
-    return {"status": "success", "data": response}
+    return defectImpo
+    # return {"status": "success", "data": response}
   except Exception as e:
     print(f"Error: {e}")  # 디버깅용 출력
     raise HTTPException(status_code=500, detail=str(e))
