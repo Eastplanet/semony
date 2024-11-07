@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)  // Builder 패턴을 위한 모든 필드 생성자
+@Builder
 @Table(name = "eqp_inspection_hst_alpha")
 public class EqpInspectionHstAlpha {
 
@@ -52,23 +55,9 @@ public class EqpInspectionHstAlpha {
     @Column(name = "defect_count")
     private Long defectCount;
 
+    @Column(name = "defect_die_count")
+    private Long defectDieCount;
+
     @Column(name = "create_dtts")
     private LocalDateTime createDtts;
-
-    @Builder
-    private EqpInspectionHstAlpha(LocalDateTime eventDtts, String moduleId, String lotId,
-        BigDecimal lotSeq, String slotNo, String flowRecipe,
-        String processRecipe, String portNo, Long defectCount,
-        LocalDateTime createDtts) {
-        this.eventDtts = eventDtts;
-        this.moduleId = moduleId;
-        this.lotId = lotId;
-        this.lotSeq = lotSeq;
-        this.slotNo = slotNo;
-        this.flowRecipe = flowRecipe;
-        this.processRecipe = processRecipe;
-        this.portNo = portNo;
-        this.defectCount = defectCount;
-        this.createDtts = createDtts;
-    }
 }
