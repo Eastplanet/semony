@@ -16,7 +16,7 @@ def generate_file_name(flow_recipe, lot, slot_no, case="default"):
   else:
     file_name = f"DefaultFile_{flow_recipe}_{lot}_{slot_no}"
 
-  print(f"Generated file name ({case}): {file_name}")
+  # print(f"Generated file name ({case}): {file_name}")
   return file_name
 
 
@@ -101,7 +101,7 @@ async def process_and_modify_in_module_data(
   """
   매개변수에 따라 파일을 로컬에서 복사하고 이름과 데이터를 변경하는 메인 함수
   """
-  # lot_id를 생성
+  # lot_id 생성
   lot_id = f"LP2{date}_PJ2@{lotId}"
   full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{macro_folder}"
   # print(macro_folder)
@@ -169,3 +169,24 @@ def modify_file_data(file_path, date, lot_id, flow_recipe, slot_no):
 
   # print(f"Modified text in SMF file: {file_path}")  # 디버깅용 출력
   return "".join(modified_lines).encode('utf-8')
+
+
+def get_defect_data(file_path):
+  # result.json 파일에서 TotalDefectCount와 TotalDefectDieCount 값 읽기
+  try:
+    with open(file_path, "r") as file:
+      data = json.load(file)
+      defect_count = data.get("TotalDefectCount", 0)
+      defect_die_count = data.get("TotalDefectDieCount", 0)
+
+      # 결과 출력
+      # print(f"Defect count: {defect_count}")
+      # print(f"Defect die count: {defect_die_count}")
+
+      return {"defectCount": defect_count, "defectDieCount": defect_die_count}
+  except FileNotFoundError:
+    # print(f"File not found: {file_path}")
+    return {"defectCount": 0, "defectDieCount": 0}
+  except json.JSONDecodeError:
+    # print(f"Error decoding JSON from file: {file_path}")
+    return {"defectCount": 0, "defectDieCount": 0}
