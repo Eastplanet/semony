@@ -5,6 +5,7 @@ import 'react-resizable/css/styles.css';
 import Image from 'next/image';
 import request from './apis/request';
 import {WaferData} from '@/app/types';
+import { mockData } from './mocks/mock_wafer';
 
 const WaferTable = () => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -24,10 +25,11 @@ const WaferTable = () => {
   const fetchData = () => {
       request(`wafer?startDate=${startDate}&endDate=${endDate}`)
         .then((data) => {
-          console.log(data);
           setListData(data);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {console.error(err);
+          setListData(mockData);
+        });
     };
     
   useEffect(() => {
@@ -146,7 +148,7 @@ const WaferTable = () => {
  
 
   return (
-    <div className="p-8 text-center relative pt-20 ">
+    <div className="p-4 text-center relative  ">
       <div className="flex justify-end items-center mb-4">
         <div className='mr-12'>
           <label className="mr-2">시작 시간:</label>
@@ -175,146 +177,156 @@ const WaferTable = () => {
       </div>
 
       <div className="overflow-y-auto h-[80vh]  rounded-2xl"> {/* 높이 제한과 오버플로우 설정 */}
-      <table className=" min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
-        <thead>
-          <tr className="bg-blue-600 text-white uppercase text-sm "
-          style={{ position: 'sticky', top: 0, zIndex: 10 }}>
-            {columns.map((col) => (
-              <th
-                key={col}
-                className="font-semibold border-b  border-gray-200 relative"
-                id={`header-${col}`}
-              >
-               
-                  <div
-                    className="flex items-center justify-center gap-1 cursor-pointer"
-                    
-                  >
-                <button
-                  className="px-2 py-[1px] m-1 rounded-lg bg-opacity-60 bg-white text-gray-700 text-[10px] font-normal hover:bg-blue-300 transition-colors" onClick={() => handleSort(col)}
-                  style={{ borderRadius: '4px' }} // 둥근 모서리
-                >
-                  정렬
-                </button>                    
-                {sortColumn === col && (
-                      sortOrder === 'asc' ? (<span>▲</span>) : sortOrder === 'desc' ? (<span>▼</span>): 
-                      ''
-                    )}
-                    {col.toUpperCase()}
-                    
-                    <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFilter(col, e);
-                  }}
-                  className="ml-1 text-xs text-gray-400 hover:text-gray-200"
-                >
-                  <Image src="/icons/filter.png" alt="Zoom In" width={16} height={16} />
-                </button>
-                  </div>
-                
-                
-                
+      <table className="min-w-full table-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <thead className="bg-blue-700 text-white text-xs" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+  <tr>
+    {/* 병합된 열 설정 - rowSpan으로 두 행을 병합 */}
+    {columns.map((col) => (
+      <th
+        key={col}
+        rowSpan={2} // 두 행을 병합
+        className="p-4 font-semibold border-b border-gray-300 relative min-w-[100px]" // 최소 너비 설정
+        id={`header-${col}`}
+      >
+        <div className="flex flex-col items-center gap-1 cursor-pointer">
+          <div className="flex items-center justify-center gap-1">
+            <button
+              className="px-2 py-[1px] rounded-lg bg-opacity-60 bg-white text-gray-700 text-[10px] font-normal hover:bg-blue-300 transition-colors"
+              onClick={() => handleSort(col)}
+            >
+              정렬
+            </button>
+           
+          </div>
+          <div className='flex'>
+          <span className="text-center whitespace-pre-wrap pr-1">{col === 'slotNo' ? 'SLOT' : col.toUpperCase()}</span> 
+          {sortColumn === col && (sortOrder === 'asc' ? <span>▲</span> : <span>▼</span>)}
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFilter(col, e);
+            }}
+            className="text-xs text-gray-300 hover:text-gray-200"
+            style={{ minWidth: '20px' }} // 아이콘의 최소 너비 유지
+          >
+            <Image src="/icons/filter.png" alt="Filter" width={16} height={16} />
+          </button>
+        </div>
+        {/* 필터 드롭다운 */}
+        {isFilterOpen[col] && dropdownPosition && (
+          <div
+            ref={dropdownRef}
+            className="fixed text-gray-500 font-normal text-xs bg-white border border-gray-300 p-2 rounded shadow-lg z-50 w-48"
+            style={{ top: dropdownPosition.top + 30, left: dropdownPosition.left }}
+          >
+            <input
+              type="text"
+              placeholder="검색"
+              value={searchTerm[col] || ''}
+              onChange={(e) => handleSearchTermChange(col, e.target.value)}
+              className="w-full p-1 border border-gray-300 rounded text-sm mb-2"
+            />
+            <div className="flex items-center gap-2 mb-1">
+              <input
+                type="checkbox"
+                checked={filters[col]?.size === uniqueValues(col).length}
+                onChange={(e) => toggleSelectAll(col, filteredValues[col], e.target.checked)}
+              />
+              <label className="">(모두 선택)</label>
+            </div>
+            <div className="max-h-32 overflow-y-auto">
+              {filteredValues[col]?.map((value) => (
+                <div key={value} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={filters[col]?.has(value) || false}
+                    onChange={(e) => handleFilterChange(col, value, e.target.checked)}
+                  />
+                  <label className="">{value}</label>
+                </div>
+              ))}
+            </div>
+            <button
+              className=" bg-gray-500 text-white text-xs py-1 px-2 rounded m-2"
+              onClick={(e) => toggleFilter(col, e)}
+            >
+              닫기
+            </button>
+            <button
+              onClick={applyFilter}
+              className=" bg-blue-500 text-white text-xs py-1 px-2 rounded m-2"
+            >
+              적용
+            </button>
+          </div>
+        )}
+      </th>
+    ))}
+    <th rowSpan={2} className="p-4 font-semibold border-b border-gray-300 text-gray-100">
+      TOTAL DEFECT
+    </th>
+    {/* STEP 헤더 그룹 */}
+    {Array.from({ length: 3 }).map((_, stepIndex) => (
+      <th key={`step-header-${stepIndex}`} colSpan={3} className="p-4 font-semibold border-b border-gray-300 text-center">
+        STEP {stepIndex + 1}
+      </th>
+    ))}
+  </tr>
+  <tr className="bg-blue-600 text-white uppercase text-xs">
+    {/* STEP 하위 ID, DEFECT, TIME 헤더 */}
+    {Array.from({ length: 3 }).map((_, stepIndex) => (
+      <React.Fragment key={`module-header-${stepIndex}`}>
+        <th className="p-4 font-semibold border-b border-gray-300 border-l">ID</th>
+        <th className="p-4 font-semibold border-b border-gray-300">DEFECT</th>
+        <th className="p-4 font-semibold border-b border-gray-300 border-r">TIME</th>
+      </React.Fragment>
+    ))}
+  </tr>
+</thead>
 
-                {/* 필터 드롭다운 */}
-                {isFilterOpen[col] && dropdownPosition && (
-                  <div
-                    ref={dropdownRef}
-                    className="fixed text-gray-500 font-normal text-xs bg-white border border-gray-300 p-2 rounded shadow-lg z-50 w-48"
-                    style={{ top: dropdownPosition.top + 30, left: dropdownPosition.left }}
-                  >
-                    
-                    <input
-                      type="text"
-                      placeholder="검색"
-                      value={searchTerm[col] || ''}
-                      onChange={(e) => handleSearchTermChange(col, e.target.value)}
-                      className="w-full p-1 border border-gray-300 rounded text-sm mb-2"
-                    />
-                    <div className="flex items-center gap-2 mb-1">
-                      <input
-                        type="checkbox"
-                        checked={filters[col]?.size === uniqueValues(col).length}
-                        onChange={(e) => toggleSelectAll(col, filteredValues[col], e.target.checked)}
-                      />
-                      <label className="">(모두 선택)</label>
-                    </div>
-                    <div className="max-h-32 overflow-y-auto">
-                      {filteredValues[col]?.map((value) => (
-                        <div key={value} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={filters[col]?.has(value) || false}
-                            onChange={(e) => handleFilterChange(col, value, e.target.checked)}
-                          />
-                          <label className="">{value}</label>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      className=" bg-gray-500 text-white text-xs py-1 px-2 rounded m-2"
-                      onClick={(e) => toggleFilter(col, e)}
-                    >
-                      닫기
-                    </button>
-                    <button
-                      onClick={applyFilter}
-                      className=" bg-blue-500 text-white text-xs py-1 px-2 rounded m-2"
-                    >
-                      적용
-                    </button>
-                  </div>
-                )}
-              </th>
-            ))}
-            <th className="p-4 font-semibold border-b border-gray-200 border-r-2" >
-              TOTAL DEFECT
-            </th>
-            <th className="p-4 font-semibold border-b border-gray-200">
-              MODULE ID
-            </th>
-            <th className="p-4 font-semibold border-b border-gray-200" >
-              DEFECT
-            </th>
-            <th className="p-4 font-semibold border-b border-gray-200" >
-              EVENT DTTS
-            </th>
-          </tr>
-        </thead>
-        <tbody className='pt-2'>
-        {filteredData.map((data, index) => (
-  data.modules.map((module, moduleIndex) => (
-    <tr
-      key={`${index}-${moduleIndex}`}
-      className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} transition-colors`}
-    >
-      {moduleIndex === 0 && (
-        <>
-          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
-            {data.ppid}
+
+
+
+{/* 본문 데이터 */}
+<tbody className="text-sm text-gray-700">
+  {filteredData.map((data, index) => (
+    <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} transition-colors`}>
+      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+        {data.ppid}
+      </td>
+      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+        {data.lotId}
+      </td>
+      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+        {data.lotSeq}
+      </td>
+      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+        {data.slotNo}
+      </td>
+      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-sm border-r-[1px]">
+        {data.totalDefectCount}
+      </td>
+
+      {/* 각 STEP의 모듈 정보를 일렬로 나열 */}
+      {data.modules.map((module, moduleIndex) => (
+        <React.Fragment key={`module-${moduleIndex}`}>
+          <td className="px-4 py-1 text-gray-700 text-xs border-l border-b border-gray-300">
+            {module ? module.moduleId : '-'}
           </td>
-          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
-            {data.lotId}
+          <td className="px-4 py-1 text-gray-700 border-b text-xs border-gray-300">
+            {module ? module.defect : '-'}
           </td>
-          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
-            {data.lotSeq}
+          <td className="px-4 py-1 text-gray-700 text-xs border-r border-b border-gray-300">
+            {module ? module.eventDtts : '-'}
           </td>
-          <td rowSpan={data.modules.length} className="p-4 text-gray-700 border-b border-gray-200 text-sm">
-            {data.slotNo}
-          </td>
-          <td rowSpan={data.modules.length} className="p-4 text-gray-700 text-sm border-r-[1px] border-gray-400">
-            {data.totalDefectCount}
-          </td>
-        </>
-      )}
-      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.moduleId : '-'}</td>
-      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.defect : '-'}</td>
-      <td className="px-4 py-1 text-gray-700 text-xs">{module ? module.eventDtts : '-'}</td>
+        </React.Fragment>
+      ))}
     </tr>
-  ))
-))}
+  ))}
+</tbody>
 
-        </tbody>
+
       </table>
       </div>
     </div>

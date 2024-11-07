@@ -2,7 +2,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import request from '@/app/apis/request';
 import { DefectRecord, DieLocation} from '@/app/types';
-import axios from "axios";
 
 
 interface DataContextProps {
