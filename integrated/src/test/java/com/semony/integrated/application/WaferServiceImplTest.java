@@ -2,9 +2,8 @@ package com.semony.integrated.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
-import com.semony.integrated.domain.dto.EqpInspectionHstAlphaConvertor;
+import com.semony.integrated.domain.dto.convertor.EqpInspectionHstAlphaConvertor;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.entity.EqpInspectionHstAlpha;
 import com.semony.integrated.domain.repository.EqpInspectionHstAlphaRepository;
@@ -16,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;

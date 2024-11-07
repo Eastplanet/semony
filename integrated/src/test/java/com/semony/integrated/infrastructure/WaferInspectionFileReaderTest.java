@@ -1,6 +1,6 @@
 package com.semony.integrated.infrastructure;
 
-import com.semony.integrated.domain.dto.WaferInspectionDTO;
+import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

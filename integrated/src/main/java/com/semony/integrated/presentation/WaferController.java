@@ -1,7 +1,13 @@
 package com.semony.integrated.presentation;
 
 import com.semony.integrated.application.WaferService;
+import com.semony.integrated.application.parser.JsonParser;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
+import com.semony.integrated.domain.dto.WaferDetailDTO;
+import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
+import com.semony.integrated.domain.dto.json.ResultJson;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,4 +31,18 @@ public class WaferController {
         return ResponseEntity.ok(waferSummaryList);
     }
 
+    @GetMapping("/detail")
+    public ResponseEntity<WaferDetailDTO> waferDetail(@RequestParam(value = "ppid")String ppid, @RequestParam(value = "lotId")String lotId,@RequestParam(value = "lotSeq")BigDecimal lotSeq, @RequestParam(value = "slotNo")String slotNo){
+
+        WaferDetailDTO waferDetail = null;
+
+        try {
+            waferDetail = waferService.getWaferDetail(lotId, lotSeq, ppid, slotNo);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.ok(waferDetail);
+    }
 }
+
