@@ -1,0 +1,47 @@
+package com.semony.maker.application.service;
+
+import com.semony.maker.domain.entity.EqpInspectionHstAlpha;
+import com.semony.maker.domain.repository.EqpInspectionHstAlphaRepository;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EqpInspectionHstAlphaServiceImpl implements EqpInspectionHstAlphaService {
+
+    private final EqpInspectionHstAlphaRepository inspectionRepository;
+
+    @Autowired
+    public EqpInspectionHstAlphaServiceImpl(EqpInspectionHstAlphaRepository inspectionRepository) {
+        this.inspectionRepository = inspectionRepository;
+    }
+
+    @Override
+    public void saveInspection(String module, String recipe,
+        LocalDate requestTime, String lotId, long lotSeq,
+        int slotId, String processRecipe, long defectCount, long defectDieCount) {
+
+        // 현재 시간 사용하여 createDtts 및 eventDtts 설정
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // EqpInspectionHstAlpha 객체 생성
+        EqpInspectionHstAlpha inspection = EqpInspectionHstAlpha.builder()
+            .eventDtts(currentDateTime)
+            .moduleId(module)
+            .lotId(lotId)
+            .lotSeq(BigDecimal.valueOf(lotSeq))
+            .slotNo(String.valueOf(slotId))
+            .flowRecipe(recipe)
+            .processRecipe(processRecipe) // RecipeCombination에서 값을 가져옴
+            .portNo(String.valueOf(slotId)) // RecipeCombination에서 값을 가져옴
+            .defectCount(defectCount)
+            .defectDieCount(defectDieCount)
+            .createDtts(currentDateTime)
+            .build();
+
+        // inspection 객체를 저장하고 반환
+        inspectionRepository.save(inspection);
+    }
+}
