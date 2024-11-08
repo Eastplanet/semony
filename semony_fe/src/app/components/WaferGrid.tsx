@@ -1,4 +1,3 @@
-// components/WaferGrid.tsx
 import React, { useState } from 'react';
 import { DefectRecordSpec } from '../mocks/defect_record';
 
@@ -69,10 +68,10 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
   };
 
   const getNormalizedDefectSize = (area: number) => {
-    const minSize = 5;  // 최소 크기 (픽셀)
-    const maxSize = 20; // 최대 크기 (픽셀)
-    const scaledSize = Math.sqrt(area) * 0.5; // 크기를 루트 스케일로 줄임
-    return Math.min(Math.max(scaledSize, minSize), maxSize);
+    const dieArea = DIE_WIDTH * DIE_HEIGHT; // die의 면적 (um²)
+    const scaleFactor = 500; // 그리드의 크기 (픽셀) 기준으로 비율 설정
+    const normalizedSize = Math.sqrt((area / dieArea) * scaleFactor * scaleFactor); // 면적을 기반으로 크기 계산
+    return Math.min(Math.max(normalizedSize, 5), 20); // 크기 제한 (최소 5px, 최대 20px)
   };
 
   // 색상 매핑: 각 스텝에 따라 색상 설정
@@ -112,7 +111,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
               >
                 {/* defect 위치를 표시하는 점 */}
                 <div
-                  className={`absolute ${getDefectColor(step)} rounded-full`} // 색상 설정
+                  className={`absolute ${getDefectColor(step)} bg-opacity-50 rounded-full`} // 색상 설정
                   style={{
                     width: `${getNormalizedDefectSize(defectArea)}px`, // defectArea에 비례한 크기 설정
                     height: `${getNormalizedDefectSize(defectArea)}px`,
