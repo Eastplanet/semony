@@ -37,11 +37,12 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
   for root, dirs, files in os.walk(local_folder_path):
     relative_path = os.path.relpath(root, local_folder_path)
     target_root = os.path.join(target_folder_path, relative_path)
+    print(f"will be make folder: {target_root}")
     os.makedirs(target_root, exist_ok=True)
 
     for file_name in files:
       original_file_path = os.path.join(root, file_name)
-      print(f"Original file path: {original_file_path}")  # 디버깅용 출력
+      print(f"copy folder: {original_file_path}")  # 디버깅용 출력
 
       if not os.path.isfile(original_file_path):
         continue  # 파일이 아닌 경우 건너뜁니다.
@@ -53,7 +54,7 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
 
         if f"PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]_Thumbnail_Macro[Inspection]" in file_name:
           print(
-            f"test : PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]_Thumbnail_Macro[Inspection]")
+              f"test : PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]_Thumbnail_Macro[Inspection]")
           thumbnail_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                                    case="thumbnail") + ".BMP"
           target_file_path = os.path.join(target_root, thumbnail_file_name)
@@ -71,7 +72,7 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
 
         else:
           target_file_path = os.path.join(target_root, file_name)
-          # print(f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")
+          print(f"Copying '{original_file_path}' to '{target_file_path}' (no changes)")
           shutil.copy(original_file_path, target_file_path)
 
 
