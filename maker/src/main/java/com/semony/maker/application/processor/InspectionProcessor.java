@@ -46,16 +46,24 @@ public class InspectionProcessor {
     }
 
     @Transactional
-    public void processInspection(String recipe, LocalDate requestTime, int slotId) {
-        String lotId = lotService.generateLotId();
-        long lotSeq = lotService.generateLotSeq();
+    public void processInspection(String recipe, LocalDate requestTime, int slotId,
+        String lotId, long lotSeq) {
         String selectRootSlot = randomSelectRootSlot();
         RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId,
             lotSeq);
+
         if (!processModuleRequests(combination, recipe, requestTime, lotId, lotSeq, slotId,
             selectRootSlot)) {
             throw new BusinessException(recipe, "module", ErrorCode.NOT_FOUND_RECIPE);
         }
+    }
+
+    // lotId와 lotSeq를 전달하지 않아도 호출할 수 있는 기본 메서드
+    @Transactional
+    public void processInspection(String recipe, LocalDate requestTime, int slotId) {
+        String lotId = lotService.generateLotId();
+        long lotSeq = lotService.generateLotSeq();
+        processInspection(recipe, requestTime, slotId, lotId, lotSeq);
     }
 
     private RecipeCombination validateAndGetRecipeCombination(String recipe, LocalDate requestTime,
@@ -74,13 +82,13 @@ public class InspectionProcessor {
         String lotId, long lotSeq, int slotId, String selectedModule) {
 
         return
-            sendAndLogModuleRequest(combination.in() + " (IN)", recipe, requestTime, lotId, lotSeq,
+            sendAndLogModuleRequest(combination.in(), recipe, requestTime, lotId, lotSeq,
                 slotId,
                 IN_FOLDER_PATH, MACRO_INSPECTION, selectedModule, "MACRO_ON") &&
                 sendAndLogModuleRequest(combination.ewim(), recipe, requestTime, lotId, lotSeq,
                     slotId,
                     EWIM_FOLDER_PATH, EBR, selectedModule, "EBR") &&
-                sendAndLogModuleRequest(combination.out() + " (OUT)", recipe, requestTime, lotId,
+                sendAndLogModuleRequest(combination.out(), recipe, requestTime, lotId,
                     lotSeq, slotId,
                     OUT_FOLDER_PATH, MACRO_INSPECTION, selectedModule, "MACRO_ON");
     }
