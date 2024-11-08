@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  integrated-server:                   # Spring Boot 애플리케이션의 서비스 이름을 integrated로 지정
+    image: tpwls1355/integrated:latest               # Dockerfile이 위치한 경로
+    ports:
+      - "8080:8080"             # 호스트의 8080 포트를 컨테이너의 8080 포트로 매핑
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/defect_db
+      - SPRING_DATASOURCE_USERNAME=semony
+      - SPRING_DATASOURCE_PASSWORD=s109
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db                      # db 서비스가 시작된 후 integrated 서비스 시작
+    volumes:
+      - /mnt/nfs_shared:/mnt/nfs_shared
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=defect_db
+      - POSTGRES_USER=semony
+      - POSTGRES_PASSWORD=s109
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

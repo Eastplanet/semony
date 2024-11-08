@@ -1,0 +1,120 @@
+pipeline {
+    agent any
+
+    tools {
+        dockerTool 'Docker'
+        nodejs 'NodeJS'
+    }
+
+    environment {
+        repository = "tpwls1355/semony-front"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-username-password')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'front/develop', 
+                    credentialsId: 'gitlab-username-password', 
+                    url: 'https://lab.ssafy.com/s11-final/S11P31S109.git'
+            }
+        }
+
+        stage('Install Dependencies and Build') {
+            steps {
+                echo 'Installing dependencies and building React app...'
+                dir('semony_fe') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image for React app...'
+                dir('semony_fe') {
+                    sh 'docker build -t semony-front:latest .'
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    echo 'Pushing Docker image to Docker Hub...'
+
+                    // Docker Hub 로그인
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-username-password', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                    }
+
+                    // 이미지에 태그 추가
+                    sh 'docker tag semony-front:latest $repository:latest'
+
+                    // Docker Hub에 이미지 푸시
+                    sh 'docker push $repository:latest'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying React app...'
+                dir('semony_fe') {
+                    script {
+                        // SSH를 사용하여 외부 호스트에서 docker-compose 실행
+                        echo 'Deploying React app on external host...'
+                        sh '''
+                            ssh -t -t ubuntu@13.125.139.232 "
+                                cd /opt/semony
+                                # 기존 컨테이너가 있다면 안전하게 중단 후 새로운 버전 배포
+                                if [ "$(docker ps -q -f name=semony-front)" ]; then
+                                    echo 'Stopping existing container...'
+                                    docker-compose -f front-docker-compose.yml down
+                                    echo 'Existing container stopped.'
+                                else
+                                    echo 'No existing container running.'
+                                fi
+                                # 새로운 컨테이너 시작
+                                echo 'Starting new container...'
+                                docker-compose -f front-docker-compose.yml up -d
+                                echo 'New container started successfully.'
+                            "
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Cleanup Dangling Images') {
+            steps {
+                script {
+                    echo 'Cleaning up dangling Docker images...'
+        
+                    // Dangling 이미지만 삭제
+                    sh '''
+                        docker images --filter "dangling=true" --format "{{.Repository}}:{{.Tag}} {{.ID}}" | while read image_info; do
+                            repo_tag=$(echo $image_info | awk '{print $1}')
+                            image_id=$(echo $image_info | awk '{print $2}')
+                            
+                            if [ "$repo_tag" = "tpwls1355/semony-front:<none>" ]; then
+                                echo "Removing dangling image: $image_id"
+                                docker rmi -f $image_id
+                            fi
+                        done
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline for React app succeeded!'
+        }
+        failure {
+            echo 'Pipeline for React app failed.'
+        }
+    }
+}

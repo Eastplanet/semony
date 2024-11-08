@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  semony-front:
+    image: tpwls1355/semony-front:latest  # Docker Hub에서 푸시한 이미지 사용
+    ports:
+      - "3000:3000"  # 외부 포트 3000을 컨테이너의 포트 3000에 매핑
+    environment:
+      - NODE_ENV=production
+    restart: always  # 컨테이너가 중단되면 자동으로 다시 시작
