@@ -1,6 +1,8 @@
 import os
+import random
 import shutil
 import json
+
 from constants import ROOT_PATH
 
 
@@ -156,10 +158,11 @@ async def process_and_modify_in_module_data(
     )
     # print("target: " + target_folder_path)
   # print("target: " + target_folder_path)
-  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{"Macro[Inspection]"}"
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/Macro[Inspection]"
   defect_data = process_files_from_local(full_local_folder_path,
                                          target_folder_path,
-                                         flow_recipe, lot_id, date, slotNo)
+                                         flow_recipe, lot_id, date, slotNo,
+                                         selectedSubfolder)
 
   return defect_data
   # print(f"defect_data: {defect_data}")
