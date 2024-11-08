@@ -33,32 +33,41 @@ export default function MainPage() {
   ];
 
   const currentStepData = stepData.filter((data) => selectedSteps.includes(data.step)); // 선택된 스텝 데이터 필터링
+  // 모든 결함 데이터를 결합
+  const allDefectRecords = [
+    ...defectRecordsStep1,
+    ...defectRecordsStep2,
+    ...defectRecordsStep3,
+  ];
 
   const minX = Math.min(
     ...dieLocations.map((d: DieLocation) => d.XINDEX),
-    ...currentStepData.flatMap((data) => data.defects.map((d: DefectRecordSpec) => d.xindex))
+    ...allDefectRecords.map((defect: DefectRecordSpec) => defect.xindex) // allDefectRecords에서 xindex 추출
   );
+
   const maxX = Math.max(
     ...dieLocations.map((d: DieLocation) => d.XINDEX),
-    ...currentStepData.flatMap((data) => data.defects.map((d: DefectRecordSpec) => d.xindex))
+    ...allDefectRecords.map((defect: DefectRecordSpec) => defect.xindex) // allDefectRecords에서 xindex 추출
   );
+
   const minY = Math.min(
     ...dieLocations.map((d: DieLocation) => d.YINDEX),
-    ...currentStepData.flatMap((data) => data.defects.map((d: DefectRecordSpec) => d.yindex))
+    ...allDefectRecords.map((defect: DefectRecordSpec) => defect.yindex) // allDefectRecords에서 yindex 추출
   );
+
   const maxY = Math.max(
     ...dieLocations.map((d: DieLocation) => d.YINDEX),
-    ...currentStepData.flatMap((data) => data.defects.map((d: DefectRecordSpec) => d.yindex))
+    ...allDefectRecords.map((defect: DefectRecordSpec) => defect.yindex) // allDefectRecords에서 yindex 추출
   );
 
   const totalRows = maxY - minY + 1;
   const totalCols = maxX - minX + 1;
 
   return (
-    <div className="p-8 pt-0">
+    <div className="pt-0">
       <SummarySection defectData={defectInfos} />
 
-      <div className="mx-24 flex items-start p-8 gap-8 justify-between">
+      <div className="mx-24 flex items-start p-2 gap-8 justify-between">
         <WaferGrid
           dieLocations={dieLocations}
           defectRecords={currentStepData.flatMap((data) => data.defects) || []}

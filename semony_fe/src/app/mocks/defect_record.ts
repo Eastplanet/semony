@@ -21,6 +21,25 @@ export interface DefectRecordSpec {
   step: number;
 }
 
+export interface DefectRecordSpecWithoutStep {
+    defectID: number;
+  defectArea: number;
+  gdsX: number;
+  gdsY: number;
+  grayMin: number;
+  grayMax: number;
+  grayMean: number;
+  alg: number;
+  radius: number;
+  select: number;
+  yrel: number;
+  xsize: number;
+  xrel: number;
+  ysize: number;
+  xindex: number;
+  yindex: number;
+}
+
 // SummarySpec 타입 정의
 interface SummarySpec {
   testNo: number;
@@ -54,7 +73,7 @@ interface WaferInspection {
   inspectionTest: number;
   sampleTestPlan: number;
   dieLocations: DieLocation | null; // 타입이 명확하지 않으므로 any로 설정
-  defectRecordSpec: DefectRecordSpec[];
+  defectRecordSpec: DefectRecordSpecWithoutStep[];
   summarySpec: SummarySpec;
   defectCnt: number;
   defectDieCnt: number;
