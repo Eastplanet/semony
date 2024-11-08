@@ -26,6 +26,7 @@ public class Constants {
     public static final String SUCCESS_MODULE_REQUEST = "Module request success";
     public static final String ERROR_MODULE_REQUEST = "Module request failed";
     public static final List<String> SUBFOLDER_OPTIONS = List.of("006", "010", "018", "022");
+    public static final int MAX_SLOT_COUNT  = 25;
 
     public static final String TIMESTAMP_PATTERN = "yyMMddHH";
 }
