@@ -1,6 +1,8 @@
 import os
+import random
 import shutil
 import json
+
 from constants import ROOT_PATH
 
 
@@ -21,16 +23,17 @@ def generate_file_name(flow_recipe, lot, slot_no, case="default"):
 
 
 def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
-    lot, date, slot_no):
+    lot, date, slot_no, selectedSubfolder):
   """
   로컬 폴더에서 파일 및 폴더를 지정된 경로로 복사하고 필요에 따라 변조
   """
   defect_data = None
-  #print("local" + local_folder_path)
+  # print("local" + local_folder_path)
   if not os.path.exists(local_folder_path):
     raise FileNotFoundError(
         f"Local folder path '{local_folder_path}' does not exist.")
-
+  modified_str = selectedSubfolder.lstrip('0')
+  print(modified_str)
   for root, dirs, files in os.walk(local_folder_path):
     relative_path = os.path.relpath(root, local_folder_path)
     target_root = os.path.join(target_folder_path, relative_path)
@@ -48,7 +51,16 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
           # result.json 파일일 경우 데이터 읽어오기 함수 실행 및 JSON 리턴
           defect_data = get_defect_data(original_file_path)
 
-        if "tempSmf" in file_name:
+        if f"PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]_Thumbnail_Macro[Inspection]" in file_name:
+          print(
+            f"test : PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]_Thumbnail_Macro[Inspection]")
+          thumbnail_file_name = generate_file_name(flow_recipe, lot, slot_no,
+                                                   case="thumbnail") + ".BMP"
+          target_file_path = os.path.join(target_root, thumbnail_file_name)
+          shutil.copy(original_file_path, target_file_path)
+
+        elif f"PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[{modified_str}]" in file_name:
+
           smf_file_name = generate_file_name(flow_recipe, lot, slot_no,
                                              case="smf") + ".smf"
           modified_data = modify_file_data(original_file_path, date, lot,
@@ -56,12 +68,6 @@ def process_files_from_local(local_folder_path, target_folder_path, flow_recipe,
           modified_file_path = os.path.join(target_root, smf_file_name)
           with open(modified_file_path, "wb") as modified_file:
             modified_file.write(modified_data)
-
-        elif "tempThumbnail" in file_name:
-          thumbnail_file_name = generate_file_name(flow_recipe, lot, slot_no,
-                                                   case="thumbnail") + ".BMP"
-          target_file_path = os.path.join(target_root, thumbnail_file_name)
-          shutil.copy(original_file_path, target_file_path)
 
         else:
           target_file_path = os.path.join(target_root, file_name)
@@ -95,13 +101,38 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
 
 async def process_and_modify_in_module_data(
     module_name: str, date: str, lotId: str, flow_recipe: str, lotSeq: str,
-    slotNo: str, local_folder_path: str, macro_folder: str,
-    selectedSubfolder: str
+    slotNo: str, local_folder_path: str, macro_folder: str
 ):
   """
   매개변수에 따라 파일을 로컬에서 복사하고 이름과 데이터를 변경하는 메인 함수
   """
   # lot_id 생성
+  # 만약 module_name == MIW7-5 인경우 => (IN) selectedSubfolder => "002, 004, 006, 008, 010, 012, 014, 016, 018, 020, 022, 024"
+  # 만약 module_name == MIW7-6 인경우 => (OUT) selectedSubfolder => "003, 006, 007, 010, 011, 012, 015, 016, 017, 018, 021, 022, 023, 024"
+  # 만약 module_name == EWIM 인경우 => ewim selectedSubfolder => "002,  006,  010,  014,  018 , 022, "
+
+  subfolder_mapping = {
+    "MIW7-51": ["002", "004", "006", "008", "010", "012", "014", "016", "018",
+                "020", "022", "024"],
+    "MIW7-52": ["002", "004", "006", "008", "010", "012", "014", "016", "018",
+                "020", "022", "024"],
+    "MIW7-61": ["003", "006", "007", "010", "011", "012", "015", "016", "017",
+                "018", "021", "022", "023", "024"],
+    "MIW7-62": ["003", "006", "007", "010", "011", "012", "015", "016", "017",
+                "018", "021", "022", "023", "024"],
+    "EWIM1-36": ["002", "006", "010", "014", "018", "022"],
+    "EWIM1-46": ["002", "006", "010", "014", "018", "022"],
+    "EWIM2-36": ["002", "006", "010", "014", "018", "022"],
+    "EWIM2-46": ["002", "006", "010", "014", "018", "022"]
+  }
+
+  # module_name이 올바른지 확인하고 subfolder 무작위 선택
+  subfolder_options = subfolder_mapping.get(module_name)
+  if not subfolder_options:
+    raise ValueError(f"Invalid module name: {module_name}")
+
+  selectedSubfolder = random.choice(subfolder_options)
+
   lot_id = f"LP2{date}_PJ2@{lotId}"
   full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{macro_folder}"
   # print(macro_folder)
@@ -116,7 +147,8 @@ async def process_and_modify_in_module_data(
     # 첫 번째 process_files_from_local 실행
     defect_data = process_files_from_local(full_local_folder_path,
                                            target_folder_path,
-                                           flow_recipe, lot_id, date, slotNo)
+                                           flow_recipe, lot_id, date, slotNo,
+                                           selectedSubfolder)
 
     # target_folder_path를 "Macro[Inspection]"으로 다시 설정
     # print("sasa"+str(defect_data))
@@ -126,10 +158,11 @@ async def process_and_modify_in_module_data(
     )
     # print("target: " + target_folder_path)
   # print("target: " + target_folder_path)
-  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{"Macro[Inspection]"}"
+  full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/Macro[Inspection]"
   defect_data = process_files_from_local(full_local_folder_path,
                                          target_folder_path,
-                                         flow_recipe, lot_id, date, slotNo)
+                                         flow_recipe, lot_id, date, slotNo,
+                                         selectedSubfolder)
 
   return defect_data
   # print(f"defect_data: {defect_data}")

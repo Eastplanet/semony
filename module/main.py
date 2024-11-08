@@ -25,8 +25,8 @@ async def create_and_modify_macro_module_data(request: RequestModel):
   """
   try:
     # 하위 폴더를 랜덤 선택
-    subfolder_options = ["006", "010", "018", "022"]
-    selected_subfolder = random.choice(subfolder_options)
+    # subfolder_options = ["006", "010", "018", "022"]
+    # selected_subfolder = random.choice(subfolder_options)
 
     # local_folder_path에 랜덤 하위 폴더 및 매크로 폴더 추가
     # full_local_folder_path = f"{request.localFolderPath}/{request.selectedSubfolder}/{request.macroFolder}"
@@ -41,8 +41,7 @@ async def create_and_modify_macro_module_data(request: RequestModel):
         request.lotSeq,
         request.slotNo,
         request.localFolderPath,
-        request.macroFolder,
-        request.selectedSubfolder
+        request.macroFolder
     )
     return defectImpo
     # return {"status": "success", "data": response}
