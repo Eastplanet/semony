@@ -1,1 +1,1 @@
-ROOT_PATH = "C:\\maked"
+ROOT_PATH = "var/lib/result"
