@@ -18,6 +18,7 @@ export interface DefectRecordSpec {
   ysize: number;
   xindex: number;
   yindex: number;
+  step: number;
 }
 
 // SummarySpec 타입 정의

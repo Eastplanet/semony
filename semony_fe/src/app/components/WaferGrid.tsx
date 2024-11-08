@@ -68,12 +68,25 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
     setTooltip(null);
   };
 
-
   const getNormalizedDefectSize = (area: number) => {
     const minSize = 5;  // 최소 크기 (픽셀)
     const maxSize = 20; // 최대 크기 (픽셀)
     const scaledSize = Math.sqrt(area) * 0.5; // 크기를 루트 스케일로 줄임
     return Math.min(Math.max(scaledSize, minSize), maxSize);
+  };
+
+  // 색상 매핑: 각 스텝에 따라 색상 설정
+  const getDefectColor = (step: number) => {
+    switch (step) {
+      case 1:
+        return 'bg-blue-500'; // 1스텝: 파란색
+      case 2:
+        return 'bg-red-500'; // 2스텝: 빨간색
+      case 3:
+        return 'bg-green-500'; // 3스텝: 초록색
+      default:
+        return 'bg-gray-500'; // 기본 색상
+    }
   };
 
   return (
@@ -87,7 +100,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
       {grid.map((row, rowIndex) =>
         row.map((cell, colIndex) => {
           if (cell.type === 'defect' && cell.defect) {
-            const { xrel, yrel, defectArea } = cell.defect;
+            const { xrel, yrel, defectArea, step } = cell.defect; // step 정보를 가져옵니다.
 
             return (
               <div
@@ -99,7 +112,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
               >
                 {/* defect 위치를 표시하는 점 */}
                 <div
-                  className="absolute bg-red-500 rounded-full"
+                  className={`absolute ${getDefectColor(step)} rounded-full`} // 색상 설정
                   style={{
                     width: `${getNormalizedDefectSize(defectArea)}px`, // defectArea에 비례한 크기 설정
                     height: `${getNormalizedDefectSize(defectArea)}px`,
@@ -111,7 +124,6 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
               </div>
             );
           }
-          
 
           // 활성화된 die 위치 설정
           return (
