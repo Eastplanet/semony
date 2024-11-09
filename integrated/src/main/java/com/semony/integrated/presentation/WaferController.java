@@ -2,12 +2,9 @@ package com.semony.integrated.presentation;
 
 import com.semony.integrated.application.WaferService;
 import com.semony.integrated.application.image.ImageEncoder;
-import com.semony.integrated.application.parser.JsonParser;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
 import com.semony.integrated.domain.dto.image.ImageSet;
-import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
-import com.semony.integrated.domain.dto.json.ResultJson;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,27 +27,35 @@ public class WaferController {
     @GetMapping()
     public ResponseEntity<List<SummaryWaferDto>> waferList(@RequestParam LocalDateTime startDate,
         @RequestParam LocalDateTime endDate) {
-        List<SummaryWaferDto> waferSummaryList = waferService.getWaferSummaryList(startDate, endDate);
+        List<SummaryWaferDto> waferSummaryList = waferService.getWaferSummaryList(startDate,
+            endDate);
         return ResponseEntity.ok(waferSummaryList);
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<WaferDetailDTO> waferDetail(@RequestParam(value = "ppid")String ppid, @RequestParam(value = "lotId")String lotId,@RequestParam(value = "lotSeq")BigDecimal lotSeq, @RequestParam(value = "slotNo")String slotNo){
+    public ResponseEntity<WaferDetailDTO> waferDetail(@RequestParam(value = "ppid") String ppid,
+        @RequestParam(value = "lotId") String lotId,
+        @RequestParam(value = "lotSeq") BigDecimal lotSeq,
+        @RequestParam(value = "slotNo") String slotNo,
+        @RequestParam(value = "date") LocalDateTime date) {
 
         WaferDetailDTO waferDetail = null;
 
         try {
             waferDetail = waferService.getWaferDetail(lotId, lotSeq, ppid, slotNo);
+            return ResponseEntity.ok(waferDetail);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return ResponseEntity.ok(waferDetail);
     }
 
     @GetMapping("/images")
-    public ResponseEntity<?> getImages(){
-        ImageSet encode = imageEncoder.encode("1", BigDecimal.ONE, "1", "1");
+    public ResponseEntity<?> getImages(@RequestParam(value = "ppid") String ppid,
+        @RequestParam(value = "lotId") String lotId,
+        @RequestParam(value = "lotSeq") BigDecimal lotSeq,
+        @RequestParam(value = "slotNo") String slotNo,
+        @RequestParam(value = "date") LocalDateTime date) {
+        List<ImageSet> encode = imageEncoder.encode(lotId, lotSeq, ppid, slotNo, date);
         return ResponseEntity.ok(encode);
     }
 
