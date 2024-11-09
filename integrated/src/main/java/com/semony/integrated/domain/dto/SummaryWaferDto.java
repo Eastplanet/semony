@@ -1,6 +1,7 @@
 package com.semony.integrated.domain.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class SummaryWaferDto {
     private Integer slotNo;
     private Long totalDefectCount;
     private Module[] modules;
+    private LocalDateTime date;
 
     @Data
     public static class Module {
