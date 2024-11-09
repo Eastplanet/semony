@@ -3,6 +3,7 @@ package com.semony.integrated.application.image;
 import com.semony.integrated.domain.dto.image.IPU;
 import com.semony.integrated.domain.dto.image.ImageData;
 import com.semony.integrated.domain.dto.image.ImageSet;
+import java.time.LocalDateTime;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,9 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.Base64;
 
-@Component
 public class ImageEncoderInLocal implements ImageEncoder {
 
-    public ImageSet encode(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo) {
+    public List<ImageSet> encode(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo, LocalDateTime date) {
         String folderPath = "static/images";
         ImageSet imageSet = new ImageSet();
         Map<String, List<ImageData>> groupData = new HashMap<>();
@@ -97,6 +97,8 @@ public class ImageEncoderInLocal implements ImageEncoder {
 
         imageSet.setIpus(ipuList);
 
-        return imageSet;
+        List<ImageSet> imageSetList = new ArrayList<>();
+        imageSetList.add(imageSet);
+        return imageSetList;
     }
 }
