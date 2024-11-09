@@ -4,6 +4,8 @@ import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO.DefectRecord;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO.SummarySpec;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,13 +19,14 @@ public class WaferInspectionFileReader {
     public static WaferInspectionDTO readFile(String filePath) throws IOException {
         WaferInspectionDTO dto = new WaferInspectionDTO();
 
-        // Load file from classpath
-        InputStream inputStream = WaferInspectionFileReader.class.getClassLoader().getResourceAsStream(filePath);
-        if (inputStream == null) {
-            throw new FileNotFoundException("File not found in resources: " + filePath);
+        // 외부 경로로부터 파일 읽기
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("File not found: " + filePath);
         }
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             List<WaferInspectionDTO.DieLocation> dieLocations = new ArrayList<>();
             List<WaferInspectionDTO.DefectRecord> defectRecords = new ArrayList<>();
