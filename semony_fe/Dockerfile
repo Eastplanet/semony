@@ -1,31 +1,24 @@
-# Step 1: Use Node.js to build the Next.js app
-FROM node:18 AS builder
-
-# Set the working directory
+# Step 1: Builder stage
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
+# Install only production dependencies
+COPY package.json package-lock.json ./
+RUN npm install --only=production
 
-# Copy the rest of the application source code
-COPY . ./
-
-# Build the Next.js app
+# Copy the application code and build it
+COPY . .
 RUN npm run build
 
-# Step 2: Run the Next.js app in production
-FROM node:18 AS runner
-
-# Set the working directory
+# Step 2: Runner stage
+FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Copy only the necessary files from the builder
-COPY --from=builder /app ./
+# Copy only the production node_modules from builder
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
-# Expose port 3000 to the outside world
+# Expose port and start the app
 EXPOSE 3000
-
-# Start the Next.js app
 CMD ["npm", "start"]
