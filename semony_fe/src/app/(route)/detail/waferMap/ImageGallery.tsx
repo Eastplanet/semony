@@ -1,21 +1,58 @@
 // ImageGallery.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { DefectRecordSpec } from '@/app/mocks/defect_record';
 
 interface ImageGalleryProps {
-  images: { src: string; label: string }[]; // 이미지 URL과 라벨 배열
+  currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
 }
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
+const images = [
+    { src: '/mocks/macro/0001_golden.TIF', label: "GOLDEN" },
+    { src: '/mocks/macro/0001_ins.TIF', label: "INSPECTION" },
+    { src: '/mocks/macro/0001_bin.TIF', label: "BINARIZE" },
+    { src: '/mocks/macro/0001_psm.TIF', label: "PSM" },
+  ];
+
+const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
   const [zoom, setZoom] = useState(100); // 기본 확대율 100%
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 이미지 위치
   const [isDragging, setIsDragging] = useState(false); // 드래그 상태
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [selectedDefectIndex, setSelectedDefectIndex] = useState(0);
+  const [currentImages, setCurrentImages] = useState(images);
   const [cursorPosition, setCursorPosition] = useState<{ x: number; y: number } | null>(null);
+
+  
   
   // 확대/축소 기능
   const handleZoomIn = () => setZoom((prevZoom) => Math.min(prevZoom + 10, 500));
-  const handleZoomOut = () => setZoom((prevZoom) => Math.max(prevZoom - 10, 90));
+  const handleZoomOut = () => setZoom((prevZoom) => Math.max(prevZoom - 10, 100));
+
+  useEffect(() => {
+    if(currentDefects?.defects && currentDefects.defects.length > 0){
+      setSelectedDefectIndex(0);
+      updateImagesForDefect(0);
+    }
+  }, []);
+
+  const updateImagesForDefect = (index: number) => {
+    const selectedDefect = currentDefects?.defects[index];
+    if(selectedDefect) {
+      setCurrentImages(
+        images.map((image) => ({
+            src: '/mocks/macro/0001_golden.TIF',
+            label: image.label,
+          }))
+      )
+    }
+  }
+  
+  const handleDefectSelection = (index: number) => {
+    setSelectedDefectIndex(index);
+    updateImagesForDefect(index);
+    setZoom(100);
+  };
 
   // 마우스 휠로 확대/축소 조절
   const handleWheel = (e: React.WheelEvent) => {
@@ -65,7 +102,32 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
   };
 
   return (
-    <div className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden" onWheel={handleWheel}>
+    <div
+      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh]  border border-1 border-gray-200 "
+    >
+      <div className="flex flex-col items-start mr-4 w-64 space-y-2">
+        {currentDefects?.defects.map((defect, index) => (
+          <button
+            key={index}
+            onClick={() => handleDefectSelection(index)}
+            className={`py-2 px-4 w-full rounded-lg border ${
+              index === selectedDefectIndex ? 'bg-blue-200 border-blue-400' : 'bg-gray-50 border-gray-200'
+            } shadow-md hover:shadow-lg transition-all text-left`}
+          >
+            <div className="font-semibold text-gray-800 text-sm">Step: {defect.step}</div>
+            <div className="text-xs text-gray-600">Defect ID: {defect.defectID}</div>
+            <div className="text-xs text-gray-600">Area: {defect.defectArea}</div>
+            <div className="text-xs text-gray-600">Radius: {defect.radius}</div>
+            <div className="text-xs text-gray-600">Gray Mean: {defect.grayMean}</div>
+            <div className="text-xs text-gray-600">
+              Gray Range: {defect.grayMin} - {defect.grayMax}
+            </div>
+            <div className="text-xs text-gray-600 mt-1">Size (X, Y): {defect.xsize} x {defect.ysize}</div>
+          </button>
+        ))}
+      </div>
+
+
       {/* 확대/축소 툴바 */}
       <div className="flex flex-col items-center mr-4 space-y-2">
         <button onClick={handleZoomIn} className="text-gray-500 hover:text-gray-700">
@@ -78,20 +140,19 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
       </div>
 
       {/* 이미지 그리드 */}
-      <div className="grid grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-2 gap-4 w-fit h-fit" onWheel={handleWheel}>
         {images.slice(0, 4).map((image, index) => (
-          <div key={index} className="relative flex flex-col items-center">
+          <div key={index} className="relative flex flex-col items-center w-full h-full">
             {/* 라벨 */}
             <div className="text-center text-gray-600 bg-gray-100 rounded-t-lg w-full py-1 font-semibold">
               {image.label}
             </div>
             {/* 이미지 */}
             <div
-              className="w-full bg-gray-200 rounded-b-lg overflow-hidden shadow-md"
+              className="w-full h-full bg-gray-200 rounded-b-lg overflow-hidden shadow-md"
               onMouseDown={handleMouseDown} // 드래그 시작
               onMouseMove={handleMouseMove} // 드래그 중 위치 이동
               onMouseUp={handleMouseUp} // 드래그 종료
-              onMouseLeave={() => setCursorPosition(null)} // 이미지 범위를 벗어날 때 빨간 점 숨김
             >
               <Image
                 style={{
@@ -105,18 +166,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
                 height={1000}
                 width={1000}
               />
-              {/* 마우스 위치 표시 (모든 이미지에 동일 위치) */}
             </div>
-            {/* {cursorPosition && (
-              <div
-                className="absolute w-1 h-1 bg-red-500 rounded-full pointer-events-none"
-                style={{
-                  top: `${cursorPosition.y}%`,
-                  left: `${cursorPosition.x}%`,
-                  transform: `translate(-50%, -50%)`,
-                }}
-              ></div>
-            )} */}
+          
           </div>
         ))}
       </div>

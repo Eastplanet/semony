@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DefectRecordSpec } from '../mocks/defect_record';
 
 interface DieLocation {
@@ -13,53 +13,48 @@ interface WaferGridProps {
   totalCols: number;
   minX: number;
   minY: number;
+  currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
+  setCurrentDefects: React.Dispatch<React.SetStateAction<{ x: number; y: number; defects: DefectRecordSpec[] } | null>>;
 }
 
-const DIE_WIDTH = 8639.48; // die 가로 크기 (um)
-const DIE_HEIGHT = 4986.74; // die 세로 크기 (um)
+const DIE_WIDTH = 8639.48;
+const DIE_HEIGHT = 4986.74;
 
-const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY }) => {
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
+const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects, currentDefects}) => {
+  const [tooltip, setTooltip] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
 
-  // 모든 결함 정보를 툴팁 내용으로 생성하는 함수
-  const generateTooltipContent = (defect: DefectRecordSpec) => {
-    return Object.entries(defect)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join('\n');
-  };
+  // useMemo를 사용하여 grid를 메모이제이션
+  const grid = useMemo(() => {
+    return Array.from({ length: totalRows }, (_, rowIndex) => {
+      return Array.from({ length: totalCols }, (_, colIndex) => {
+        const x = colIndex + minX;
+        const y = rowIndex + minY;
 
-  // 그리드 초기화
-  const grid = Array.from({ length: totalRows }, (_, rowIndex) => {
-    return Array.from({ length: totalCols }, (_, colIndex) => {
-      const x = colIndex + minX;
-      const y = rowIndex + minY;
+        const defects = defectRecords.filter(d => d.xindex === x && d.yindex === y);
+        if (defects.length > 0) {
+          return { type: 'defect', defects };
+        }
 
-      // defectRecord 위치인지 확인
-      const defect = defectRecords.find((d) => d.xindex === x && d.yindex === y);
+        if (dieLocations.some(die => die.XINDEX === x && die.YINDEX === y)) {
+          return { type: 'active' };
+        }
 
-      // defect 위치가 맞다면 그 위치를 반환
-      if (defect) {
-        return { type: 'defect', defect };
-      }
-
-      // die 위치인지 확인
-      if (dieLocations.some((die) => die.XINDEX === x && die.YINDEX === y)) {
-        return { type: 'active' };
-      }
-
-      // 빈 셀 반환
-      return { type: '' };
+        return { type: '' };
+      });
     });
-  });
+  }, [totalRows, totalCols, minX, minY, dieLocations, defectRecords]);
 
-  const handleMouseEnter = (event: React.MouseEvent, defect: DefectRecordSpec) => {
-    const content = generateTooltipContent(defect);
-    setTooltip({ x: event.clientX, y: event.clientY, content });
+  const handleMouseEnter = (event: React.MouseEvent, defects: DefectRecordSpec[]) => {
+    setTooltip({ x: event.clientX, y: event.clientY, defects });
   };
+
+  const handleMouseClick = (event: React.MouseEvent, defects: DefectRecordSpec[]) => {
+    setCurrentDefects({ x: event.clientX, y: event.clientY, defects });
+  }
 
   const handleMouseMove = (event: React.MouseEvent) => {
     if (tooltip) {
-      setTooltip((prevTooltip) => prevTooltip && { ...prevTooltip, x: event.clientX, y: event.clientY });
+      setTooltip(prev => prev && { ...prev, x: event.clientX, y: event.clientY });
     }
   };
 
@@ -68,63 +63,62 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
   };
 
   const getNormalizedDefectSize = (area: number) => {
-    const dieArea = DIE_WIDTH * DIE_HEIGHT; // die의 면적 (um²)
-    const scaleFactor = 500; // 그리드의 크기 (픽셀) 기준으로 비율 설정
-    const normalizedSize = Math.sqrt((area / dieArea) * scaleFactor * scaleFactor); // 면적을 기반으로 크기 계산
-    return Math.min(Math.max(normalizedSize, 5), 20); // 크기 제한 (최소 5px, 최대 20px)
+    const dieArea = DIE_WIDTH * DIE_HEIGHT;
+    const scaleFactor = 500;
+    const normalizedSize = Math.sqrt((area / dieArea) * scaleFactor * scaleFactor);
+    return Math.min(Math.max(normalizedSize, 5), 20);
   };
 
-  // 색상 매핑: 각 스텝에 따라 색상 설정
   const getDefectColor = (step: number) => {
     switch (step) {
       case 1:
-        return 'bg-blue-500'; // 1스텝: 파란색
+        return 'bg-blue-500';
       case 2:
-        return 'bg-red-500'; // 2스텝: 빨간색
+        return 'bg-red-500 z-10';
       case 3:
-        return 'bg-green-500'; // 3스텝: 초록색
+        return 'bg-green-500 ';
       default:
-        return 'bg-gray-500'; // 기본 색상
+        return 'bg-gray-500';
     }
   };
 
   return (
     <div
-      className="relative w-[500px] h-[500px] border-2 border-orange-500 rounded-full overflow-hidden grid"
-      style={{
-        gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
-        gridTemplateRows: `repeat(${totalRows}, 1fr)`,
-      }}
-    >
+    className="relative aspect-square w-[70vh] max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
+    style={{
+      gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
+      gridTemplateRows: `repeat(${totalRows}, 1fr)`,
+    }}
+  >
       {grid.map((row, rowIndex) =>
         row.map((cell, colIndex) => {
-          if (cell.type === 'defect' && cell.defect) {
-            const { xrel, yrel, defectArea, step } = cell.defect; // step 정보를 가져옵니다.
-
+          if (cell.type === 'defect' && cell.defects) {
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 className="relative border border-orange-300 bg-white"
-                onMouseEnter={(event) => handleMouseEnter(event, cell.defect)}
+                onMouseEnter={(event) => handleMouseEnter(event, cell.defects)}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
+                onClick={(event) => handleMouseClick(event, cell.defects)}
               >
-                {/* defect 위치를 표시하는 점 */}
-                <div
-                  className={`absolute ${getDefectColor(step)} bg-opacity-50 rounded-full`} // 색상 설정
-                  style={{
-                    width: `${getNormalizedDefectSize(defectArea)}px`, // defectArea에 비례한 크기 설정
-                    height: `${getNormalizedDefectSize(defectArea)}px`,
-                    left: `${(xrel / DIE_WIDTH) * 100}%`, // xrel을 die 크기에 대한 비율로 변환하여 위치 설정
-                    top: `${(yrel / DIE_HEIGHT) * 100}%`, // yrel을 die 크기에 대한 비율로 변환하여 위치 설정
-                    transform: 'translate(-50%, -50%)', // 점 중앙 정렬
-                  }}
-                />
+                {cell.defects.map((defect, index) => (
+                  <div
+                    key={index}
+                    className={`absolute ${getDefectColor(defect.step)} bg-opacity-70 rounded-full`}
+                    style={{
+                      width: `${getNormalizedDefectSize(defect.defectArea)}px`,
+                      height: `${getNormalizedDefectSize(defect.defectArea)}px`,
+                      left: `${(defect.xrel / DIE_WIDTH) * 100}%`,
+                      top: `${(defect.yrel / DIE_HEIGHT) * 100}%`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                ))}
               </div>
             );
           }
 
-          // 활성화된 die 위치 설정
           return (
             <div
               key={`${rowIndex}-${colIndex}`}
@@ -136,18 +130,28 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
         })
       )}
 
-      {/* 툴팁 */}
       {tooltip && (
         <div
-          className="fixed p-2 bg-black text-white text-sm rounded z-50"
+          className="fixed p-2 bg-black text-white text-sm rounded z-50 flex space-x-2"
           style={{
-            top: tooltip.y + 10, // 마우스 위치 아래로 살짝 이동
-            left: tooltip.x + 10, // 마우스 위치 오른쪽으로 살짝 이동
+            top: tooltip.y + 10,
+            left: tooltip.x + 10,
             transform: 'translate(0, -50%)',
             whiteSpace: 'pre-line',
           }}
         >
-          {tooltip.content}
+          {tooltip.defects.map((defect, index) => (
+            <div key={index} className="p-2 bg-opacity-70 rounded flex flex-col items-center" style={{ backgroundColor: getDefectColor(defect.step) }}>
+              <div className="font-bold">Step {defect.step}</div>
+              <div className="text-gray-200 text-xs">
+                {Object.entries(defect)
+                  .filter(([key]) => key !== 'gdsX' && key !== 'gdsY') // gdsx, gdsy 제외
+                  .map(([key, value]) => (
+                    <div key={key}>{`${key}: ${value}`}</div>
+                  ))}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

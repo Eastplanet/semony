@@ -1,7 +1,7 @@
 // MainPage.tsx
 'use client';
 
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import WaferGrid from '@/app/components/WaferGrid';
 import SummarySection from './SummarySection';
 import { defectInfos } from '@/app/mocks/wafer_map';
@@ -12,6 +12,7 @@ import { DieLocation } from '@/app/types';
 
 export default function MainPage() {  
   const dataContext = useContext(DataContext);
+  const [currentDefects, setCurrentDefects] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
 
   if (!dataContext) {
     return <div>Loading...</div>;
@@ -19,12 +20,7 @@ export default function MainPage() {
 
   const { dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps } = dataContext;
 
-  const images = [
-    { src: '/mocks/macro/0001_golden.TIF', label: "GOLDEN" },
-    { src: '/mocks/macro/0001_ins.TIF', label: "INSPECTION" },
-    { src: '/mocks/macro/0001_bin.TIF', label: "BINARIZE" },
-    { src: '/mocks/macro/0001_psm.TIF', label: "PSM" },
-  ];
+  
 
   const stepData = [
     { step: 1, defects: defectRecordsStep1 },
@@ -67,7 +63,7 @@ export default function MainPage() {
     <div className="pt-0">
       <SummarySection defectData={defectInfos} />
 
-      <div className="mx-24 flex items-start p-2 gap-8 justify-between">
+      <div className="mx-24 flex items-start p-2 gap-8 justify-around">
         <WaferGrid
           dieLocations={dieLocations}
           defectRecords={currentStepData.flatMap((data) => data.defects) || []}
@@ -75,9 +71,11 @@ export default function MainPage() {
           totalCols={totalCols}
           minX={minX}
           minY={minY}
+          currentDefects={currentDefects}
+          setCurrentDefects={setCurrentDefects}
         />
 
-        <ImageGallery images={images} />
+        <ImageGallery currentDefects={currentDefects} />
       </div>
     </div>
   );
