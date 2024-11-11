@@ -47,9 +47,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
     const selectedDefect = currentDefects?.defects[index];
     if(selectedDefect) {
       const { defectID, step } = selectedDefect;
-      
+      console.log(defectID, step)
       const matchingIpus = IPUImages[step]?.find((ipu)=> ipu.ipuNum === defectID);
-
+      console.log(matchingIpus);
+      // IPUImages에 matchingIpus가 없을 경우
+      // IPUImages에 matchingIpus가 있을 경우ㅋ
       if(matchingIpus) {
         const labelMapping: { [key: string]: string } = {
           ins: 'INSPECTION',
@@ -63,19 +65,20 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
           matchingIpus.images.map((image) => {
             const labelKey = image.fileName.split('_')[1]; // [defectId]_[label] 형식에서 label 추출
             const label = labelMapping[labelKey] || labelKey;
-            return { src: image.data, label };
+            console.log(image.data);
+            return { src: `data:image/png;base64,${image.data}`, label };
           }));
       }
 
       // setCurrentImages(
       //   IPUImages[defectStep]
       // )
-      setCurrentImages(
-        images.map((image) => ({
-            src: '/mocks/macro/0001_golden.TIF',
-            label: image.label,
-          }))
-      )
+      // setCurrentImages(
+      //   images.map((image) => ({
+      //       src: '/mocks/macro/0001_golden.TIF',
+      //       label: image.label,
+      //     }))
+      // )
     }
   }
   
