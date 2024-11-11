@@ -1,1 +1,1 @@
-ROOT_PATH = "var/lib/result"
+ROOT_PATH = "/var/lib/result"
