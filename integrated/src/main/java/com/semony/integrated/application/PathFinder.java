@@ -129,7 +129,7 @@ public class PathFinder {
         sb.append("-");
         sb.append(lotSeq);
         sb.append("/");
-        sb.append(slotNo);
+        sb.append(slotNoExcludeZero);
         return sb.toString();
     }
 
