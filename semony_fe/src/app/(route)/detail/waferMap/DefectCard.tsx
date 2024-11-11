@@ -1,10 +1,10 @@
 // DefectCard.tsx
 import React, { useContext } from 'react';
-import { DefectInfo } from '@/app/mocks/wafer_map';
 import { DataContext } from '../DataContext'; // DataContext 가져오기
+import { stepInfo } from '@/app/types';
 
 interface DefectCardProps {
-  data: DefectInfo & { step: number }; // DefectInfo에 step 속성을 추가
+  data: stepInfo & { step: number }; // DefectInfo에 step 속성을 추가
   index: number;
 }
 
@@ -28,17 +28,19 @@ const DefectCard: React.FC<DefectCardProps> = ({ data, index }) => {
 
   return (
     <div
-      className={`shadow-md rounded-lg py-2 px-4 ${cardColor} cursor-pointer transition-colors`}
+      className={`shadow-md rounded-lg py-2 px-4 ${cardColor} cursor-pointer transition-colors font-light text-xs`}
       onClick={handleClick}
       style={{ minWidth: "250px" }}
     >
       <div className="flex flex-row items-center">
         <h3 className="text-gray-700 text-sm font-semibold">{data.moduleId}</h3>
-        <p className="text-xs text-gray-600 p-1">({data.timestamp})</p>
+        <p className="text-xs text-gray-600 p-1">({data.eventDtts})</p>
       </div>
-      <p>Defect Die: {data.defectDie}</p>
-      <p>Defect Area: {data.defectArea}</p>
-      <p>Defect Cnt: {data.defectCnt}</p>
+      <p>defect_count: <span className="font-semibold">{data.defectCnt}</span></p>
+      <p>defect_die_count: <span className="font-semibold">{data.defectDieCnt}</span></p>
+      <p>total_die_count: <span className="font-semibold">{data.nDie}</span></p>
+      <p>defect_area: <span className="font-semibold">{data.defDensity}%</span></p>
+      
     </div>
   );
 };
