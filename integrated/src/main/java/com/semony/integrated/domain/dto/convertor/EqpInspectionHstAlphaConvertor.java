@@ -43,6 +43,7 @@ public class EqpInspectionHstAlphaConvertor {
             dto.setLotId(inspection.getLotId());
             dto.setLotSeq(inspection.getLotSeq());
             dto.setSlotNo(Integer.parseInt(inspection.getSlotNo()));
+            dto.setDate(inspection.getEventDtts());
 
         }
 
