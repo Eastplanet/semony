@@ -55,7 +55,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         defDensity: step.summarySpec.defDensity,
         eventDtts: step.eventDtts,
       }));
-      setThreeStepInfo(formattedData)
+      setThreeStepInfo(formattedData);
 
       setDefectRecordsStep1(step1Data);
       setDefectRecordsStep2(step2Data);
