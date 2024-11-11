@@ -31,10 +31,11 @@ public class EqpInspectionHstAlphaServiceImpl implements EqpInspectionHstAlphaSe
         // EqpInspectionHstAlpha 객체 생성
         System.out.println("CT: " + currentTime);
         System.out.println("ET: " + eventDtts);
+        String savaLotId = String.format("LP2%s_PJ2@%s", requestTime, lotId);
         EqpInspectionHstAlpha inspection = EqpInspectionHstAlpha.builder()
             .eventDtts(eventDtts)
             .moduleId(module)
-            .lotId(lotId)
+            .lotId(savaLotId)
             .lotSeq(BigDecimal.valueOf(lotSeq))
             .slotNo(String.valueOf(slotId))
             .flowRecipe(recipe)
