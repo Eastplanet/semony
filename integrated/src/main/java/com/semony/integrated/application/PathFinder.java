@@ -56,10 +56,10 @@ public class PathFinder {
         this.date = sb.toString();
     }
 
-    public String getMacro(){
-        //PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[18].smf
-        return "PPID"+"["+this.PPID+"]_LOT["+this.lotId+"]_WAFER["+this.slotNoExcludeZero+"].smf";
-    }
+//    public String getMacro(){
+//        //PPID[0TT_EWIM_NO_CHHP]_LOT[LP22024100315_PJ2@89654577]_WAFER[18].smf
+//        return "PPID"+"["+this.PPID+"]_LOT["+this.lotId+"]_WAFER["+this.slotNoExcludeZero+"].smf";
+//    }
 
     private String getFileBaseName(){
         StringBuilder sb = new StringBuilder();
