@@ -80,7 +80,40 @@ public class InspectionProcessor {
     private boolean processModuleRequests(RecipeCombination combination, String recipe,
         LocalDate requestTime,
         String lotId, long lotSeq, int slotId, String selectedModule) {
+        System.out.println("Sending request for IN module with parameters: " +
+            "Combination IN: " + combination.in() +
+            ", Recipe: " + recipe +
+            ", Request Time: " + requestTime +
+            ", Lot ID: " + lotId +
+            ", Lot Seq: " + lotSeq +
+            ", Slot ID: " + slotId +
+            ", Folder Path: " + IN_FOLDER_PATH +
+            ", Inspection Type: " + MACRO_INSPECTION +
+            ", Selected Module: " + selectedModule +
+            ", Inspection Mode: MACRO_ON");
+        System.out.println("Sending request for EWIM module with parameters: " +
+            "Combination EWIM: " + combination.ewim() +
+            ", Recipe: " + recipe +
+            ", Request Time: " + requestTime +
+            ", Lot ID: " + lotId +
+            ", Lot Seq: " + lotSeq +
+            ", Slot ID: " + slotId +
+            ", Folder Path: " + EWIM_FOLDER_PATH +
+            ", Inspection Type: " + EBR +
+            ", Selected Module: " + selectedModule +
+            ", Inspection Mode: EBR");
 
+        System.out.println("Sending request for OUT module with parameters: " +
+            "Combination OUT: " + combination.out() +
+            ", Recipe: " + recipe +
+            ", Request Time: " + requestTime +
+            ", Lot ID: " + lotId +
+            ", Lot Seq: " + lotSeq +
+            ", Slot ID: " + slotId +
+            ", Folder Path: " + OUT_FOLDER_PATH +
+            ", Inspection Type: " + MACRO_INSPECTION +
+            ", Selected Module: " + selectedModule +
+            ", Inspection Mode: MACRO_ON");
         return
             sendAndLogModuleRequest(combination.in(), recipe, requestTime, lotId, lotSeq,
                 slotId,
