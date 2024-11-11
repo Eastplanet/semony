@@ -29,6 +29,8 @@ public class EqpInspectionHstAlphaServiceImpl implements EqpInspectionHstAlphaSe
         LocalTime currentTime = LocalTime.now(); // 현재 시간을 가져옴
         LocalDateTime eventDtts = LocalDateTime.of(requestTime, currentTime); // 동일한 방식으로 eventDtts 설정
         // EqpInspectionHstAlpha 객체 생성
+        System.out.println("CT: " + currentTime);
+        System.out.println("ET: " + eventDtts);
         EqpInspectionHstAlpha inspection = EqpInspectionHstAlpha.builder()
             .eventDtts(eventDtts)
             .moduleId(module)
