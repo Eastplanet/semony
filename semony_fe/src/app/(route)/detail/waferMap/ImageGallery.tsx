@@ -1,8 +1,8 @@
 // ImageGallery.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { DefectRecordSpec } from '@/app/mocks/defect_record';
-
+import {DataContext} from "../DataContext"
 interface ImageGalleryProps {
   currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
 }
@@ -20,23 +20,30 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
   const [isDragging, setIsDragging] = useState(false); // 드래그 상태
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [selectedDefectIndex, setSelectedDefectIndex] = useState(0);
+  useEffect(() => {
+    if(currentDefects?.defects && currentDefects.defects.length > 0){
+      setSelectedDefectIndex(0);
+      updateImagesForDefect(0);
+    }
+    setSelectedDefectIndex(0);
+  }, [currentDefects]);
+  
   const [currentImages, setCurrentImages] = useState(images);
-  const [cursorPosition, setCursorPosition] = useState<{ x: number; y: number } | null>(null);
-
+  const dataContext = useContext(DataContext);
+  if(!dataContext) {
+    return null;
+  }
+  const { threeStepInfo } = dataContext;
   
   
   // 확대/축소 기능
   const handleZoomIn = () => setZoom((prevZoom) => Math.min(prevZoom + 10, 500));
   const handleZoomOut = () => setZoom((prevZoom) => Math.max(prevZoom - 10, 100));
 
-  useEffect(() => {
-    if(currentDefects?.defects && currentDefects.defects.length > 0){
-      setSelectedDefectIndex(0);
-      updateImagesForDefect(0);
-    }
-  }, []);
+ 
 
   const updateImagesForDefect = (index: number) => {
+    
     const selectedDefect = currentDefects?.defects[index];
     if(selectedDefect) {
       setCurrentImages(
@@ -79,21 +86,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
         x: (e.clientX - dragStart.x) / scaleFactor,
         y: (e.clientY - dragStart.y) / scaleFactor,
       });
-    } else {
-      // 마우스가 움직일 때마다 커서 위치를 업데이트
-      const rect = (e.target as HTMLDivElement).getBoundingClientRect();
-      const xPos = ((e.clientX - rect.left) / rect.width) * 100;
-      const yPos = ((e.clientY - rect.top) / rect.height) * 100;
-      
-      if (xPos >= 0 && xPos <= 100 && yPos >= 0 && yPos <= 100) {
-        setCursorPosition({
-          x: xPos / (zoom / 100), // 확대 비율에 따라 조정
-          y: yPos / (zoom / 100),
-        });
-      } else {
-        setCursorPosition(null); // 이미지 범위를 벗어나면 빨간 점을 숨김
-      }
-    }
+    } 
   };
 
   // 드래그 종료
@@ -103,44 +96,41 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
 
   return (
     <div
-      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh]  border border-1 border-gray-200 "
+      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh] max-w-full border border-1 border-gray-200 "
     >
-      <div className="flex flex-col items-start mr-4 w-64 space-y-2">
+    <div
+        className="flex flex-col items-start mr-4 min-w-fit space-y-2 overflow-y-auto"
+        style={{
+          scrollbarWidth: 'none', // Firefox에서 스크롤바 숨김
+          msOverflowStyle: 'none', // IE와 Edge에서 스크롤바 숨김
+        }}
+      >
         {currentDefects?.defects.map((defect, index) => (
           <button
             key={index}
             onClick={() => handleDefectSelection(index)}
             className={`py-2 px-4 w-full rounded-lg border ${
-              index === selectedDefectIndex ? 'bg-blue-200 border-blue-400' : 'bg-gray-50 border-gray-200'
-            } shadow-md hover:shadow-lg transition-all text-left`}
+              index === selectedDefectIndex ? 'bg-gray-600 border-gray-300 shadow-md text-gray-200' : 'bg-gray-50 border-gray-200 hover:bg-gray-200'
+            }  transition-all text-left`}
           >
-            <div className="font-semibold text-gray-800 text-sm">Step: {defect.step}</div>
-            <div className="text-xs text-gray-600">Defect ID: {defect.defectID}</div>
-            <div className="text-xs text-gray-600">Area: {defect.defectArea}</div>
-            <div className="text-xs text-gray-600">Radius: {defect.radius}</div>
-            <div className="text-xs text-gray-600">Gray Mean: {defect.grayMean}</div>
-            <div className="text-xs text-gray-600">
-              Gray Range: {defect.grayMin} - {defect.grayMax}
+            <div className={`${
+              index === selectedDefectIndex ? "text-white font-bold " :"" } font-semibold  text-xs`} > {threeStepInfo[defect.step - 1]?.moduleId || 'N/A'}</div>
+            <div className="text-xs ">defect_id: {defect.defectID}</div>
+            <div className="text-xs ">defect_area: {defect.defectArea}</div>
+            <div className="text-xs ">radius: {defect.radius}</div>
+            <div className="text-xs ">gray_mean: {defect.grayMean}</div>
+            <div className="text-xs ">
+              gray_range: {defect.grayMin} - {defect.grayMax}
             </div>
-            <div className="text-xs text-gray-600 mt-1">Size (X, Y): {defect.xsize} x {defect.ysize}</div>
+            <div className="text-xs  mt-1">size (x, y): {defect.xsize} x {defect.ysize}</div>
           </button>
         ))}
       </div>
 
 
-      {/* 확대/축소 툴바 */}
-      <div className="flex flex-col items-center mr-4 space-y-2">
-        <button onClick={handleZoomIn} className="text-gray-500 hover:text-gray-700">
-          <span role="img" aria-label="Zoom In">➕</span>
-        </button>
-        <span className="text-gray-700 font-semibold">{zoom}%</span>
-        <button onClick={handleZoomOut} className="text-gray-500 hover:text-gray-700">
-          <span role="img" aria-label="Zoom Out">➖</span>
-        </button>
-      </div>
 
       {/* 이미지 그리드 */}
-      <div className="grid grid-cols-2 gap-4 w-fit h-fit" onWheel={handleWheel}>
+      <div className="grid grid-cols-2 gap-4 w-full h-full" onWheel={handleWheel}>
         {images.slice(0, 4).map((image, index) => (
           <div key={index} className="relative flex flex-col items-center w-full h-full">
             {/* 라벨 */}
@@ -171,6 +161,16 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
           </div>
         ))}
       </div>
+      <div className="flex flex-col items-center ml-4 space-y-2 text-sm">
+        <button onClick={handleZoomIn} className="text-gray-500 hover:text-gray-700">
+          <span role="img" aria-label="Zoom In">➕</span>
+        </button>
+        <span className="text-gray-700 font-semibold">{zoom}%</span>
+        <button onClick={handleZoomOut} className="text-gray-500 hover:text-gray-700">
+          <span role="img" aria-label="Zoom Out">➖</span>
+        </button>
+      </div>
+
     </div>
   );
 };

@@ -1,10 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { DefectRecordSpec } from '../mocks/defect_record';
-
-interface DieLocation {
-  XINDEX: number;
-  YINDEX: number;
-}
+import { DieLocation } from '../types';
 
 interface WaferGridProps {
   dieLocations: DieLocation[];
@@ -13,14 +9,13 @@ interface WaferGridProps {
   totalCols: number;
   minX: number;
   minY: number;
-  currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
   setCurrentDefects: React.Dispatch<React.SetStateAction<{ x: number; y: number; defects: DefectRecordSpec[] } | null>>;
 }
 
 const DIE_WIDTH = 8639.48;
 const DIE_HEIGHT = 4986.74;
 
-const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects, currentDefects}) => {
+const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects}) => {
   const [tooltip, setTooltip] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
 
   // useMemo를 사용하여 grid를 메모이제이션
@@ -35,11 +30,11 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
           return { type: 'defect', defects };
         }
 
-        if (dieLocations.some(die => die.XINDEX === x && die.YINDEX === y)) {
-          return { type: 'active' };
+        if (dieLocations.some(die => die.xindex === x && die.yindex === y)) {
+          return  { type: '' };
         }
 
-        return { type: '' };
+        return { type: 'none' };
       });
     });
   }, [totalRows, totalCols, minX, minY, dieLocations, defectRecords]);
@@ -84,7 +79,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
 
   return (
     <div
-    className="relative aspect-square w-[70vh] max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
+    className="relative aspect-square w-[70vh] my-auto max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
     style={{
       gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
       gridTemplateRows: `repeat(${totalRows}, 1fr)`,
@@ -123,7 +118,7 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
             <div
               key={`${rowIndex}-${colIndex}`}
               className={`w-full h-full border 
-                ${cell.type === 'active' ? 'bg-orange-200' : 'bg-white'}
+                ${cell.type === 'none' ? 'bg-slate-200' : 'bg-white'}
                 border-orange-300`}
             ></div>
           );
