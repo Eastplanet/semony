@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { DefectRecordSpec } from '../mocks/defect_record';
+import { DefectRecordSpec } from '../types';
 import { DieLocation } from '../types';
 
 interface WaferGridProps {
@@ -17,6 +17,16 @@ const DIE_HEIGHT = 4986.74;
 
 const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects}) => {
   const [tooltip, setTooltip] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
+  const [zoom, setZoom] = useState(1); // 기본 확대 비율 1
+  
+  const handleWheel = (event: React.WheelEvent) => {
+    event.preventDefault();
+    if (event.deltaY < 0) {
+      setZoom((prevZoom) => Math.min(prevZoom + 0.1, 3)); // 최대 3배까지 확대
+    } else {
+      setZoom((prevZoom) => Math.max(prevZoom - 0.1, 0.5)); // 최소 0.5배까지 축소
+    }
+  };
 
   // useMemo를 사용하여 grid를 메모이제이션
   const grid = useMemo(() => {
@@ -80,7 +90,9 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
   return (
     <div
     className="relative aspect-square w-[70vh] my-auto max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
+    onWheel={handleWheel} // 스크롤 이벤트 핸들러 추가
     style={{
+      // transform: `scale(${zoom})`, // zoom 상태에 따라 확대/축소 적용
       gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
       gridTemplateRows: `repeat(${totalRows}, 1fr)`,
     }}

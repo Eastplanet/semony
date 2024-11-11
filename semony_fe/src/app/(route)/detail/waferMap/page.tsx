@@ -51,6 +51,7 @@ export default function MainPage() {
       <SummarySection defectData={threeStepInfo} />
 
       <div className="mx-24 flex items-start p-2 gap-8 justify-around">
+        <div className="overflow-hidden mx-auto my-auto">
         <WaferGrid
           dieLocations={DieLocations}
           defectRecords={currentStepData.flatMap((data) => data.defects) || []}
@@ -60,7 +61,7 @@ export default function MainPage() {
           minY={minY}
           setCurrentDefects={setCurrentDefects}
         />
-
+      </div>
         <ImageGallery currentDefects={currentDefects} />
       </div>
     </div>

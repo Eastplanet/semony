@@ -33,25 +33,26 @@ const WaferTable = () => {
     };
     
   useEffect(() => {
-    // const now = new Date();
+    const now = new Date();
 
-    // // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
-    // const formatDateTime = (date: Date): string => {
-    //   const pad = (num: number): string => num.toString().padStart(2, '0');
-    //   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    // };
+    // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
+    const formatDateTime = (date: Date): string => {
+      const pad = (num: number): string => num.toString().padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    };
     
 
-    // const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
-    // const endDate = formatDateTime(now); // 현재 시간
-
-    // // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
-    // request(`wafer?startDate=2024-10-03T00:00:00&endDate=2024-10-03T19:00:00`)
-    //   .then((data) => {
-    //     console.log(data);
-    //     setListData(data);
-    //   })
-    //   .catch((err) => console.error(err));
+    const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
+    const endDate = formatDateTime(now); // 현재 시간
+    setStartDate(startDate);
+    setEndDate(endDate);
+    // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
+    request(`wafer?startDate=${startDate}&endDate=${endDate}`)
+      .then((data) => {
+        console.log(data);
+        setListData(data);
+      })
+      .catch((err) => console.error(err));
     fetchData();
 
     const handleClickOutside = (event: MouseEvent) => {

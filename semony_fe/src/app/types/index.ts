@@ -104,3 +104,34 @@ export interface WaferInspectionStep {
   defectCnt: number;
   defectDieCnt: number;
 }
+
+export interface ImageProps {
+  fileName: string;
+  data: string;
+}
+
+
+export interface imagesPerStep {
+  ipus: { 
+    ipuNum: number; 
+    images: ImageProps[]; 
+  }[]; // 여러 개의 ipu 객체 포함 가능
+  macro: ImageProps | null;
+  golden: ImageProps | null;
+  ebr: ImageProps | null;
+}
+
+export interface MainImageItem {
+  golden: ImageProps;
+  macro: ImageProps;
+  ebr?: ImageProps;
+}
+
+export type MainImages = MainImageItem[];
+
+export interface ipus {
+  ipuNum: number;
+  images: ImageProps[];
+}
+
+export type IPUImages = ipus[][];
