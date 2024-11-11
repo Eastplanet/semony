@@ -1,10 +1,10 @@
 // SummarySection.tsx
 import React from 'react';
 import DefectCard from './DefectCard';
-import { DefectInfo } from '@/app/mocks/wafer_map';
+import { stepInfo } from '@/app/types';
 
 interface SummarySectionProps {
-  defectData: DefectInfo[];
+  defectData: stepInfo[];
 }
 
 const SummarySection: React.FC<SummarySectionProps> = ({ defectData }) => (

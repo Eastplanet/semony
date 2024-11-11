@@ -17,8 +17,6 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
     router.push(`/detail/${tab}`);
   };
 
-  // Update activeTab based on the current path
-
   useEffect(() => {
     const currentTab = pathname.split('/').pop(); // 현재 경로에서 탭 추출
     if (currentTab) {
@@ -29,14 +27,13 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   // Tabs array to simplify rendering
   const tabs = [
     { name: 'waferMap', label: 'WAFER MAP' },
-    { name: 'macro', label: 'MACRO' },
-    { name: 'golden', label: 'GOLDEN' },
+    { name: 'macro', label: 'MACRO / GOLDEN' },
     { name: 'ebr', label: 'EBR' },
   ];
 
   return (
     <DataProvider>
-      <div className="p-4 md:p-6 pt-1 h-screen overflow-auto">
+      <div className="p-4 md:p-6 pt-1 h-[100vh]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           {/* Wafer Header */}
           <div className="mb-4 md:mb-0">

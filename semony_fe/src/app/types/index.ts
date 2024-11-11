@@ -13,10 +13,19 @@ export interface WaferData {
   lotSeq: string;
   modules: ModuleData[]; // modules 속성 추가
 }
+
+export interface stepInfo {
+  moduleId: string;
+  defectDieCnt: number;
+  defectCnt: number;
+  nDie: number;
+  defDensity: number;
+  eventDtts: string;
+}
   
 export interface DieLocation {
-    XINDEX: number;
-    YINDEX: number;
+    xindex: number;
+    yindex: number;
   }
   
 export interface DefectRecord {
