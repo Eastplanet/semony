@@ -15,6 +15,12 @@ import java.util.Base64;
 
 public class ImageEncoderInLocal implements ImageEncoder {
 
+    @Override
+    public List<ImageSet> encodeGolden(String lotId, BigDecimal lotSeq, String flowRecipe,
+        String slotNo, LocalDateTime date) {
+        return List.of();
+    }
+
     public List<ImageSet> encode(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo, LocalDateTime date) {
         String folderPath = "static/images";
         ImageSet imageSet = new ImageSet();

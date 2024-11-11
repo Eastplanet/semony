@@ -23,6 +23,60 @@ import org.springframework.stereotype.Component;
 public class ImageEncoderUsingMountedFolder implements ImageEncoder {
 
     @Override
+    public List<ImageSet> encodeGolden(String lotId, BigDecimal lotSeq, String flowRecipe,
+        String slotNo, LocalDateTime date) {
+        PathFinder pathFinder = new PathFinder(FlowRecipe.findByPpid(flowRecipe), lotSeq.toString(),
+            lotId, slotNo, date);
+
+        List<ImageSet> imageSets = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+
+            ImageSet imageSet = new ImageSet();
+
+            String path = null;
+            String ebrPath = null;
+
+            switch (i) {
+                case 0:
+                    path = pathFinder.getInPath();
+                    break;
+                case 1:
+                    path = pathFinder.getEwimPath();
+                    ebrPath = pathFinder.getEwimPathEBR();
+                    break;
+                case 2:
+                    path = pathFinder.getOutPath();
+                    break;
+            }
+
+            // Golden 가져오기
+            ImageData imageData = new ImageData();
+            imageData.setFileName("Golden");
+            imageData.setData(getFile(path, "Golden.jpg"));
+            imageSet.setGolden(imageData);
+
+            // Macro 가져오기
+            imageData = new ImageData();
+            imageData.setFileName("Macro");
+            imageData.setData(getFile(path, "PPID"));
+            imageSet.setMacro(imageData);
+
+
+            // i==1 EWIM 모듈인 경우 EBR 가져오기
+            if(i==1){
+                imageData = new ImageData();
+                imageData.setFileName("EBR");
+                imageData.setData(getFile(ebrPath, "EBR"));
+                imageSet.setEBR(imageData);
+            }
+            imageSets.add(imageSet);
+        }
+
+        return imageSets;
+    }
+
+    @Override
     public List<ImageSet> encode(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo,
         LocalDateTime date) {
 
