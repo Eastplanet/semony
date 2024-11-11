@@ -74,13 +74,16 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
             // IPU 가져오기
             List<IPU> ipuList = new ArrayList<IPU>();
             Map<String, List<ImageData>> groupData = getIPU(path);
-            for (Map.Entry<String, List<ImageData>> entry : groupData.entrySet()) {
-                IPU ipu = new IPU();
-                ipu.setIpuNum(Integer.parseInt(entry.getKey()));
-                ipu.setImages(entry.getValue());
-                ipuList.add(ipu);
+            if(groupData != null) {
+                for (Map.Entry<String, List<ImageData>> entry : groupData.entrySet()) {
+                    IPU ipu = new IPU();
+                    ipu.setIpuNum(Integer.parseInt(entry.getKey()));
+                    ipu.setImages(entry.getValue());
+                    ipuList.add(ipu);
+                }
+                imageSet.setIpus(ipuList);
             }
-            imageSet.setIpus(ipuList);
+
 
             // i==1 EWIM 모듈인 경우 EBR 가져오기
             if(i==1){
@@ -128,7 +131,7 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
         FileSystemResource resource = new FileSystemResource(base);
 
         if (!resource.exists()) {
-            throw new RuntimeException("폴더를 찾을 수 없습니다: " + base);
+           return null;
         }
 
         File[] files = resource.getFile().listFiles();
