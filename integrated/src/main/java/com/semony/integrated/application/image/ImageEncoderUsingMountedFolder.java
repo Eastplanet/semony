@@ -214,7 +214,23 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
             try {
                 String fileNameWithoutExtension = file.getName().split("\\.")[0];
 //                System.out.println(file.toPath());
-                String data = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+//                String data = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+
+
+                BufferedImage image = ImageIO.read(file);
+                if (image == null) {
+                    throw new IOException("파일 형식을 변환할 수 없음: " + file.getName());
+                }
+
+                // JPEG로 변환
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpeg", baos);
+
+                // Base64 인코딩 후 반환
+                byte[] jpegBytes = baos.toByteArray();
+                String data = Base64.getEncoder().encodeToString(jpegBytes);
+
+                //123
 
                 ImageData imageData = new ImageData();
                 imageData.setFileName(fileNameWithoutExtension);
