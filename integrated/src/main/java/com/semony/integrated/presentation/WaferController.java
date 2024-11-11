@@ -55,7 +55,20 @@ public class WaferController {
         @RequestParam(value = "lotSeq") BigDecimal lotSeq,
         @RequestParam(value = "slotNo") String slotNo,
         @RequestParam(value = "date") LocalDateTime date) {
+
+        // 시작 시간 측정
+        long startTime = System.currentTimeMillis();
+
         List<ImageSet> encode = imageEncoder.encode(lotId, lotSeq, ppid, slotNo, date);
+
+        // 끝 시간 측정
+        long endTime = System.currentTimeMillis();
+
+        // 소요 시간 계산
+        long duration = endTime - startTime;
+        System.out.println("Request processing time: " + duration + " ms");
+
+
         return ResponseEntity.ok(encode);
     }
 
