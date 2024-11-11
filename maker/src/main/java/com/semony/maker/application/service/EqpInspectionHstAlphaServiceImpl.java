@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,9 @@ public class EqpInspectionHstAlphaServiceImpl implements EqpInspectionHstAlphaSe
         // EqpInspectionHstAlpha 객체 생성
         System.out.println("CT: " + currentTime);
         System.out.println("ET: " + eventDtts);
-        String savaLotId = String.format("LP2%s_PJ2@%s", requestTime, lotId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String formattedTime = requestTime.format(formatter);
+        String savaLotId = String.format("LP2%s_PJ2@%s", formattedTime, lotId);
         EqpInspectionHstAlpha inspection = EqpInspectionHstAlpha.builder()
             .eventDtts(eventDtts)
             .moduleId(module)
