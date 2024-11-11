@@ -5,9 +5,9 @@ import java.util.List;
 public class Constants {
 
     public static final String MODULE_DATA_URI = "/modules/data";
-    public static final String IN_FOLDER_PATH = "C:/root/in";
-    public static final String EWIM_FOLDER_PATH = "C:/root/ewim";
-    public static final String OUT_FOLDER_PATH = "C:/root/out";
+    public static final String IN_FOLDER_PATH = "/var/lib/result/root/in";
+    public static final String EWIM_FOLDER_PATH = "/var/lib/result/root/ewim";
+    public static final String OUT_FOLDER_PATH = "/var/lib/result/root/out";
     public static final String MACRO_INSPECTION = "Macro[Inspection]";
     public static final String EBR = "EBR";
     public static final String ERROR_INVALID_RECIPE_COMBINATION = "Invalid recipe combination";
