@@ -93,7 +93,7 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
 
   # 최종 폴더 경로를 구성, 마지막에 macro_folder 추가
   target_folder_path = os.path.join(
-      ROOT_PATH, module_name, "InVision", "SaveData", date, folder_id, slotNo,
+      ROOT_PATH, module_name, "InVision", "SaveData", date[:-2], folder_id, slotNo,
       macro_folder
   )
   os.makedirs(target_folder_path, exist_ok=True)
