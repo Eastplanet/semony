@@ -61,7 +61,7 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
             // Macro 가져오기
             imageData = new ImageData();
             imageData.setFileName("Macro");
-            imageData.setData(getFile(path, pathFinder.getMacro()));
+            imageData.setData(getFile(path, "Thumbnail"));
             imageSet.setMacro(imageData);
 
 
