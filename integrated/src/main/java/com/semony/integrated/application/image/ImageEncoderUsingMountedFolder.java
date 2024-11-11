@@ -5,17 +5,19 @@ import com.semony.integrated.domain.dto.image.IPU;
 import com.semony.integrated.domain.dto.image.ImageData;
 import com.semony.integrated.domain.dto.image.ImageSet;
 import com.semony.integrated.domain.entity.FlowRecipe;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
@@ -165,8 +167,23 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
         for (File file : files) {
             if (file.getName().contains(findFile)) {
                 try {
-                    byte[] bytes = Files.readAllBytes(file.toPath());
-                    return Base64.getEncoder().encodeToString(bytes);
+//                    byte[] bytes = Files.readAllBytes(file.toPath());
+//                    return Base64.getEncoder().encodeToString(bytes);
+                    // 이미지 파일을 BufferedImage로 읽기
+                    BufferedImage image = ImageIO.read(file);
+                    if (image == null) {
+                        throw new IOException("파일 형식을 변환할 수 없음: " + file.getName());
+                    }
+
+                    // JPEG로 변환
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(image, "jpeg", baos);
+
+                    // Base64 인코딩 후 반환
+                    byte[] jpegBytes = baos.toByteArray();
+                    return Base64.getEncoder().encodeToString(jpegBytes);
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
