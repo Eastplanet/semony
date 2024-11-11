@@ -82,7 +82,7 @@ public class PathFinder {
     public String getInPath() {
         StringBuilder sb = new StringBuilder();
         sb.append(getBasePath(this.in));
-        sb.append("/" + in + " (IN)");
+        sb.append("/" + in);
         sb.append(getCommonPath());
         sb.append("/Macro[Inspection]");
         return sb.toString();
@@ -91,7 +91,7 @@ public class PathFinder {
     public String getOutPath(){
         StringBuilder sb = new StringBuilder();
         sb.append(getBasePath(this.out));
-        sb.append("/" + out + " (OUT)");
+        sb.append("/" + out);
         sb.append(getCommonPath());
         sb.append("/Macro[Inspection]");
         return sb.toString();
