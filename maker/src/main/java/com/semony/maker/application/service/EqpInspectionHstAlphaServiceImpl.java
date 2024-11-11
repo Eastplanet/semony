@@ -5,6 +5,7 @@ import com.semony.maker.domain.repository.EqpInspectionHstAlphaRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,11 @@ public class EqpInspectionHstAlphaServiceImpl implements EqpInspectionHstAlphaSe
 
         // 현재 시간 사용하여 createDtts 및 eventDtts 설정
         LocalDateTime currentDateTime = LocalDateTime.now();
-
+        LocalTime currentTime = LocalTime.now(); // 현재 시간을 가져옴
+        LocalDateTime eventDtts = LocalDateTime.of(requestTime, currentTime); // 동일한 방식으로 eventDtts 설정
         // EqpInspectionHstAlpha 객체 생성
         EqpInspectionHstAlpha inspection = EqpInspectionHstAlpha.builder()
-            .eventDtts(currentDateTime)
+            .eventDtts(eventDtts)
             .moduleId(module)
             .lotId(lotId)
             .lotSeq(BigDecimal.valueOf(lotSeq))
