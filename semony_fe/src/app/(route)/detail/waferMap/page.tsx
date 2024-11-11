@@ -6,8 +6,8 @@ import WaferGrid from '@/app/components/WaferGrid';
 import SummarySection from './SummarySection';
 import ImageGallery from './ImageGallery';
 import { DataContext } from '../DataContext';
-import { DefectRecordSpec, DieLocations } from '@/app/mocks/defect_record';
-import { DieLocation } from '@/app/types';
+import { DieLocations } from '@/app/mocks/defect_record';
+import { DefectRecordSpec, DieLocation } from '@/app/types';
 
 export default function MainPage() {  
   const dataContext = useContext(DataContext);

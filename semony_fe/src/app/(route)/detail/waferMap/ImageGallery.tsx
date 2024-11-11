@@ -1,7 +1,7 @@
 // ImageGallery.tsx
 import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
-import { DefectRecordSpec } from '@/app/mocks/defect_record';
+import { DefectRecordSpec } from '@/app/types';
 import {DataContext} from "../DataContext"
 interface ImageGalleryProps {
   currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
@@ -96,7 +96,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
 
   return (
     <div
-      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh] max-w-full border border-1 border-gray-200 "
+      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh] max-w-full border border-1 border-gray-200"
     >
     <div
         className="flex flex-col items-start mr-4 min-w-fit space-y-2 overflow-y-auto"
@@ -110,7 +110,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
             key={index}
             onClick={() => handleDefectSelection(index)}
             className={`py-2 px-4 w-full rounded-lg border ${
-              index === selectedDefectIndex ? 'bg-gray-600 border-gray-300 shadow-md text-gray-200' : 'bg-gray-50 border-gray-200 hover:bg-gray-200'
+              index === selectedDefectIndex ? 'bg-gray-700 border-gray-300 shadow-md text-gray-200' : 'bg-gray-50 border-gray-200 hover:bg-gray-200'
             }  transition-all text-left`}
           >
             <div className={`${
@@ -131,7 +131,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
 
       {/* 이미지 그리드 */}
       <div className="grid grid-cols-2 gap-4 w-full h-full" onWheel={handleWheel}>
-        {images.slice(0, 4).map((image, index) => (
+        {currentImages.slice(0, 4).map((image, index) => (
           <div key={index} className="relative flex flex-col items-center w-full h-full">
             {/* 라벨 */}
             <div className="text-center text-gray-600 bg-gray-100 rounded-t-lg w-full py-1 font-semibold">

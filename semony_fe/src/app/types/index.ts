@@ -45,3 +45,62 @@ export interface DefectRecord {
     gray_mean: number;
     radius: number;
   }
+
+  export interface DefectRecordSpec {
+    defectID: number;
+    defectArea: number;
+    gdsX: number;
+    gdsY: number;
+    grayMin: number;
+    grayMax: number;
+    grayMean: number;
+    alg: number;
+    radius: number;
+    select: number;
+    yrel: number;
+    xsize: number;
+    xrel: number;
+    ysize: number;
+    xindex: number;
+    yindex: number;
+    step: number;
+  }
+  
+  export interface SummarySpec {
+    testNo: number;
+    defDensity: number;
+    ndefect: number;
+    ndie: number;
+    ndefDie: number;
+  }
+
+export interface WaferInspectionStep {
+  moduleId: string;
+  eventDtts: string;
+  fileVersion: string;
+  fileTimestamp: string;
+  inspectionStationID: string[];
+  sampleType: string;
+  resultTimestamp: string;
+  lotID: string;
+  sampleSize: [number, number];
+  setupID: [string, string, string];
+  stepID: string;
+  coatorID: number;
+  spinName: string | null;
+  sampleOrientationMarkType: string;
+  orientationMarkLocation: string;
+  diePitch: [number, number];
+  shotComposition: [number, number];
+  dieOrigin: [number, number];
+  waferID: string;
+  slot: number;
+  sampleCenterLocation: [number, number];
+  inspectionTest: number;
+  sampleTestPlan: number;
+  dieLocations: DieLocation[] | null;
+  defectRecordSpec: DefectRecordSpec[];
+  summarySpec: SummarySpec;
+  defectCnt: number;
+  defectDieCnt: number;
+}

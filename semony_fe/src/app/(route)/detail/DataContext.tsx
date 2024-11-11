@@ -1,8 +1,7 @@
 // src/app/detail/DataContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import request from '@/app/apis/request';
-import { DieLocation, stepInfo } from '@/app/types';
-import { DefectRecordSpec } from '@/app/mocks/defect_record';
+import { DieLocation, stepInfo, DefectRecordSpec, WaferInspectionStep } from '@/app/types';
 
 
 interface DataContextProps {
@@ -48,11 +47,11 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         step: 3, // 3단계 결함
       }));
 
-      const formattedData: stepInfo[] = data.waferInspections.map((step: any) => ({
+      const formattedData: stepInfo[] = data.waferInspections.map((step: WaferInspectionStep) => ({
         moduleId: step.moduleId,
         defectDieCnt: step.defectDieCnt,
         defectCnt: step.defectCnt,
-        nDie: step.summarySpec.nDie,
+        nDie: step.summarySpec.ndie,
         defDensity: step.summarySpec.defDensity,
         eventDtts: step.eventDtts,
       }));
@@ -64,27 +63,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     })
     .catch((error) => {
       console.error("Error fetching wafer defect detail data:", error);
-
-      // setDieLocations(DieLocations);
-
-      // setDefectRecordsStep1(
-      //   waferInspectionsData?.waferInspections?.[0]?.defectRecordSpec?.map((defect: DefectRecordSpecWithoutStep) => ({
-      //     ...defect,
-      //     step: 1,
-      //   })) || []
-      // );
-      // setDefectRecordsStep2(
-      //   waferInspectionsData?.waferInspections?.[1]?.defectRecordSpec?.map((defect: DefectRecordSpecWithoutStep) => ({
-      //     ...defect,
-      //     step: 2,
-      //   })) || []
-      // );
-      // setDefectRecordsStep3(
-      //   waferInspectionsData?.waferInspections?.[2]?.defectRecordSpec?.map((defect: DefectRecordSpecWithoutStep) => ({
-      //     ...defect,
-      //     step: 3,
-      //   })) || []
-      // );
     });
     request(`wafer/images?ppid=0TT_EWIM_NO_CHHP&slotNo=18&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&date=2024-10-03T00:00:00`).then((data) => {
       console.log(data);

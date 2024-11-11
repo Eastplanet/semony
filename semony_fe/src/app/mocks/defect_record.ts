@@ -1,25 +1,6 @@
 import { DieLocation } from "../types";
 
 // DefectRecordSpec 타입 정의
-export interface DefectRecordSpec {
-  defectID: number;
-  defectArea: number;
-  gdsX: number;
-  gdsY: number;
-  grayMin: number;
-  grayMax: number;
-  grayMean: number;
-  alg: number;
-  radius: number;
-  select: number;
-  yrel: number;
-  xsize: number;
-  xrel: number;
-  ysize: number;
-  xindex: number;
-  yindex: number;
-  step: number;
-}
 
 export interface DefectRecordSpecWithoutStep {
     defectID: number;
