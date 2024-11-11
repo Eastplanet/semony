@@ -19,7 +19,15 @@ interface DataContextProps {
 
 export const DataContext = createContext<DataContextProps | undefined>(undefined);
 
-export const DataProvider = ({ children }: { children: ReactNode }) => {
+interface DataProviderProps {
+  ppid: string;
+  lotId: string;
+  lotSeq: string;
+  slotNo: string;
+  children: ReactNode;
+}
+
+export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, children }: DataProviderProps) => {
   const [dieLocations, setDieLocations] = useState<DieLocation[]>([]);
   const [threeStepInfo, setThreeStepInfo] = useState<stepInfo[]>([]);
   const [defectRecordsStep1, setDefectRecordsStep1] = useState<DefectRecordSpec[]>([]);
@@ -29,12 +37,16 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [mainImages, setMainImages] = useState<MainImages>([]);
   const [IPUImages, setIPUImages] = useState<IPUImages>([]);
 
+  console.log("ppid, lotid, lotSeq, slotNo", ppid, lotId, lotSeq, slotNo)
+
   const toggleStep = (step: number) => {
     setSelectedSteps((prev) =>
       prev.includes(step) ? prev.filter((s) => s !== step) : [...prev, step]
     );
   };
   const fetchMainImages = () => {
+    // request(`wafer/images/summary?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=2024-10-03T00:00:00`)
+
     request(`wafer/images/summary?ppid=0TT_EWIM_NO_CHHP&slotNo=18&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&date=2024-10-03T00:00:00`)
       .then((data) => {
         const formattedData: MainImages = [
@@ -61,6 +73,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchIPUImages = () => {
+    // request(`wafer/images?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=2024-10-03T00:00:00`)
+
     request(`wafer/images?ppid=0TT_EWIM_NO_CHHP&slotNo=18&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&date=2024-10-03T00:00:00`)
       .then((data) => {
         const formattedData: IPUImages = data.map((group: any) => 
@@ -83,6 +97,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   
 
   const fetchData = () => {
+    // request(`wafer/detail?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=2024-10-03T00:00:00`)
+
     request(`wafer/detail?ppid=0TT_EWIM_NO_CHHP&slotNo=18&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&date=2024-10-03T00:00:00`).then((data) => {
       setDieLocations(data.dieLocations);
       const step1Data = data.waferInspections[0].defectRecordSpec.map((defect: DefectRecordSpec) => ({
@@ -120,7 +136,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchMainImages();
     fetchData();
     fetchIPUImages();
-  }, []);
+  }, [ppid, lotId, lotSeq, slotNo]);
 
 
   return (

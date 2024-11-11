@@ -5,16 +5,25 @@ import React, { useState, useEffect } from 'react';
 import WaferHeader from './WaferHeader';
 import { useRouter, usePathname } from 'next/navigation';
 import { DataProvider } from './DataContext';
+import { useParams } from 'next/navigation';
 
 const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null); 
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams(); // 경로 파라미터 가져오기
+
+  // Extract parameters and convert them to string if they exist
+  const ppid = params.ppid as string;
+  const lotId = params.lotId as string;
+  const lotSeq = params.lotSeq as string;
+  const slotNo = params.slotNo as string;
+
 
   // Handle tab change and route navigation
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    router.push(`/detail/${tab}`);
+    router.push(`/detail/${ppid}/${lotId}/${lotSeq}/${slotNo}/${tab}`);
   };
 
   useEffect(() => {
@@ -32,16 +41,16 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <DataProvider>
-      <div className="p-4 md:p-6 pt-1 h-[100vh]">
+    <DataProvider ppid={ppid} lotId={lotId} lotSeq={lotSeq} slotNo={slotNo}>
+      <div className="p-2 pt-1 h-[100vh]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           {/* Wafer Header */}
           <div className="mb-4 md:mb-0">
             <WaferHeader
-              ppid="0TT_EWIM_NO_CHHP"
-              lotId="LP22024100315_PJ2@89654577"
-              lotSeq="727939436"
-              slotNo="2"
+              ppid={ppid}
+              lotId={lotId}
+              lotSeq={lotSeq}
+              slotNo={slotNo}
             />
           </div>
   

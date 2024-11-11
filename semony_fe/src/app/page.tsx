@@ -6,6 +6,7 @@ import Image from 'next/image';
 import request from './apis/request';
 import {WaferData} from '@/app/types';
 import { mockData } from './mocks/mock_wafer';
+import { useRouter } from 'next/navigation';
 
 const WaferTable = () => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -19,7 +20,7 @@ const WaferTable = () => {
   const [listData, setListData] = useState<WaferData[]>([]);
   const [startDate, setStartDate] = useState('2024-10-03T00:00:00');
   const [endDate, setEndDate] = useState('2024-10-03T19:00:00');
-  
+  const router = useRouter();
   const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
   const fetchData = () => {
@@ -292,7 +293,8 @@ const WaferTable = () => {
 {/* 본문 데이터 */}
 <tbody className="text-sm text-gray-700">
   {filteredData.map((data, index) => (
-    <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} transition-colors`}>
+    <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} transition-colors`}
+    onClick={() => {router.push(`/detail/${data.ppid}/${data.lotId}/${data.lotSeq}/${data.slotNo}/waferMap`)}}>
       <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
         {data.ppid}
       </td>

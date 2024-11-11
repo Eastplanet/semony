@@ -1,6 +1,6 @@
 // DefectCard.tsx
 import React, { useContext } from 'react';
-import { DataContext } from '../DataContext'; // DataContext 가져오기
+import { DataContext } from '../../../../../DataContext'; // DataContext 가져오기
 import { stepInfo } from '@/app/types';
 
 interface DefectCardProps {

@@ -1,5 +1,5 @@
 'use client'
-import { DataContext } from '../DataContext';
+import { DataContext } from '../../../../../DataContext';
 import { useContext } from 'react';
 
 const DetailPage: React.FC = () => {

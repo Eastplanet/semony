@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navigation from "./components/Navigation"; // Navigation 컴포넌트 임포트
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +32,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* 네비게이션 컴포넌트 */}
-        <Navigation />
         
         {children}
       </body>

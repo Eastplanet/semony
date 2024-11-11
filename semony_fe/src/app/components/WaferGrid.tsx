@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { DefectRecordSpec } from '../types';
 import { DieLocation } from '../types';
 
+
 interface WaferGridProps {
   dieLocations: DieLocation[];
   defectRecords: DefectRecordSpec[];

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { DefectRecordSpec } from '@/app/types';
-import {DataContext} from "../DataContext"
+import {DataContext} from "../../../../../DataContext"
 interface ImageGalleryProps {
   currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
 }
@@ -33,7 +33,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
   if(!dataContext) {
     return null;
   }
-  const { threeStepInfo } = dataContext;
+  const { threeStepInfo, IPUImages } = dataContext;
   
   
   // 확대/축소 기능
@@ -46,6 +46,30 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
     
     const selectedDefect = currentDefects?.defects[index];
     if(selectedDefect) {
+      const { defectID, step } = selectedDefect;
+      
+      const matchingIpus = IPUImages[step]?.find((ipu)=> ipu.ipuNum === defectID);
+
+      if(matchingIpus) {
+        const labelMapping: { [key: string]: string } = {
+          ins: 'INSPECTION',
+          golden: 'GOLDEN',
+          psm: 'PSM',
+          bin: 'BINARIZE',
+        };
+
+        // 매칭된 이미지 리스트로 currentImages 설정
+        setCurrentImages(
+          matchingIpus.images.map((image) => {
+            const labelKey = image.fileName.split('_')[1]; // [defectId]_[label] 형식에서 label 추출
+            const label = labelMapping[labelKey] || labelKey;
+            return { src: image.data, label };
+          }));
+      }
+
+      // setCurrentImages(
+      //   IPUImages[defectStep]
+      // )
       setCurrentImages(
         images.map((image) => ({
             src: '/mocks/macro/0001_golden.TIF',
