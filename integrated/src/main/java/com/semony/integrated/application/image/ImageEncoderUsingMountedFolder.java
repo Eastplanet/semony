@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class ImageEncoderUsingMountedFolder implements ImageEncoder {
 
     @Override
-    public List<ImageSet> encodeGolden(String lotId, BigDecimal lotSeq, String flowRecipe,
+    public List<ImageSet> encodeSummary(String lotId, BigDecimal lotSeq, String flowRecipe,
         String slotNo, LocalDateTime date) {
         PathFinder pathFinder = new PathFinder(FlowRecipe.findByPpid(flowRecipe), lotSeq.toString(),
             lotId, slotNo, date);

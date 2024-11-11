@@ -16,7 +16,7 @@ import java.util.Base64;
 public class ImageEncoderInLocal implements ImageEncoder {
 
     @Override
-    public List<ImageSet> encodeGolden(String lotId, BigDecimal lotSeq, String flowRecipe,
+    public List<ImageSet> encodeSummary(String lotId, BigDecimal lotSeq, String flowRecipe,
         String slotNo, LocalDateTime date) {
         return List.of();
     }

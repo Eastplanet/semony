@@ -59,13 +59,13 @@ public class WaferController {
         return ResponseEntity.ok(encode);
     }
 
-    @GetMapping("/images-golden")
-    public ResponseEntity<?> getImagesGolden(@RequestParam(value = "ppid") String ppid,
+    @GetMapping("/images/summary")
+    public ResponseEntity<?> getImagesSummary(@RequestParam(value = "ppid") String ppid,
         @RequestParam(value = "lotId") String lotId,
         @RequestParam(value = "lotSeq") BigDecimal lotSeq,
         @RequestParam(value = "slotNo") String slotNo,
         @RequestParam(value = "date") LocalDateTime date) {
-        List<ImageSet> encode = imageEncoder.encodeGolden(lotId, lotSeq, ppid, slotNo, date);
+        List<ImageSet> encode = imageEncoder.encodeSummary(lotId, lotSeq, ppid, slotNo, date);
         return ResponseEntity.ok(encode);
     }
 
