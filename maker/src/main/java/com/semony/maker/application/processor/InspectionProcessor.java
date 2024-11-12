@@ -20,6 +20,7 @@ import com.semony.maker.global.error.ErrorCode;
 import com.semony.maker.global.error.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Random;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class InspectionProcessor {
     }
 
     @Transactional
-    public void processInspection(String recipe, LocalDate requestTime, int slotId,
+    public void processInspection(String recipe, LocalDateTime requestTime, int slotId,
         String lotId, long lotSeq) {
         String selectRootSlot = randomSelectRootSlot();
         RecipeCombination combination = validateAndGetRecipeCombination(recipe, requestTime, lotId,
@@ -60,13 +61,13 @@ public class InspectionProcessor {
 
     // lotId와 lotSeq를 전달하지 않아도 호출할 수 있는 기본 메서드
     @Transactional
-    public void processInspection(String recipe, LocalDate requestTime, int slotId) {
+    public void processInspection(String recipe, LocalDateTime requestTime, int slotId) {
         String lotId = lotService.generateLotId();
         long lotSeq = lotService.generateLotSeq();
         processInspection(recipe, requestTime, slotId, lotId, lotSeq);
     }
 
-    private RecipeCombination validateAndGetRecipeCombination(String recipe, LocalDate requestTime,
+    private RecipeCombination validateAndGetRecipeCombination(String recipe, LocalDateTime requestTime,
         String lotId, long lotSeq) {
         RecipeCombination combination = recipeMappingProvider.generateCombination(recipe);
         if (combination == null) {
@@ -78,7 +79,7 @@ public class InspectionProcessor {
     }
 
     private boolean processModuleRequests(RecipeCombination combination, String recipe,
-        LocalDate requestTime,
+        LocalDateTime requestTime,
         String lotId, long lotSeq, int slotId, String selectedModule) {
         System.out.println("Sending request for IN module with parameters: " +
             "Combination IN: " + combination.in() +
@@ -126,7 +127,7 @@ public class InspectionProcessor {
                     OUT_FOLDER_PATH, MACRO_INSPECTION, selectedModule, "MACRO_ON");
     }
 
-    private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDate requestTime,
+    private boolean sendAndLogModuleRequest(String moduleName, String recipe, LocalDateTime requestTime,
         String lotId, long lotSeq, int slotId, String localFolderPath,
         String macroFolder, String selectedModule, String processRecipe) {
         try {

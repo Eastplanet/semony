@@ -1,10 +1,8 @@
 package com.semony.maker.application.handler;
 
 import com.semony.maker.application.service.LoggingService;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.springframework.stereotype.Component;
 
 @Component
 public class LogHandler {
@@ -16,12 +14,14 @@ public class LogHandler {
     }
 
     public void logSuccess(String message, String recipe, String moduleName,
-        LocalDate requestTime, String lotId, long lotSeq) {
-        loggingService.saveLog("success", message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+        LocalDateTime requestTime, String lotId, long lotSeq) {
+        loggingService.saveLog("success", message, recipe, moduleName, LocalDateTime.now(),
+            requestTime, lotId, lotSeq);
     }
 
     public void logError(String message, String recipe, String moduleName,
-        LocalDate requestTime, String lotId, long lotSeq) {
-        loggingService.saveLog("error", message, recipe, moduleName, LocalDateTime.now(), requestTime, lotId, lotSeq);
+        LocalDateTime requestTime, String lotId, long lotSeq) {
+        loggingService.saveLog("error", message, recipe, moduleName, LocalDateTime.now(),
+            requestTime, lotId, lotSeq);
     }
 }

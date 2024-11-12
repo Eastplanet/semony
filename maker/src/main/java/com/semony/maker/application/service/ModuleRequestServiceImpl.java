@@ -3,7 +3,7 @@ package com.semony.maker.application.service;
 import com.semony.maker.domain.dto.ModuleRequestPayload;
 import com.semony.maker.global.error.ErrorCode;
 import com.semony.maker.global.error.exception.BusinessException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -47,7 +47,7 @@ public class ModuleRequestServiceImpl implements ModuleRequestService {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public Map<String, Long> sendModuleRequest(String moduleName, LocalDate date, String lotId,
+    public Map<String, Long> sendModuleRequest(String moduleName, LocalDateTime date, String lotId,
         String flowRecipe, long lotSeq, int slotNo,
         String localFolderPath, String macroFolder, String selectedSubfolder) {
 
@@ -79,7 +79,8 @@ public class ModuleRequestServiceImpl implements ModuleRequestService {
                 moduleIp = ewim2_46;
                 break;
             default:
-                throw new BusinessException(moduleName, "moduleName", ErrorCode.MODULE_IP_NOT_FOUND);
+                throw new BusinessException(moduleName, "moduleName",
+                    ErrorCode.MODULE_IP_NOT_FOUND);
         }
 
         // IP 주소 확인
@@ -113,7 +114,8 @@ public class ModuleRequestServiceImpl implements ModuleRequestService {
 
             return defectDataMono.block();
         } catch (Exception e) {
-            throw new BusinessException(moduleName, "moduleRequest", ErrorCode.MODULE_REQUEST_FAILED);
+            throw new BusinessException(moduleName, "moduleRequest",
+                ErrorCode.MODULE_REQUEST_FAILED);
         }
     }
 }

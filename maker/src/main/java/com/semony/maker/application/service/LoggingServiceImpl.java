@@ -1,7 +1,6 @@
 package com.semony.maker.application.service;
 
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class LoggingServiceImpl implements LoggingService {
 
     @Transactional
     public void saveLog(String status, String message, String recipe, String moduleName,
-        LocalDateTime currentTime, LocalDate requestTime, String lotId, long lotSeq) {
+        LocalDateTime currentTime, LocalDateTime requestTime, String lotId, long lotSeq) {
 
         // 수정 가능한 HashMap을 사용하여 로그 데이터를 저장
         Map<String, Object> logData = new HashMap<>();

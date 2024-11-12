@@ -34,7 +34,7 @@ class LoggingServiceImplTest {
         String recipe = "Test recipe";
         String moduleName = "TestModule";
         LocalDateTime currentTime = LocalDateTime.now();
-        LocalDate requestTime = LocalDate.now();
+        LocalDateTime requestTime = LocalDateTime.now();
         String lotId = "LP22024100315_PJ2@89654577";
         long lotSeq = 123456;
 
@@ -62,7 +62,7 @@ class LoggingServiceImplTest {
         String recipe = "Test recipe";
         String moduleName = "TestModule";
         LocalDateTime currentTime = LocalDateTime.now();
-        LocalDate requestTime = LocalDate.now();
+        LocalDateTime requestTime = LocalDateTime.now();
         String lotId = "LP22024100315_PJ2@89654577";
         long lotSeq = 123456;
 
