@@ -42,41 +42,42 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <DataProvider ppid={ppid} lotId={lotId} lotSeq={lotSeq} slotNo={slotNo}>
-      <div className="p-2 pt-1 h-[100vh]">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          {/* Wafer Header */}
-          <div className="mb-4 md:mb-0">
-            <WaferHeader
-              ppid={ppid}
-              lotId={lotId}
-              lotSeq={lotSeq}
-              slotNo={slotNo}
-            />
-          </div>
-  
-          {/* Tabs */}
-          <div className="flex space-x-2 -mb-5 mr-4 md:-mb-5 sm:-mb-0 sm: ml-3">
-            {tabs.map((tab) => (
-              <button
-                key={tab.name}
-                onClick={() => handleTabChange(tab.name)}
-                className={`px-auto py-2 text-sm md:px-4 md:py-2 md:text-xs overflow-hidden h-10 font-semibold rounded-t-lg transition-colors ${
-                  activeTab === tab.name
-                    ? 'bg-gray-300 border-2 border-gray-600'
-                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+    <div className="p-2 pt-1 h-[100vh]">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div className="mb-4 md:mb-0">
+          <WaferHeader
+            ppid={ppid}
+            lotId={lotId}
+            lotSeq={lotSeq}
+            slotNo={slotNo}
+          />
         </div>
-  
-        <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-fit"> 
-          {children}
+
+        {/* Tabs */}
+        <div className="flex space-x-2 mt-4 -mb-3 mr-10">
+          {tabs.map((tab) => (
+            <button
+              key={tab.name}
+              onClick={() => handleTabChange(tab.name)}
+              className={`px-5 py-3 text-sm font-semibold rounded-t-lg transition-all duration-300 ease-in-out shadow-md 
+                ${
+                  activeTab === tab.name
+                    ? 'bg-blue-600 text-white shadow-lg border-b-2 border-blue-800'
+                    : 'bg-gray-200 text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                }
+              `}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
-    </DataProvider>
+
+      <div className="bg-white border-2 border-gray-600 shadow-md rounded-3xl p-3 md:p-4 h-fit">
+        {children}
+      </div>
+    </div>
+  </DataProvider>
   );
 };
 

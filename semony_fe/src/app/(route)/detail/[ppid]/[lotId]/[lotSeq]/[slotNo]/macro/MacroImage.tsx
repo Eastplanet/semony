@@ -1,5 +1,6 @@
-'use client';
+// src/app/detail/MacroImage.tsx
 
+'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
@@ -9,25 +10,22 @@ interface MacroImageProps {
 }
 
 const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' }) => {
-  const [scale, setScale] = useState(1); // Zoom scale
-  const [position, setPosition] = useState({ x: 0, y: 0 }); // Image position
-  const [dragging, setDragging] = useState(false); // If the image is being dragged
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 }); // Initial drag start position
-  const [drawing, setDrawing] = useState(false); // If the user is drawing
-  const [drawMode, setDrawMode] = useState(false); // Toggle for drawing mode
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [drawing, setDrawing] = useState(false);
+  const [drawMode, setDrawMode] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Handle zoom in/out
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    setScale((prevScale) => Math.min(Math.max(prevScale + e.deltaY * -0.001, 0.5), 3));
+    setScale((prevScale) => Math.min(Math.max(prevScale + e.deltaY * -0.001, 1), 3));
   };
 
-  // Handle image dragging
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     if (drawMode) {
-      // Start drawing if in drawing mode
       setDrawing(true);
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext('2d');
@@ -39,7 +37,6 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
         ctx.moveTo(adjustedX, adjustedY);
       }
     } else {
-      // Start dragging if not in drawing mode
       setDragging(true);
       setDragStart({
         x: e.clientX - position.x,
@@ -50,12 +47,11 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (dragging && !drawMode) {
-      // Handle dragging the image
-      const newPosX = e.clientX - dragStart.x;
-      const newPosY = e.clientY - dragStart.y;
-      setPosition({ x: newPosX, y: newPosY });
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
     } else if (drawing && drawMode) {
-      // Handle drawing on the canvas
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext('2d');
       if (ctx && canvas) {
@@ -73,7 +69,6 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
     setDrawing(false);
   };
 
-  // Prevent the context menu from showing up on right-click
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
   };
@@ -84,53 +79,69 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.lineWidth = 1;
-        ctx.strokeStyle = 'red'; // You can change the color and thickness here
+        ctx.strokeStyle = 'red';
         ctx.lineCap = 'round';
       }
     }
   }, []);
 
-  // Toggle drawing mode
   const toggleDrawMode = () => {
     setDrawMode((prev) => !prev);
   };
 
+  // 휴지통 버튼 클릭 시 canvas 초기화
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  };
+
   return (
-    <>
+    <div className="relative w-[60vh] h-[60vh] max-w-md mx-auto rounded-2xl shadow-md bg-white overflow-hidden">
+      <div
+        className="relative w-full h-full overflow-hidden"
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onContextMenu={handleContextMenu}
+        onMouseLeave={() => {
+          setDragging(false);
+          setDrawing(false);
+        }}
+        style={{
+          transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+          transformOrigin: 'center center',
+          cursor: drawMode ? 'crosshair' : dragging ? 'grabbing' : 'grab',
+        }}
+      >
+        <Image src={src} alt={alt} width={1000} height={1000} className="w-full h-full" />
+        <canvas ref={canvasRef} className="absolute inset-0" width={500} height={500} />
+      </div>
+      
+      {/* Draw Mode Toggle Button */}
       <button
         onClick={toggleDrawMode}
-        className={`absolute top-2 left-2 px-2 py-1 rounded bg-${drawMode ? 'red-500' : 'blue-500'} text-white`}
+        className={`absolute top-4 right-4 p-2 rounded-lg ${
+          drawMode ? 'bg-red-500' : 'bg-blue-500'
+        } text-white text-xs font-semibold transition-colors duration-200 hover:bg-opacity-80 shadow-md`}
       >
         {drawMode ? 'Stop Drawing' : 'Draw'}
       </button>
-      <div className="relative w-96 h-96 rounded-3xl shadow-lg overflow-hidden bg-gray-700">
-        <div
-          className="w-full h-full"
-          onWheel={handleWheel}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onContextMenu={handleContextMenu} // Prevent right-click menu
-          onMouseLeave={() => {
-            setDragging(false);
-            setDrawing(false);
-          }}
-          style={{
-            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-            transformOrigin: 'center center',
-            cursor: drawMode ? 'crosshair' : dragging ? 'grabbing' : 'grab',
-          }}
-        >
-          <Image src={src} alt={alt} width={500} height={500} className="object-center" />
-          <canvas
-            ref={canvasRef}
-            className="absolute top-0 left-0"
-            width={500}
-            height={500}
-          />
-        </div>
-      </div>
-    </>
+
+      {/* Clear Canvas Button (Trash Icon) */}
+      <button
+        onClick={clearCanvas}
+        className="absolute top-4 left-4 p-1 text-xs bg-gray-200 rounded-full text-gray-600 hover:bg-gray-300 shadow-md"
+        aria-label="Clear Canvas"
+      >
+        🗑️
+      </button>
+    </div>
   );
 };
 
