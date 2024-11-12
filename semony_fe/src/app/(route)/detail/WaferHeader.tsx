@@ -16,7 +16,7 @@ const WaferHeader: React.FC<InfoCardProps> = ({ ppid, lotId, lotSeq, slotNo }) =
 
   // 뒤로 가기 버튼 클릭 핸들러
   const handleBackClick = () => {
-    router.back(); 
+    router.push('/'); 
   };
 
   return (
