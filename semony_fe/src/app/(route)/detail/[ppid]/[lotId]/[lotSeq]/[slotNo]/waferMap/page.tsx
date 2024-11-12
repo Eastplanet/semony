@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useContext, useState } from 'react';
-import WaferGrid from '@/app/components/WaferGrid';
+import WaferGrid from './WaferGrid';
 import SummarySection from './SummarySection';
 import ImageGallery from './ImageGallery';
 import { DataContext } from '../../../../../DataContext';

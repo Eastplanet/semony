@@ -123,10 +123,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
 
   return (
     <div
-      className="bg-white p-4 shadow-md rounded-lg flex overflow-hidden h-[70vh] max-w-full border border-1 border-gray-200"
+      className="bg-white p-4 shadow-md rounded-lg flex overflow-auto h-[70vh] max-w-full border border-1 border-gray-200"
     >
     <div
-        className="flex flex-col items-start mr-4 min-w-fit space-y-2 overflow-y-auto"
+        className="flex flex-col items-start mr-4 w-56 space-y-2 overflow-y-auto"
         style={{
           scrollbarWidth: 'none', // Firefox에서 스크롤바 숨김
           msOverflowStyle: 'none', // IE와 Edge에서 스크롤바 숨김

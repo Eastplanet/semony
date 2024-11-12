@@ -7,6 +7,7 @@ import request from './apis/request';
 import {WaferData} from '@/app/types';
 import { mockData } from './mocks/mock_wafer';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 const WaferTable = () => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -18,8 +19,16 @@ const WaferTable = () => {
   const [filteredValues, setFilteredValues] = useState<{ [key: string]: string[] }>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [listData, setListData] = useState<WaferData[]>([]);
-  const [startDate, setStartDate] = useState('2024-10-03T00:00:00');
-  const [endDate, setEndDate] = useState('2024-10-03T19:00:00');
+  const now = new Date();
+
+  const formatDateTime = (date: Date): string => {
+    const pad = (num: number): string => num.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  };
+  const start = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
+  const end = formatDateTime(now); // 현재 시간
+  const [startDate, setStartDate] = useState(start);
+  const [endDate, setEndDate] = useState(end);
   const router = useRouter();
   const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
@@ -34,26 +43,6 @@ const WaferTable = () => {
     };
     
   useEffect(() => {
-    const now = new Date();
-
-    // 로컬 시간대의 날짜 및 시간 형식을 "yyyy-MM-ddThh:mm:ss"로 맞추기
-    const formatDateTime = (date: Date): string => {
-      const pad = (num: number): string => num.toString().padStart(2, '0');
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    };
-    
-
-    const startDate = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
-    const endDate = formatDateTime(now); // 현재 시간
-    setStartDate(startDate);
-    setEndDate(endDate);
-    // URL에 startDate와 endDate를 포함하여 요청을 보냅니다
-    request(`wafer?startDate=${startDate}&endDate=${endDate}`)
-      .then((data) => {
-        console.log(data);
-        setListData(data);
-      })
-      .catch((err) => console.error(err));
     fetchData();
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,10 +50,12 @@ const WaferTable = () => {
         setIsFilterOpen({});
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+
   }, []);
 
   
@@ -215,7 +206,6 @@ const WaferTable = () => {
             <Image src="/icons/filter.png" alt="Filter" width={16} height={16} />
           </button>
         </div>
-        {/* 필터 드롭다운 */}
         {isFilterOpen[col] && dropdownPosition && (
           <div
             ref={dropdownRef}
@@ -265,10 +255,10 @@ const WaferTable = () => {
         )}
       </th>
     ))}
-    <th rowSpan={2} className="p-4 font-semibold border-b border-gray-300 text-gray-100">
+    <th rowSpan={2} className="p-4 font-semibold border-b border-gray-300 w-7 text-gray-100">
       TOTAL DEFECT
     </th>
-    {/* STEP 헤더 그룹 */}
+
     {Array.from({ length: 3 }).map((_, stepIndex) => (
       <th key={`step-header-${stepIndex}`} colSpan={3} className="p-4 font-semibold border-b border-gray-300 text-center">
         STEP {stepIndex + 1}
@@ -280,7 +270,7 @@ const WaferTable = () => {
     {Array.from({ length: 3 }).map((_, stepIndex) => (
       <React.Fragment key={`module-header-${stepIndex}`}>
         <th className="p-4 font-semibold border-b border-gray-300 border-l">ID</th>
-        <th className="p-4 font-semibold border-b border-gray-300">DEFECT</th>
+        <th className="p-4 font-semibold border-b border-gray-300 w-8" >DEFECT</th>
         <th className="p-4 font-semibold border-b border-gray-300 border-r">TIME</th>
       </React.Fragment>
     ))}
@@ -292,43 +282,51 @@ const WaferTable = () => {
 
 {/* 본문 데이터 */}
 <tbody className="text-sm text-gray-700">
-  {filteredData.map((data, index) => (
-    <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} transition-colors`}
-    onClick={() => {router.push(`/detail/${data.ppid}/${data.lotId}/${data.lotSeq}/${data.slotNo}/waferMap`)}}>
-      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
-        {data.ppid}
-      </td>
-      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
-        {data.lotId}
-      </td>
-      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
-        {data.lotSeq}
-      </td>
-      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
-        {data.slotNo}
-      </td>
-      <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-sm border-r-[1px]">
-        {data.totalDefectCount}
-      </td>
+      {filteredData.map((data, index) => (
+        <tr
+        key={index}
+        className={`${
+          index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+        } transition-colors duration-200 ease-in-out hover:bg-blue-100 cursor-pointer`}
+        onClick={() =>
+          router.push(
+            `/detail/${data.ppid}/${data.lotId}/${data.lotSeq}/${data.slotNo}/waferMap`
+          )
+        }
+      >
+          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+            {data.ppid}
+          </td>
+          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+            {data.lotId}
+          </td>
+          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+            {data.lotSeq}
+          </td>
+          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
+            {data.slotNo}
+          </td>
+          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-sm border-r-[1px]">
+            {data.totalDefectCount}
+          </td>
 
-      {/* 각 STEP의 모듈 정보를 일렬로 나열 */}
-      {data.modules.map((module, moduleIndex) => (
-        <React.Fragment key={`module-${moduleIndex}`}>
-          <td className="px-4 py-1 text-gray-700 text-xs border-l border-b border-gray-300">
-            {module ? module.moduleId : '-'}
-          </td>
-          <td className="px-4 py-1 text-gray-700 border-b text-xs border-gray-300">
-            {module ? module.defect : '-'}
-          </td>
-          <td className="px-4 py-1 text-gray-700 text-xs border-r border-b border-gray-300">
-            {module ? module.eventDtts : '-'}
-          </td>
-        </React.Fragment>
+          {/* 각 STEP의 모듈 정보를 일렬로 나열 */}
+          {data.modules.map((module, moduleIndex) => (
+            <React.Fragment key={`module-${moduleIndex}`}>
+              <td className="px-4 py-1 text-gray-700 text-xs border-l border-b border-gray-300 whitespace-nowrap">
+                {module ? module.moduleId : '-'}
+              </td>
+              <td className="px-2 py-1 text-gray-700 border-b text-xs w-8 border-gray-300">
+                {module ? module.defect : '-'}
+              </td>
+              <td className="px-4 py-1 text-gray-700 text-xs border-r border-b border-gray-300">
+                {module ? format(new Date(module.eventDtts), 'yyyy-MM-dd HH:mm:ss') : '-'}
+              </td>
+            </React.Fragment>
+          ))}
+        </tr>
       ))}
-    </tr>
-  ))}
-</tbody>
-
+    </tbody>
 
       </table>
       </div>

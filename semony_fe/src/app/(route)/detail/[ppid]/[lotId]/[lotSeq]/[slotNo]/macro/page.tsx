@@ -3,15 +3,15 @@
 'use client';
 import React, { useContext, useState } from 'react';
 import MacroImage from './MacroImage';
-import MenuBar from './MenuBar';
 import { DataContext } from '@/app/(route)/detail/DataContext';
 import IPUImages from './IPUImages';
 import { DefectRecordSpec } from '@/app/types';
 
+
 const MacroPage: React.FC = () => {
   const [step, setStep] = useState<number>(0);
   const [currentDefect, setCurrentDefect] = useState<DefectRecordSpec | null>(null);
-  const [isDefectListOpen, setIsDefectListOpen] = useState(true);
+  const [isDefectListOpen, setIsDefectListOpen] = useState(false);
 
   const dataContext = useContext(DataContext);
   if (!dataContext) return null;
@@ -49,7 +49,7 @@ const MacroPage: React.FC = () => {
       </div>
 
       {/* Images Section */}
-      <div className="flex flex-col md:flex-row justify-start gap-6">
+      <div className="flex flex-col md:flex-row justify-start gap-6 ">
         <div className="">
           <MacroImage
             src={`data:image/png;base64,${mainImages[step]?.macro?.data || ''}`}

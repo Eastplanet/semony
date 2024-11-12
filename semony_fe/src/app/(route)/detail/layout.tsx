@@ -23,7 +23,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   // Handle tab change and route navigation
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    router.push(`/detail/${ppid}/${lotId}/${lotSeq}/${slotNo}/${tab}`);
+    router.push(`/detail/${ppid}/${lotId}/${decodeURIComponent(lotSeq)}/${slotNo}/${tab}`);
   };
 
   useEffect(() => {
@@ -41,14 +41,14 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <DataProvider ppid={ppid} lotId={lotId} lotSeq={lotSeq} slotNo={slotNo}>
+    <DataProvider ppid={ppid} lotId={lotId} lotSeq={decodeURIComponent(lotSeq)} slotNo={slotNo}>
     <div className="p-2 pt-1 h-[100vh]">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div className="mb-4 md:mb-0">
           <WaferHeader
             ppid={ppid}
             lotId={lotId}
-            lotSeq={lotSeq}
+            lotSeq={decodeURIComponent(lotSeq)}
             slotNo={slotNo}
           />
         </div>

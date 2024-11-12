@@ -89,7 +89,6 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
     setDrawMode((prev) => !prev);
   };
 
-  // 휴지통 버튼 클릭 시 canvas 초기화
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -101,7 +100,7 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
   };
 
   return (
-    <div className="relative w-[60vh] h-[60vh] max-w-md mx-auto rounded-2xl shadow-md bg-white overflow-hidden">
+    <div className="relative w-[55vh] h-[55vh] mx-auto rounded-2xl shadow-md bg-white overflow-hidden">
       <div
         className="relative w-full h-full overflow-hidden"
         onWheel={handleWheel}
@@ -119,11 +118,16 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
           cursor: drawMode ? 'crosshair' : dragging ? 'grabbing' : 'grab',
         }}
       >
-        <Image src={src} alt={alt} width={1000} height={1000} className="w-full h-full" />
+        <Image
+          src={src}
+          alt={alt}
+          width={2000}
+          height={2000}
+          className="w-full h-full object-cover" // Ensures 1:1 aspect ratio with object-cover
+        />
         <canvas ref={canvasRef} className="absolute inset-0" width={500} height={500} />
       </div>
       
-      {/* Draw Mode Toggle Button */}
       <button
         onClick={toggleDrawMode}
         className={`absolute top-4 right-4 p-2 rounded-lg ${
@@ -133,7 +137,6 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example' 
         {drawMode ? 'Stop Drawing' : 'Draw'}
       </button>
 
-      {/* Clear Canvas Button (Trash Icon) */}
       <button
         onClick={clearCanvas}
         className="absolute top-4 left-4 p-1 text-xs bg-gray-200 rounded-full text-gray-600 hover:bg-gray-300 shadow-md"
