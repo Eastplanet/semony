@@ -2,11 +2,9 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Install both production and development dependencies
+# Install dependencies and build the app
 COPY package.json package-lock.json ./
 RUN npm install
-
-# Copy the application code and build it
 COPY . .
 RUN npm run build
 
@@ -14,12 +12,11 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Install only production dependencies
+# Install only production dependencies in the runner stage
 COPY package.json package-lock.json ./
 RUN npm install --only=production
 
 # Copy build artifacts from the builder stage
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
