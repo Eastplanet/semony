@@ -136,11 +136,11 @@ async def process_and_modify_in_module_data(
 
   lot_id = f"LP2{date}_PJ2@{lotId}"
   full_local_folder_path = f"{local_folder_path}/{selectedSubfolder}/{macro_folder}"
-  # print(macro_folder)
+  # print("full : " + full_local_folder_path)
   target_folder_path = None
   # 기본 대상 폴더 경로 생성
   target_folder_path = create_target_folder_path(
-      module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
+      module_name, date[:-2], lotId, flow_recipe, lotSeq, slotNo, macro_folder
   )
   # print("asasapp"+macro_folder)
   # macro_folder가 "EBR"인 경우
@@ -154,7 +154,7 @@ async def process_and_modify_in_module_data(
     # target_folder_path를 "Macro[Inspection]"으로 다시 설정
     # print("sasa"+str(defect_data))
     target_folder_path = create_target_folder_path(
-        module_name, date, lotId, flow_recipe, lotSeq, slotNo,
+        module_name, date[:-2], lotId, flow_recipe, lotSeq, slotNo,
         "Macro[Inspection]"
     )
     # print("target: " + target_folder_path)
