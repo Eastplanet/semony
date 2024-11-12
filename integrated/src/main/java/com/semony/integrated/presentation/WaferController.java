@@ -49,6 +49,7 @@ public class WaferController {
         }
     }
 
+
     @GetMapping("/images")
     public ResponseEntity<?> getImages(@RequestParam(value = "ppid") String ppid,
         @RequestParam(value = "lotId") String lotId,
@@ -81,6 +82,8 @@ public class WaferController {
         List<ImageSet> encode = imageEncoder.encodeSummary(lotId, lotSeq, ppid, slotNo, date);
         return ResponseEntity.ok(encode);
     }
+
+
 
 }
 
