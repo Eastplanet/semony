@@ -8,9 +8,7 @@ import java.io.IOException;
 
 public class JsonParser {
 
-    public ResultJson parse(String fileName) {
-        // JSON 파일 경로
-        String filePath = "src/main/resources/static/Result.json";
+    public ResultJson parse(String filePath) {
 
         // ObjectMapper를 사용해 JSON을 Java 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();

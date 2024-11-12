@@ -1,9 +1,11 @@
 package com.semony.integrated.application;
 
+import com.semony.integrated.application.parser.JsonParser;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
 import com.semony.integrated.domain.dto.WaferSpecificationValueDto;
 import com.semony.integrated.domain.dto.convertor.EqpInspectionHstAlphaConvertor;
+import com.semony.integrated.domain.dto.json.ResultJson;
 import com.semony.integrated.domain.dto.smf.DiePos;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO.DefectRecord;
@@ -121,6 +123,10 @@ public class WaferServiceImpl implements WaferService {
 
         }
 
+        JsonParser jsonParser = new JsonParser();
+        ResultJson parse = jsonParser.parse(pathFinder.getEwimPathEBR() + "/Result.json");
+
+        data.setResultJson(parse);
 
         return data;
     }
