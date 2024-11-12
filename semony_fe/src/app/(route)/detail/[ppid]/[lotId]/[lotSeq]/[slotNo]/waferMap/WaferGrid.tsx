@@ -10,13 +10,18 @@ interface WaferGridProps {
   minX: number;
   minY: number;
   setCurrentDefects: React.Dispatch<React.SetStateAction<{ x: number; y: number; defects: DefectRecordSpec[] } | null>>;
+  zoom: number;
+  position: { x: number; y: number };
+
 }
 
 const DIE_WIDTH = 8639.48;
 const DIE_HEIGHT = 4986.74;
 
-const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects}) => {
+const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, totalRows, totalCols, minX, minY, setCurrentDefects, zoom, position}) => {
   const [tooltip, setTooltip] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
+  const [tooltipHovered, setTooltipHovered] = useState(false); // 툴팁에 마우스가 있는지 여부 상태 추가
+
   // const [zoom, setZoom] = useState(1); // 기본 확대 비율 1
   
   // const handleWheel = (event: React.WheelEvent) => {
@@ -59,12 +64,18 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
 
   const handleMouseMove = (event: React.MouseEvent) => {
     if (tooltip) {
-      setTooltip(prev => prev && { ...prev, x: event.clientX, y: event.clientY });
+      const rect = event.currentTarget.getBoundingClientRect();
+      const adjustedX = (event.clientX - rect.left - position.x) / zoom;
+      const adjustedY = (event.clientY - rect.top - position.y) / zoom;
+
+      setTooltip((prev) => (prev ? { ...prev, x: adjustedX, y: adjustedY } : prev));
     }
   };
 
   const handleMouseLeave = () => {
-    setTooltip(null);
+    if (!tooltipHovered) {
+      setTooltip(null);
+    }
   };
 
   const getNormalizedDefectSize = (area: number) => {
@@ -88,11 +99,51 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
   };
 
   return (
+    <div className="relative">
+    {tooltip && (
+  <div
+    className="absolute p-2 bg-black text-white text-sm rounded z-50 flex space-x-2"
+    onMouseEnter={() => setTooltipHovered(true)}
+    onMouseLeave={() => setTooltipHovered(false)}
+    style={{
+      top: `20px`, // 확대/축소 및 이동 위치에 맞춘 y 좌표
+      left: `20px`, // 확대/축소 및 이동 위치에 맞춘 x 좌표
+      transformOrigin: 'top left',
+    }}
+  >
+    {tooltip.defects.slice(0, 4).map((defect, index) => (
+      <div
+        key={index}
+        className="p-2 bg-opacity-70 rounded flex flex-col items-center w-full"
+        style={{ backgroundColor: getDefectColor(defect.step) }}
+      >
+        <div className="font-bold">Step {defect.step}</div>
+        <div
+          className="text-gray-200 text-xs"
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {Object.entries(defect)
+            .filter(([key]) => key !== 'gdsX' && key !== 'gdsY')
+            .map(([key, value]) => (
+              <div key={key}>{`${key}: ${value}`}</div>
+            ))}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
     <div
-    className="relative aspect-square w-[70vh] my-auto max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
+    className="relative aspect-square w-[75vh] my-auto max-w-full border-2 border-orange-500 rounded-full overflow-hidden grid"
     // onWheel={handleWheel} // 스크롤 이벤트 핸들러 추가
     style={{
       // transform: `scale(${zoom})`, // zoom 상태에 따라 확대/축소 적용
+      transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`,
+      transformOrigin: 'center center',
       gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
       gridTemplateRows: `repeat(${totalRows}, 1fr)`,
     }}
@@ -137,31 +188,9 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
         })
       )}
 
-      {tooltip && (
-        <div
-          className="fixed p-2 bg-black text-white text-sm rounded z-50 flex space-x-2"
-          style={{
-            top: tooltip.y + 10,
-            left: tooltip.x + 10,
-            transform: 'translate(0, -50%)',
-            whiteSpace: 'pre-line',
-          }}
-        >
-          {tooltip.defects.map((defect, index) => (
-            <div key={index} className="p-2 bg-opacity-70 rounded flex flex-col items-center" style={{ backgroundColor: getDefectColor(defect.step) }}>
-              <div className="font-bold">Step {defect.step}</div>
-              <div className="text-gray-200 text-xs">
-                {Object.entries(defect)
-                  .filter(([key]) => key !== 'gdsX' && key !== 'gdsY') // gdsx, gdsy 제외
-                  .map(([key, value]) => (
-                    <div key={key}>{`${key}: ${value}`}</div>
-                  ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+     
+      
+    </div></div>
   );
 };
 
