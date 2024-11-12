@@ -176,12 +176,19 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
                     }
 
                     // JPEG로 변환
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(image, "jpeg", baos);
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                    ImageIO.write(image, "jpeg", baos);
+//
+//                    // Base64 인코딩 후 반환
+//                    byte[] jpegBytes = baos.toByteArray();
 
-                    // Base64 인코딩 후 반환
-                    byte[] jpegBytes = baos.toByteArray();
-                    return Base64.getEncoder().encodeToString(jpegBytes);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                ImageIO.write(image, "jpeg", baos);
+//                // Base64 인코딩 후 반환
+//                byte[] jpegBytes = baos.toByteArray();
+                    ImageIO.write(image, "bmp", baos);
+                    byte[] bytes = baos.toByteArray();
+                    return Base64.getEncoder().encodeToString(bytes);
 
 
                 } catch (IOException e) {
@@ -218,17 +225,19 @@ public class ImageEncoderUsingMountedFolder implements ImageEncoder {
 
 
                 BufferedImage image = ImageIO.read(file);
-                if (image == null) {
-                    throw new IOException("파일 형식을 변환할 수 없음: " + file.getName());
+                    if (image == null) {
+                        throw new IOException("파일 형식을 변환할 수 없음: " + file.getName());
                 }
 
                 // JPEG로 변환
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(image, "jpeg", baos);
-
                 // Base64 인코딩 후 반환
-                byte[] jpegBytes = baos.toByteArray();
-                String data = Base64.getEncoder().encodeToString(jpegBytes);
+                byte[] bytes = baos.toByteArray();
+//                ImageIO.write(image, "bmp", baos);
+//                byte[] bytes = baos.toByteArray();
+
+                String data = Base64.getEncoder().encodeToString(bytes);
 
                 //123
 
