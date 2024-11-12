@@ -17,6 +17,25 @@ interface DataContextProps {
 }
 
 
+interface ImageData {
+  fileName: string;
+  data: string;
+}
+
+// IPU 타입 정의
+interface IPU {
+  ipuNum: number;
+  images: ImageData[];
+}
+
+// Group 타입 정의
+interface Group {
+  ipus: IPU[];
+  golden: ImageData;
+  ebr: ImageData | null;
+  macro: ImageData;
+}
+
 export const DataContext = createContext<DataContextProps | undefined>(undefined);
 
 interface DataProviderProps {
@@ -76,22 +95,22 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, children }: DataProv
     // request(`wafer/images?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=2024-10-03T00:00:00`)
 
     request(`wafer/images?ppid=0TT_EWIM_NO_CHHP&slotNo=18&lotId=LP22024100315_PJ2@89654577&lotSeq=727939436&date=2024-10-03T00:00:00`)
-      .then((data) => {
-        const formattedData: IPUImages = data.map((group: any) => 
-          group.ipus.map((ipu: any) => ({
-            ipuNum: ipu.ipuNum,
-            images: ipu.images.map((image: any) => ({
-              fileName: image.fileName,
-              data: image.data,
-            })),
-          }))
-        );
-        setIPUImages(formattedData);
-        console.log(formattedData); // 형식에 맞게 변환된 IPUImages 확인
-      })
-      .catch((error) => {
-        console.error("Failed to fetch IPU images:", error);
-      });
+  .then((data: Group[]) => {
+    const formattedData: IPUImages = data.map((group) =>
+      group.ipus.map((ipu) => ({
+        ipuNum: ipu.ipuNum,
+        images: ipu.images.map((image) => ({
+          fileName: image.fileName,
+          data: image.data,
+        })),
+      }))
+    );
+    setIPUImages(formattedData);
+    console.log(formattedData); // 형식에 맞게 변환된 IPUImages 확인
+  })
+  .catch((error) => {
+    console.error("Failed to fetch IPU images:", error);
+  });
   };
   
   
