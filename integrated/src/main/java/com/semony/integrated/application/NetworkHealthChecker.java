@@ -27,7 +27,7 @@ public class NetworkHealthChecker {
     @Scheduled(fixedRate = 10000)
     public void repeat(){
         // 각 모듈의 헬스 체크 수행
-        System.out.println("수행 시작");
+//        System.out.println("수행 시작");
         for (ModuleMapping module : moduleMappings) {
             module.setHealthy(isPortAvailable(module.getIp(), Integer.parseInt(module.getPort())));
         }

@@ -5,6 +5,7 @@ import com.semony.integrated.application.image.ImageEncoder;
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
 import com.semony.integrated.domain.dto.image.ImageSet;
+import com.semony.integrated.domain.dto.json.EbrResultJson;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wafer")
+@RequestMapping("/api/wafer")
 @RequiredArgsConstructor
 public class WaferController {
 
@@ -49,6 +50,24 @@ public class WaferController {
         }
     }
 
+    @GetMapping("/detail/result")
+    public ResponseEntity<EbrResultJson> waferDetailResult(@RequestParam(value = "ppid") String ppid,
+        @RequestParam(value = "lotId") String lotId,
+        @RequestParam(value = "lotSeq") BigDecimal lotSeq,
+        @RequestParam(value = "slotNo") String slotNo,
+        @RequestParam(value = "date") LocalDateTime date){
+
+        EbrResultJson ebrResultJson = null;
+        try {
+            ebrResultJson = waferService.getWaferDetailResult(lotId, lotSeq, ppid, slotNo);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(ebrResultJson);
+
+    }
+
+
 
     @GetMapping("/images")
     public ResponseEntity<?> getImages(@RequestParam(value = "ppid") String ppid,
@@ -57,18 +76,8 @@ public class WaferController {
         @RequestParam(value = "slotNo") String slotNo,
         @RequestParam(value = "date") LocalDateTime date) {
 
-        // 시작 시간 측정
-        long startTime = System.currentTimeMillis();
 
         List<ImageSet> encode = imageEncoder.encode(lotId, lotSeq, ppid, slotNo, date);
-
-        // 끝 시간 측정
-        long endTime = System.currentTimeMillis();
-
-        // 소요 시간 계산
-        long duration = endTime - startTime;
-        System.out.println("Request processing time: " + duration + " ms");
-
 
         return ResponseEntity.ok(encode);
     }
