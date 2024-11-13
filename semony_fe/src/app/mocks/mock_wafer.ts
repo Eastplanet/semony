@@ -12,6 +12,7 @@ export const mockData: WaferData[] = [
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
     ],
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_XYZT_NO_ABCD',
@@ -23,7 +24,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
       { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
@@ -35,7 +37,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
       { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
       { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_QWER_NO_ASDF',
@@ -47,7 +50,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ZXCV_NO_QWER',
@@ -59,7 +63,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
       { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
@@ -70,7 +75,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_XYZT_NO_ABCD',
@@ -82,7 +88,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
       { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
@@ -94,7 +101,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
       { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
       { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_QWER_NO_ASDF',
@@ -106,7 +114,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ZXCV_NO_QWER',
@@ -118,7 +127,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
       { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_EWIM_NO_CHHP',
@@ -130,7 +140,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_XYZT_NO_ABCD',
@@ -142,7 +153,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
       { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
@@ -154,7 +166,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
       { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
       { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_QWER_NO_ASDF',
@@ -166,7 +179,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ZXCV_NO_QWER',
@@ -178,7 +192,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
       { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },{
     ppid: 'OTT_EWIM_NO_CHHP',
     lotId: 'LP20224100315_PJ2 @89654577',
@@ -189,7 +204,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-03 4:12 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-03 4:13 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 4:14 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_XYZT_NO_ABCD',
@@ -201,7 +217,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-03 5:24 PM" },
       { moduleId: "EWIM1-36", defect: "2", eventDtts: "2024-10-03 5:25 PM" },
       { moduleId: "MIW7-61", defect: "3", eventDtts: "2024-10-03 5:26 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ABCD_NO_WXYZ',
@@ -213,7 +230,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "1", eventDtts: "2024-10-04 1:16 PM" },
       { moduleId: "EWIM1-36", defect: "4", eventDtts: "2024-10-04 1:17 PM" },
       { moduleId: "MIW7-61", defect: "5", eventDtts: "2024-10-04 1:18 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_QWER_NO_ASDF',
@@ -225,7 +243,8 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "2", eventDtts: "2024-10-04 2:50 PM" },
       { moduleId: "EWIM1-36", defect: "1", eventDtts: "2024-10-04 2:51 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-04 2:52 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
   {
     ppid: 'OTT_ZXCV_NO_QWER',
@@ -237,6 +256,7 @@ export const mockData: WaferData[] = [
       { moduleId: "MIW7-51", defect: "4", eventDtts: "2024-10-05 3:06 PM" },
       { moduleId: "EWIM1-36", defect: "3", eventDtts: "2024-10-05 3:07 PM" },
       { moduleId: "MIW7-61", defect: "2", eventDtts: "2024-10-05 3:08 PM" },
-    ],
+    ],    
+    date: "2024-11-13T09:16:42",
   },
 ];
