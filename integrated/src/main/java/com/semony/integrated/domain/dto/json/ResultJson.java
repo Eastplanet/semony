@@ -239,13 +239,14 @@ class Die {
 }
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Position {
 
-    @JsonProperty("$type")
-    String type;
-
-    @JsonProperty("Unit")
-    String unit;
+//    @JsonProperty("$type")
+//    String type;
+//
+//    @JsonProperty("Unit")
+//    String unit;
 
     @JsonProperty("Value")
     BigDecimal value;
