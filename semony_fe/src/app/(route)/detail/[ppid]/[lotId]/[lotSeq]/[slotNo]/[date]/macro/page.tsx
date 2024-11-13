@@ -71,12 +71,17 @@ const MacroPage: React.FC = () => {
           <p className="text-center font-extrabold mt-2 text-white bg-gray-600 rounded-xl items-center py-2 shadow-lg">MACRO</p>
         </div>
         <div className="w-1/3">
-          <DefectImage
+          {(defectRecords.length > 0) ? <DefectImage
             defects={defectRecords}
             src={`data:image/bmp;base64,${mainImages[step]?.golden?.data || ''}`}
             alt={`Golden Image for Step ${step}`}
             setDefects={setDefects}
-          />
+          /> : <DefectImage
+          defects={defectRecords}
+          src="/golden_default.png"
+          alt={`Golden Image for Step ${step}`}
+          setDefects={setDefects}
+        />}
           <p className="text-center font-extrabold mt-2 text-white bg-gray-600 rounded-xl items-center py-2 shadow-lg">GOLDEN</p>
         </div>
         <IPUImages currentDefect={currentDefect} />
