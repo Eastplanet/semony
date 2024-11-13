@@ -52,14 +52,16 @@ const MacroPage: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-start gap-6 ">
         <div className="">
           <MacroImage
-            src={`data:image/png;base64,${mainImages[step]?.macro?.data || ''}`}
+          defects = {defectRecords}
+            src={`data:image/bmp;base64,${mainImages[step]?.macro?.data || ''}`}
             alt={`Macro Image for Step ${step}`}
           />
           <p className="text-center mt-2 text-gray-600">Macro Image</p>
         </div>
         <div className="">
           <MacroImage
-            src={`data:image/png;base64,${mainImages[step]?.golden?.data || ''}`}
+                    defects = {defectRecords}
+            src={`data:image/bmp;base64,${mainImages[step]?.golden?.data || ''}`}
             alt={`Golden Image for Step ${step}`}
           />
           <p className="text-center mt-2 text-gray-600">Golden Image</p>

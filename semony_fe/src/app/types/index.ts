@@ -12,6 +12,7 @@ export interface WaferData {
   slotNo: string;
   lotSeq: string;
   modules: ModuleData[]; // modules 속성 추가
+  date: string;
 }
 
 export interface stepInfo {

@@ -2,12 +2,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { DefectRecordSpec } from '@/app/types';
-import {DataContext} from "../../../../../DataContext"
-
-interface IPUImagesProps {
-  currentDefect: DefectRecordSpec | null;
+import {DataContext} from "../../../../../../DataContext"
+interface ImageGalleryProps {
+  currentDefects: { x: number; y: number; defects: DefectRecordSpec[] } | null;
 }
-
 
 const images = [
     { src: '/mocks/macro/0001_golden.TIF', label: "GOLDEN" },
@@ -16,22 +14,26 @@ const images = [
     { src: '/mocks/macro/0001_psm.TIF', label: "PSM" },
   ];
 
-const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
+const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
   const [zoom, setZoom] = useState(100); // 기본 확대율 100%
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 이미지 위치
   const [isDragging, setIsDragging] = useState(false); // 드래그 상태
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
+  const [selectedDefectIndex, setSelectedDefectIndex] = useState(0);
   useEffect(() => {
-    updateImagesForDefect();
-  }, [currentDefect]);
+    if(currentDefects?.defects && currentDefects.defects.length > 0){
+      setSelectedDefectIndex(0);
+      updateImagesForDefect(0);
+    }
+    setSelectedDefectIndex(0);
+  }, [currentDefects]);
   
   const [currentImages, setCurrentImages] = useState(images);
   const dataContext = useContext(DataContext);
   if(!dataContext) {
     return null;
   }
-  const { IPUImages } = dataContext;
+  const { threeStepInfo, IPUImages } = dataContext;
   
   
   // 확대/축소 기능
@@ -40,11 +42,14 @@ const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
 
  
 
-  const updateImagesForDefect = () => {
-     if(currentDefect){
-      const { defectID, step } = currentDefect;
+  const updateImagesForDefect = (index: number) => {
+    
+    const selectedDefect = currentDefects?.defects[index];
+    if(selectedDefect) {
+      const { defectID, step } = selectedDefect;
       console.log(defectID, step)
       const matchingIpus = IPUImages[step]?.find((ipu)=> ipu.ipuNum === defectID);
+      console.log(matchingIpus);
       // IPUImages에 matchingIpus가 없을 경우
       // IPUImages에 matchingIpus가 있을 경우ㅋ
       if(matchingIpus) {
@@ -63,12 +68,26 @@ const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
             console.log(image.data);
             return { src: `data:image/png;base64,${image.data}`, label };
           }));
+      }
 
+      // setCurrentImages(
+      //   IPUImages[defectStep]
+      // )
+      // setCurrentImages(
+      //   images.map((image) => ({
+      //       src: '/mocks/macro/0001_golden.TIF',
+      //       label: image.label,
+      //     }))
+      // )
     }
-     }
-      
   }
   
+  const handleDefectSelection = (index: number) => {
+    setSelectedDefectIndex(index);
+    updateImagesForDefect(index);
+    setZoom(100);
+  };
+
   // 마우스 휠로 확대/축소 조절
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault(); // 전역 스크롤 방지
@@ -104,15 +123,35 @@ const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
 
   return (
     <div
-      className="bg-white h-full p-4 shadow-md rounded-lg flex  max-w-full border border-1 border-gray-200"
+      className="bg-white p-4 shadow-md rounded-lg flex overflow-auto h-[70vh] max-w-full border border-1 border-gray-200"
     >
     <div
-        className="flex flex-col items-start mr-4 min-w-fit space-y-2 overflow-y-auto"
+        className="flex flex-col items-start mr-4 w-56 space-y-2 overflow-y-auto"
         style={{
           scrollbarWidth: 'none', // Firefox에서 스크롤바 숨김
           msOverflowStyle: 'none', // IE와 Edge에서 스크롤바 숨김
         }}
       >
+        {currentDefects?.defects.map((defect, index) => (
+          <button
+            key={index}
+            onClick={() => handleDefectSelection(index)}
+            className={`py-2 px-4 w-full rounded-lg border ${
+              index === selectedDefectIndex ? 'bg-gray-700 border-gray-300 shadow-md text-gray-200' : 'bg-gray-50 border-gray-200 hover:bg-gray-200'
+            }  transition-all text-left`}
+          >
+            <div className={`${
+              index === selectedDefectIndex ? "text-white font-bold " :"" } font-semibold  text-xs`} > {threeStepInfo[defect.step - 1]?.moduleId || 'N/A'}</div>
+            <div className="text-xs ">defect_id: {defect.defectID}</div>
+            <div className="text-xs ">defect_area: {defect.defectArea}</div>
+            <div className="text-xs ">radius: {defect.radius}</div>
+            <div className="text-xs ">gray_mean: {defect.grayMean}</div>
+            <div className="text-xs ">
+              gray_range: {defect.grayMin} - {defect.grayMax}
+            </div>
+            <div className="text-xs  mt-1">size (x, y): {defect.xsize} x {defect.ysize}</div>
+          </button>
+        ))}
       </div>
 
 
@@ -163,4 +202,4 @@ const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
   );
 };
 
-export default IPUImages;
+export default ImageGallery;

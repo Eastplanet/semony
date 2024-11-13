@@ -18,12 +18,13 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   const lotId = params.lotId as string;
   const lotSeq = params.lotSeq as string;
   const slotNo = params.slotNo as string;
+  const date = params.date as string;
 
 
   // Handle tab change and route navigation
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    router.push(`/detail/${ppid}/${lotId}/${decodeURIComponent(lotSeq)}/${slotNo}/${tab}`);
+    router.push(`/detail/${ppid}/${lotId}/${decodeURIComponent(lotSeq)}/${slotNo}/${date}/${tab}`);
   };
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <DataProvider ppid={ppid} lotId={lotId} lotSeq={decodeURIComponent(lotSeq)} slotNo={slotNo}>
+    <DataProvider date={date} ppid={ppid} lotId={lotId} lotSeq={decodeURIComponent(lotSeq)} slotNo={slotNo}>
     <div className="p-2 pt-1 h-[100vh]">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div className="mb-4 md:mb-0">
