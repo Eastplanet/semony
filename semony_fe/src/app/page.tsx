@@ -28,23 +28,33 @@ const WaferTable = () => {
   const start = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
   const end = formatDateTime(now); // 현재 시간
   const [startDate, setStartDate] = useState(() => {
-    return localStorage.getItem('startDate') || start;
-  });  
-  const [endDate, setEndDate] = useState(() => {
-    return localStorage.getItem('endDate') || end;
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('startDate') || start;
+    }
+    return start;
   });
-  const router = useRouter();
-  const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
-
+  
+  const [endDate, setEndDate] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('endDate') || end;
+    }
+    return end;
+  });
+  
   useEffect(() => {
-    localStorage.setItem('startDate', startDate);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('startDate', startDate);
+    }
   }, [startDate]);
   
   useEffect(() => {
-    localStorage.setItem('endDate', endDate);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('endDate', endDate);
+    }
   }, [endDate]);
+  const router = useRouter();
+  const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
-  
   const fetchData = () => {
       request(`wafer?startDate=${startDate}&endDate=${endDate}`)
         .then((data) => {
