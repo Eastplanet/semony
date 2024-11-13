@@ -5,6 +5,7 @@ import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
 import com.semony.integrated.domain.dto.WaferSpecificationValueDto;
 import com.semony.integrated.domain.dto.convertor.EqpInspectionHstAlphaConvertor;
+import com.semony.integrated.domain.dto.json.EbrResultJson;
 import com.semony.integrated.domain.dto.json.ResultJson;
 import com.semony.integrated.domain.dto.smf.DiePos;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
@@ -123,13 +124,27 @@ public class WaferServiceImpl implements WaferService {
 
         }
 
-        JsonParser jsonParser = new JsonParser();
-        ResultJson parse = jsonParser.parse(pathFinder.getEwimPathEBR() + "/Result.json");
-
-        data.setResultJson(parse);
-
         return data;
     }
 
+    @Override
+    public EbrResultJson getWaferDetailResult(String lotId, BigDecimal lotSeq, String flowRecipe,
+        String slotNo) throws IOException {
+
+        SummaryWaferDto waferSummary = getWaferSummary(lotId, lotSeq, flowRecipe, slotNo);
+
+        PathFinder pathFinder = new PathFinder(
+            FlowRecipe.findByPpid(flowRecipe),
+            lotSeq.toString(),
+            lotId,
+            slotNo,
+            waferSummary.getDate()
+        );
+
+        JsonParser jsonParser = new JsonParser();
+        EbrResultJson parse = jsonParser.parse(pathFinder.getEwimPathEBR() + "/Result.json");
+
+        return parse;
+    }
 
 }

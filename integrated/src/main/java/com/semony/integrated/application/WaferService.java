@@ -2,6 +2,7 @@ package com.semony.integrated.application;
 
 import com.semony.integrated.domain.dto.SummaryWaferDto;
 import com.semony.integrated.domain.dto.WaferDetailDTO;
+import com.semony.integrated.domain.dto.json.EbrResultJson;
 import com.semony.integrated.domain.dto.smf.WaferInspectionDTO;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,5 +17,8 @@ public interface WaferService {
     public List<SummaryWaferDto> getWaferSummaryList(LocalDateTime startDate, LocalDateTime endDate);
 
     public WaferDetailDTO getWaferDetail(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo)
+        throws IOException;
+
+    public EbrResultJson getWaferDetailResult(String lotId, BigDecimal lotSeq, String flowRecipe, String slotNo)
         throws IOException;
 }
