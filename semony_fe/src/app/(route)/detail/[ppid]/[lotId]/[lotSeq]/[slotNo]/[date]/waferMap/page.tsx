@@ -77,7 +77,7 @@ export default function MainPage() {
 
       <div className="mx-24 flex items-start p-2 gap-8 justify-around">
         <div
-          className="overflow-hidden mx-auto my-auto bg-gray-100 rounded-xl p-3"
+          className="overflow-hidden mx-auto my-auto  rounded-xl p-3"
           onMouseDown={handleMouseDown}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}

@@ -1,26 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-
-export interface DefectRecordSpec {
-  defectID: number;
-  defectArea: number;
-  gdsX: number;
-  gdsY: number;
-  grayMin: number;
-  grayMax: number;
-  grayMean: number;
-  alg: number;
-  radius: number;
-  select: number;
-  yrel: number;
-  xsize: number;
-  xrel: number;
-  ysize: number;
-  xindex: number;
-  yindex: number;
-  step: number;
-}
+import { DefectRecordSpec } from '@/app/types';
 
 interface MacroImageProps {
   src: string;
@@ -33,44 +14,85 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example',
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Set intrinsic image size and scaling factor
+  // Intrinsic image size
   const intrinsicWidth = 7344;
   const intrinsicHeight = 7500;
-  const scaleFactor = 42.25; // 1 pixel = 42.25 um
 
   const drawDefects = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-  
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-    // defects가 유효한지 확인
+
     if (!defects || defects.length === 0) return;
-  
+
+    // Scale GDS coordinates to canvas dimensions
+    const xScale = canvas.width / intrinsicWidth;
+    const yScale = canvas.height / intrinsicHeight;
+
     defects.forEach((defect) => {
-      const xPos = (defect.gdsX / scaleFactor) * (canvas.width / intrinsicWidth);
-      const yPos = (defect.gdsY / scaleFactor) * (canvas.height / intrinsicHeight);
-      const defectSize = (defect.defectArea / scaleFactor) * 0.5; // Adjust size as needed
-  
+      // Calculate defect position and size
+      const xPos = (defect.gdsX / 20) * xScale + 10;
+      const yPos = (defect.gdsY / 20) * yScale + 10;
+      const defectWidth = (defect.xsize / 16) * xScale;
+      const defectHeight = (defect.ysize / 16) * yScale;
+
       ctx.beginPath();
-      ctx.rect(xPos, yPos, defectSize, defectSize);
-      ctx.strokeStyle = 'red';
+      ctx.rect(xPos, yPos, defectWidth, defectHeight);
+      ctx.strokeStyle = 'rgba(75, 213, 255, 0.8)';
       ctx.lineWidth = 2;
       ctx.stroke();
     });
   };
-  
+
   useEffect(() => {
     drawDefects();
   }, [defects, scale, position]);
 
+  const handleMouseMoveOnCanvas = (e: React.MouseEvent) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Find a defect that overlaps with the mouse position
+    const xScale = canvas.width / intrinsicWidth;
+    const yScale = canvas.height / intrinsicHeight;
+
+    const hoveredDefect = defects.find((defect) => {
+      const xPos = (defect.gdsX / 20) * xScale + 10;
+      const yPos = (defect.gdsY / 20) * yScale + 10;
+      const defectWidth = (defect.xsize / 16) * xScale;
+      const defectHeight = (defect.ysize / 16) * yScale;
+
+      return (
+        mouseX >= xPos &&
+        mouseX <= xPos + defectWidth &&
+        mouseY >= yPos &&
+        mouseY <= yPos + defectHeight
+      );
+    });
+
+    if (hoveredDefect) {
+      setTooltip({
+        x: e.clientX,
+        y: e.clientY,
+        text: `X: ${hoveredDefect.gdsX}, Y: ${hoveredDefect.gdsY}`,
+      });
+    } else {
+      setTooltip(null);
+    }
+  };
+
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    setScale((prevScale) => Math.min(Math.max(prevScale + e.deltaY * -0.001, 1), 3));
+    setScale((prevScale) => Math.min(Math.max(prevScale + e.deltaY * -0.001, 1), 10));
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -111,18 +133,38 @@ const MacroImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example',
         className="relative w-full h-full overflow-hidden"
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
+        onMouseMove={(e) => {
+          handleMouseMove(e);
+          handleMouseMoveOnCanvas(e);
+        }}
         onMouseUp={handleMouseUp}
-        onMouseLeave={() => setDragging(false)}
+        onMouseLeave={() => {
+          setDragging(false);
+          setTooltip(null);
+        }}
         style={{
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
           transformOrigin: 'center center',
           cursor: dragging ? 'grabbing' : 'grab',
         }}
       >
-        <Image src={src} alt={alt} width={2000} height={2000} className="w-full h-full object-cover" />
-        <canvas ref={canvasRef} className="absolute inset-0" width={500} height={500} />
+        <Image src={src} alt={alt} width={intrinsicWidth} height={intrinsicHeight} className="w-full h-full object-cover" />
+        <canvas ref={canvasRef} className="absolute inset-0" width={intrinsicWidth} height={intrinsicHeight} />
       </div>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          className="absolute bg-gray-700 text-white text-xs rounded px-2 py-1 shadow-lg"
+          style={{
+            top: tooltip.y + 15,
+            left: tooltip.x + 15,
+            pointerEvents: 'none',
+          }}
+        >
+          {tooltip.text}
+        </div>
+      )}
       
       <button
         onClick={clearCanvas}

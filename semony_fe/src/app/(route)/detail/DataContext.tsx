@@ -14,6 +14,14 @@ interface DataContextProps {
   threeStepInfo: stepInfo[];
   mainImages: MainImages;
   IPUImages: IPUImages;  
+  healthData: HealthData[]; // 추가된 health data
+}
+
+interface HealthData {
+  moduleId: string;
+  ip: string;
+  port: string;
+  healthy: boolean;
 }
 
 
@@ -56,6 +64,8 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
   const [selectedSteps, setSelectedSteps] = useState<number[]>([]);
   const [mainImages, setMainImages] = useState<MainImages>([]);
   const [IPUImages, setIPUImages] = useState<IPUImages>([]);
+  const [healthData, setHealthData] = useState<HealthData[]>([]); // 추가된 healthData 상태
+
 
 
   const toggleStep = (step: number) => {
@@ -112,6 +122,17 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
     console.error("Failed to fetch IPU images:", error);
   });
   };
+
+  const fetchHealth = () => {
+    request(`health`)
+      .then((data: HealthData[]) => {
+        setHealthData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch health data:", error);
+      });
+  };
   
   
 
@@ -155,12 +176,14 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
   useEffect(() => {
     fetchMainImages();
     fetchData();
+    fetchHealth();
     fetchIPUImages();
+    
   }, [ppid, lotId, lotSeq, slotNo, date]);
 
 
   return (
-    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages }}>
+    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages, healthData }}>
       {children}
     </DataContext.Provider>
   );
