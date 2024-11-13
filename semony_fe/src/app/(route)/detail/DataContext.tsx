@@ -73,6 +73,15 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
       prev.includes(step) ? prev.filter((s) => s !== step) : [...prev, step]
     );
   };
+
+  const fetchEBRResults = () => {
+    request(`wafer/detail/result?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=${date}`)
+    .then((data) =>{
+      console.log(data);
+    })
+  }
+
+
   const fetchMainImages = () => {
     request(`wafer/images/summary?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=${date}`)
 
@@ -177,6 +186,7 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
     fetchMainImages();
     fetchData();
     fetchHealth();
+    fetchEBRResults();
     fetchIPUImages();
     
   }, [ppid, lotId, lotSeq, slotNo, date]);
