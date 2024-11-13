@@ -1,12 +1,10 @@
 package com.semony.integrated.application;
 
+import com.semony.integrated.domain.dto.ModuleMapping;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +47,4 @@ public class NetworkHealthChecker {
 
 
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class ModuleMapping {
-    String moduleId;
-    String ip;
-    String port;
-    boolean isHealthy;
-}
+
