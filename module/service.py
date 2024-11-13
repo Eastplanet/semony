@@ -93,7 +93,7 @@ def create_target_folder_path(module_name, date, lotId, flow_recipe, lotSeq,
 
   # 최종 폴더 경로를 구성, 마지막에 macro_folder 추가
   target_folder_path = os.path.join(
-      ROOT_PATH, module_name, "InVision", "SaveData", date, folder_id, slotNo,
+      ROOT_PATH, module_name, "InVision", "SaveData", date[:-2], folder_id, slotNo,
       macro_folder
   )
   os.makedirs(target_folder_path, exist_ok=True)
@@ -140,7 +140,7 @@ async def process_and_modify_in_module_data(
   target_folder_path = None
   # 기본 대상 폴더 경로 생성
   target_folder_path = create_target_folder_path(
-      module_name, date[:-2], lotId, flow_recipe, lotSeq, slotNo, macro_folder
+      module_name, date, lotId, flow_recipe, lotSeq, slotNo, macro_folder
   )
   # print("asasapp"+macro_folder)
   # macro_folder가 "EBR"인 경우
@@ -154,7 +154,7 @@ async def process_and_modify_in_module_data(
     # target_folder_path를 "Macro[Inspection]"으로 다시 설정
     # print("sasa"+str(defect_data))
     target_folder_path = create_target_folder_path(
-        module_name, date[:-2], lotId, flow_recipe, lotSeq, slotNo,
+        module_name, date, lotId, flow_recipe, lotSeq, slotNo,
         "Macro[Inspection]"
     )
     # print("target: " + target_folder_path)
