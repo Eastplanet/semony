@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { DieLocation, DefectRecordSpec } from '../../../../../../../types';
+import { DieLocation, DefectRecordSpec } from '../../../../../../../../types';
 
 
 interface WaferGridProps {

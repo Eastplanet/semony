@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import 'react-resizable/css/styles.css';
 import Image from 'next/image';
 import request from './apis/request';
-import {WaferData} from '@/app/types';
+import { WaferData } from '@/app/types';
 import { mockData } from './mocks/mock_wafer';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
@@ -27,11 +27,24 @@ const WaferTable = () => {
   };
   const start = formatDateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate())); // 오늘 시작 시간
   const end = formatDateTime(now); // 현재 시간
-  const [startDate, setStartDate] = useState(start);
-  const [endDate, setEndDate] = useState(end);
+  const [startDate, setStartDate] = useState(() => {
+    return localStorage.getItem('startDate') || start;
+  });  
+  const [endDate, setEndDate] = useState(() => {
+    return localStorage.getItem('endDate') || end;
+  });
   const router = useRouter();
   const columns = ['ppid', 'lotId', 'lotSeq', 'slotNo'];
 
+  useEffect(() => {
+    localStorage.setItem('startDate', startDate);
+  }, [startDate]);
+  
+  useEffect(() => {
+    localStorage.setItem('endDate', endDate);
+  }, [endDate]);
+
+  
   const fetchData = () => {
       request(`wafer?startDate=${startDate}&endDate=${endDate}`)
         .then((data) => {
@@ -290,7 +303,7 @@ const WaferTable = () => {
         } transition-colors duration-200 ease-in-out hover:bg-blue-100 cursor-pointer`}
         onClick={() =>
           router.push(
-            `/detail/${data.ppid}/${data.lotId}/${data.lotSeq}/${data.slotNo}/waferMap`
+            `/detail/${data.ppid}/${data.lotId}/${data.lotSeq}/${data.slotNo}/${data.date}/waferMap`
           )
         }
       >
