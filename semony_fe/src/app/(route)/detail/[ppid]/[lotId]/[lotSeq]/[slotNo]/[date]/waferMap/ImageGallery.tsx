@@ -48,10 +48,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
     if(selectedDefect) {
       const { defectID, step } = selectedDefect;
       console.log(defectID, step)
-      const matchingIpus = IPUImages[step]?.find((ipu)=> ipu.ipuNum === defectID);
+      const matchingIpus = IPUImages[step-1]?.find((ipu)=> ipu.ipuNum === defectID);
       console.log(matchingIpus);
       // IPUImages에 matchingIpus가 없을 경우
-      // IPUImages에 matchingIpus가 있을 경우ㅋ
+      // IPUImages에 matchingIpus가 있을 경우
       if(matchingIpus) {
         const labelMapping: { [key: string]: string } = {
           ins: 'INSPECTION',
@@ -68,6 +68,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ currentDefects }) => {
             console.log(image.data);
             return { src: `data:image/png;base64,${image.data}`, label };
           }));
+      }else{
+        console.log("매칭되는 이미지 없음", defectID, step);
       }
 
       // setCurrentImages(

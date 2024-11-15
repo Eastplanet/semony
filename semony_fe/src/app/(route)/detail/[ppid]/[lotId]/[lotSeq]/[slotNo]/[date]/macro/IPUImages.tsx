@@ -51,7 +51,7 @@ const IPUImages: React.FC<IPUImagesProps> = ({ currentDefect }) => {
     if(selectedDefect) {
       const { defectID, step } = selectedDefect;
       console.log(defectID, step)
-      const matchingIpus = IPUImages[step]?.find((ipu)=> ipu.ipuNum === defectID);
+      const matchingIpus = IPUImages[step-1]?.find((ipu)=> ipu.ipuNum === defectID);
       console.log(matchingIpus);
       // IPUImages에 matchingIpus가 없을 경우
       // IPUImages에 matchingIpus가 있을 경우ㅋ
