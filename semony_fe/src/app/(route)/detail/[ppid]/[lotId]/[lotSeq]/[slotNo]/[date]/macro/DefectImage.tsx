@@ -190,7 +190,7 @@ const DefectImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example'
     setIsDragging(false);
   };
 
-  const handleClickOnCanvas = (e: React.MouseEvent) => {
+  const handleClickOnCanvas = () => {
     if (!isDrawing && tooltip && setDefects) {
       setDefects(tooltip.defects);
     }
