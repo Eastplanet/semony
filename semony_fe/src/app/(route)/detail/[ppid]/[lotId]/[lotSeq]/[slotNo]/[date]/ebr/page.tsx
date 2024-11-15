@@ -2,17 +2,26 @@
 import { DataContext } from '../../../../../../DataContext';
 import { useContext } from 'react';
 
-// TypeScript 인터페이스 정의
-interface EBRData {
-  ebrResult: string;
-  notchAngle: number;
-  ebrAverageThickness: number;
-  ebrDivideCount: number;
-  waferLoadingCenterOffsetX: number;
-  waferLoadingCenterOffsetY: number;
-  chuckFlatnessAngle: number;
-  afterAlignCenterOffsetX: number;
-  afterAlignCenterOffsetY: number;
+// ebrResults 데이터의 인터페이스 정의
+interface EbrResultData {
+  EbrResultType: number;
+  NotchAngle: { Value: number };
+  EbrDivideCount: number;
+  EbrAverageThickness: { Value: number };
+  WaferLoadingCenterOffsetX: { Value: number };
+  WaferLoadingCenterOffsetY: { Value: number };
+  AfterAlignCenterOffsetX: { Value: number };
+  AfterAlignCenterOffsetY: { Value: number };
+  ChuckFlatnessAngle: { Value: number };
+  m_ebrDividedDataList: {
+    $values: {
+      Index: number;
+      Angle: { Value: number };
+      MeasuredEbrWidth: { Value: number };
+      BevelWidth: { Value: number };
+      FittedEbrWidth: { Value: number };
+    }[];
+  };
 }
 
 const DetailPage: React.FC = () => {
@@ -22,35 +31,25 @@ const DetailPage: React.FC = () => {
     return null;
   }
 
-  const { mainImages } = dataContext;
+  const { mainImages, ebrResults } = dataContext;
   const data = mainImages[1]?.ebr?.data;
-
-  // 임시 데이터 생성
-  const mockData: EBRData = {
-    ebrResult: 'resultisgood',
-    notchAngle: 57.105,
-    ebrAverageThickness: 720.803,
-    ebrDivideCount: 8,
-    waferLoadingCenterOffsetX: 20.573,
-    waferLoadingCenterOffsetY: 5.735,
-    chuckFlatnessAngle: 0.450,
-    afterAlignCenterOffsetX: -21.357,
-    afterAlignCenterOffsetY: -0.052,
-  };
+  console.log("ebr", ebrResults);
 
   const imageSrc = `data:image/jpeg;base64,${data}`;
 
+  // 컬럼 이름 정의
   const columnNames: { [key: string]: string } = {
-    ebrResult: 'EBR 결과',
-    notchAngle: 'Notch Angle [deg]',
-    ebrAverageThickness: 'EBR 평균 두께 [um]',
-    ebrDivideCount: 'EBR Divide Count',
-    waferLoadingCenterOffsetX: 'Wafer Loading Center OffsetX [um]',
-    waferLoadingCenterOffsetY: 'Wafer Loading Center OffsetY [um]',
-    chuckFlatnessAngle: 'Chuck Flatness Angle [deg]',
-    afterAlignCenterOffsetX: 'After Align Center OffsetX [um]',
-    afterAlignCenterOffsetY: 'After Align Center OffsetY [um]',
+    EbrResultType: 'EBR Result Type',
+    NotchAngle: 'Notch Angle [deg]',
+    EbrAverageThickness: 'EBR Average Thickness [um]',
+    EbrDivideCount: 'EBR Divide Count',
+    WaferLoadingCenterOffsetX: 'Wafer Loading Center Offset X [um]',
+    WaferLoadingCenterOffsetY: 'Wafer Loading Center Offset Y [um]',
+    ChuckFlatnessAngle: 'Chuck Flatness Angle [deg]',
+    AfterAlignCenterOffsetX: 'After Align Center Offset X [um]',
+    AfterAlignCenterOffsetY: 'After Align Center Offset Y [um]',
   };
+
   return (
     <div className="flex flex-col justify-center md:flex-row w-full h-[80vh] gap-8 p-6">
       {/* 테이블 */}
@@ -60,22 +59,89 @@ const DetailPage: React.FC = () => {
         </h2>
         <table className="min-w-full text-xs table-fixed">
           <tbody>
-            {Object.entries(mockData).map(([key, value], index) => (
-              <tr
-                key={index}
-                className={`border-t ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} transition-colors duration-200 hover:bg-blue-100`}
-              >
-                <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
-                  <div className="flex items-center gap-2">
-                    {columnNames[key]}
-                  
-                  </div>
-                </td>
-                <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
-                  {typeof value === 'number' ? value.toFixed(3) : value}
-                </td>
-              </tr>
-            ))}
+            {/* ebrResults 데이터 표시 */}
+            {ebrResults && (
+              <>
+                <tr className="border-t bg-gray-50">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['EbrResultType']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.EbrResultType === 0
+                      ? 'Processing Fail'
+                      : ebrResults.EbrResultType === 1
+                      ? 'Result is Abnormal'
+                      : ebrResults.EbrResultType === 2
+                      ? 'Result is Good'
+                      : 'Unknown'}
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['NotchAngle']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.NotchAngle.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t bg-gray-50">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['EbrAverageThickness']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.EbrAverageThickness.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['EbrDivideCount']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.EbrDivideCount}
+                  </td>
+                </tr>
+                <tr className="border-t bg-gray-50">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['WaferLoadingCenterOffsetX']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.WaferLoadingCenterOffsetX.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['WaferLoadingCenterOffsetY']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.WaferLoadingCenterOffsetY.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t bg-gray-50">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['AfterAlignCenterOffsetX']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.AfterAlignCenterOffsetX.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['AfterAlignCenterOffsetY']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.AfterAlignCenterOffsetY.Value.toFixed(3)}
+                  </td>
+                </tr>
+                <tr className="border-t bg-gray-50">
+                  <td className="py-3 px-4 font-semibold text-gray-700 whitespace-nowrap text-left border-r border-gray-200">
+                    {columnNames['ChuckFlatnessAngle']}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800 text-right font-mono tracking-wide">
+                    {ebrResults.ChuckFlatnessAngle.Value.toFixed(3)}
+                  </td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
       </div>

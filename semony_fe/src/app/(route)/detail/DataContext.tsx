@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import request from '@/app/apis/request';
 import { DieLocation, stepInfo, DefectRecordSpec, WaferInspectionStep, MainImages, IPUImages } from '@/app/types';
+import {EbrResultData} from '@/app/types/ebr';
 
 
 interface DataContextProps {
@@ -15,6 +16,7 @@ interface DataContextProps {
   mainImages: MainImages;
   IPUImages: IPUImages;  
   healthData: HealthData[]; // 추가된 health data
+  ebrResults: EbrResultData | null; // EBR 결과
 }
 
 interface HealthData {
@@ -65,6 +67,7 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
   const [mainImages, setMainImages] = useState<MainImages>([]);
   const [IPUImages, setIPUImages] = useState<IPUImages>([]);
   const [healthData, setHealthData] = useState<HealthData[]>([]); // 추가된 healthData 상태
+  const [ebrResults, setEbrResults] = useState<EbrResultData | null>(null);
 
 
 
@@ -76,7 +79,8 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
 
   const fetchEBRResults = () => {
     request(`wafer/detail/result?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=${date}`)
-    .then((data) =>{
+    .then((data:EbrResultData) =>{
+      setEbrResults(data);
       console.log(data);
     })
   }
@@ -193,7 +197,7 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
 
 
   return (
-    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages, healthData }}>
+    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages, healthData, ebrResults }}>
       {children}
     </DataContext.Provider>
   );
