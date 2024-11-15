@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import request from '@/app/apis/request';
 import { DieLocation, stepInfo, DefectRecordSpec, WaferInspectionStep, MainImages, IPUImages } from '@/app/types';
+import {EbrResultData} from '@/app/types/ebr';
 
 
 interface DataContextProps {
@@ -14,6 +15,15 @@ interface DataContextProps {
   threeStepInfo: stepInfo[];
   mainImages: MainImages;
   IPUImages: IPUImages;  
+  healthData: HealthData[]; // 추가된 health data
+  ebrResults: EbrResultData | null; // EBR 결과
+}
+
+interface HealthData {
+  moduleId: string;
+  ip: string;
+  port: string;
+  healthy: boolean;
 }
 
 
@@ -56,6 +66,9 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
   const [selectedSteps, setSelectedSteps] = useState<number[]>([]);
   const [mainImages, setMainImages] = useState<MainImages>([]);
   const [IPUImages, setIPUImages] = useState<IPUImages>([]);
+  const [healthData, setHealthData] = useState<HealthData[]>([]); // 추가된 healthData 상태
+  const [ebrResults, setEbrResults] = useState<EbrResultData | null>(null);
+
 
 
   const toggleStep = (step: number) => {
@@ -63,6 +76,16 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
       prev.includes(step) ? prev.filter((s) => s !== step) : [...prev, step]
     );
   };
+
+  const fetchEBRResults = () => {
+    request(`wafer/detail/result?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=${date}`)
+    .then((data:EbrResultData) =>{
+      setEbrResults(data);
+      console.log(data);
+    })
+  }
+
+
   const fetchMainImages = () => {
     request(`wafer/images/summary?ppid=${ppid}&slotNo=${slotNo}&lotId=${lotId}&lotSeq=${lotSeq}&date=${date}`)
 
@@ -112,6 +135,17 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
     console.error("Failed to fetch IPU images:", error);
   });
   };
+
+  const fetchHealth = () => {
+    request(`health`)
+      .then((data: HealthData[]) => {
+        setHealthData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch health data:", error);
+      });
+  };
   
   
 
@@ -155,12 +189,15 @@ export const DataProvider = ({ ppid, lotId, lotSeq, slotNo, date, children }: Da
   useEffect(() => {
     fetchMainImages();
     fetchData();
+    fetchHealth();
+    fetchEBRResults();
     fetchIPUImages();
+    
   }, [ppid, lotId, lotSeq, slotNo, date]);
 
 
   return (
-    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages }}>
+    <DataContext.Provider value={{ dieLocations, defectRecordsStep1, defectRecordsStep2, defectRecordsStep3, selectedSteps, toggleStep, threeStepInfo, mainImages, IPUImages, healthData, ebrResults }}>
       {children}
     </DataContext.Provider>
   );

@@ -329,9 +329,19 @@ const WaferTable = () => {
           <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-xs">
             {data.slotNo}
           </td>
-          <td rowSpan={1} className="p-4 text-gray-700 border-b border-gray-300 text-sm border-r-[1px]">
+          <td
+            rowSpan={1}
+            className={`p-4 text-sm border-b border-gray-300 border-r-[1px] ${
+              data.totalDefectCount >= 100
+                ? 'text-red-600 font-semibold' // 100 이상일 때 더 진한 빨간색과 굵은 폰트
+                : data.totalDefectCount !== 0
+                ? data.totalDefectCount > 10 ? 'text-orange-500 font-medium' : 'text-black font-medium' // 50~99일 때 중간 주황색과 중간 굵기 폰트
+                : 'text-gray-400' // 0~49일 때 연한 회색
+            }`}
+          >
             {data.totalDefectCount}
           </td>
+
 
           {/* 각 STEP의 모듈 정보를 일렬로 나열 */}
           {data.modules.map((module, moduleIndex) => (

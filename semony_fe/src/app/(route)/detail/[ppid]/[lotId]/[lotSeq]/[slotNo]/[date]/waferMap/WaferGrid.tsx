@@ -22,18 +22,6 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
   const [tooltip, setTooltip] = useState<{x: number; y: number; defects: DefectRecordSpec[] }| null>(null);
   const [tooltipHovered, setTooltipHovered] = useState(false); // 툴팁에 마우스가 있는지 여부 상태 추가
 
-  // const [zoom, setZoom] = useState(1); // 기본 확대 비율 1
-  
-  // const handleWheel = (event: React.WheelEvent) => {
-  //   event.preventDefault();
-  //   if (event.deltaY < 0) {
-  //     setZoom((prevZoom) => Math.min(prevZoom + 0.1, 3)); // 최대 3배까지 확대
-  //   } else {
-  //     setZoom((prevZoom) => Math.max(prevZoom - 0.1, 0.5)); // 최소 0.5배까지 축소
-  //   }
-  // };
-
-  // useMemo를 사용하여 grid를 메모이제이션
   const grid = useMemo(() => {
     return Array.from({ length: totalRows }, (_, rowIndex) => {
       return Array.from({ length: totalCols }, (_, colIndex) => {
@@ -114,10 +102,10 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
     {tooltip.defects.slice(0, 4).map((defect, index) => (
       <div
         key={index}
-        className="p-2 bg-opacity-70 rounded flex flex-col items-center w-full"
+        className="p-1 bg-opacity-70 rounded flex flex-col items-center w-full"
         style={{ backgroundColor: getDefectColor(defect.step) }}
       >
-        <div className="font-bold">Step {defect.step}</div>
+        <div className="font-bold text-xs py-1">ID: {defect.defectID} (Step {defect.step})</div>
         <div
           className="text-gray-200 text-xs"
           style={{
@@ -126,11 +114,14 @@ const WaferGrid: React.FC<WaferGridProps> = ({ dieLocations, defectRecords, tota
             textOverflow: 'ellipsis',
           }}
         >
-          {Object.entries(defect)
-            .filter(([key]) => key !== 'gdsX' && key !== 'gdsY')
-            .map(([key, value]) => (
-              <div key={key}>{`${key}: ${value}`}</div>
-            ))}
+          <div>defectArea: {defect.defectArea}</div>
+          <div>index (x,y): {defect.xindex}, {defect.yindex}</div>
+          <div>size (x,y): {defect.xsize}, {defect.ysize}</div>
+          <div>x_rel: {defect.xrel}</div>
+          <div>y_rel: {defect.yrel}</div>
+          <div>gray_range: {defect.grayMin} ~ {defect.grayMax}</div>
+          <div>gray_mean: {defect.grayMean}</div>
+          
         </div>
       </div>
     ))}
