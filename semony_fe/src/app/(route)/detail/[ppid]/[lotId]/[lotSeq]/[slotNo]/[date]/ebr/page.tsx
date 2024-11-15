@@ -3,26 +3,7 @@ import { DataContext } from '../../../../../../DataContext';
 import { useContext } from 'react';
 
 // ebrResults 데이터의 인터페이스 정의
-interface EbrResultData {
-  EbrResultType: number;
-  NotchAngle: { Value: number };
-  EbrDivideCount: number;
-  EbrAverageThickness: { Value: number };
-  WaferLoadingCenterOffsetX: { Value: number };
-  WaferLoadingCenterOffsetY: { Value: number };
-  AfterAlignCenterOffsetX: { Value: number };
-  AfterAlignCenterOffsetY: { Value: number };
-  ChuckFlatnessAngle: { Value: number };
-  m_ebrDividedDataList: {
-    $values: {
-      Index: number;
-      Angle: { Value: number };
-      MeasuredEbrWidth: { Value: number };
-      BevelWidth: { Value: number };
-      FittedEbrWidth: { Value: number };
-    }[];
-  };
-}
+
 
 const DetailPage: React.FC = () => {
   const dataContext = useContext(DataContext);

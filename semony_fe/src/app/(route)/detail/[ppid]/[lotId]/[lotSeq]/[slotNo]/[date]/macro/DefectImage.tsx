@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef, useEffect, useState } from 'react';
 import { DefectRecordSpec } from '@/app/types';
+import Image from 'next/image';
 
 interface MacroImageProps {
   src: string;
@@ -230,16 +231,16 @@ const DefectImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example'
         </button>
        
         {mode === 'zoom' && (
-          <div className="flex items-end ml-12">
-            <button onClick={() => setDrawing((prev) => !prev)} className="font-medium text-sm text-purple-600 rounded-full focus:outline-none z-10 p-2">
+          <div className="flex items-end ml-7">
+            <button onClick={() => setDrawing((prev) => !prev)} className="font-medium text-sm text-purple-600 rounded-full focus:outline-none z-10 p-1">
               {drawing ? '🟥' : '✏️'}
             </button>
-            <button onClick={() => setDrawings([])} className="font-medium text-sm text-red-600 rounded-full focus:outline-none z-10 p-2">
+            <button onClick={() => setDrawings([])} className="font-medium text-sm text-red-600 rounded-full focus:outline-none z-10 p-1">
               🗑️
             </button>
           </div>
         )} 
-        <button onClick={() => {
+        <div className='flex items-center' onClick={() => {
           setMode((prevMode) => {
             const newMode = prevMode === 'zoom' ? 'defect' : 'zoom';
             if (newMode === 'defect') {
@@ -247,9 +248,12 @@ const DefectImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example'
             }
             return newMode;
           });
-        }} className="font-medium text-sm text-green-600 rounded-full focus:outline-none z-10 p-2">
+        }}>
+        <button  className={`font-medium text-sm ${mode === 'zoom' ? "text-blue-600" : "text-green-600"} rounded-full focus:outline-none z-10 p-2`}>
           {mode === 'zoom' ? '🔍 확대/축소 모드' : '🛠 결함 조회 모드'}
         </button>
+        <Image src={`/icons/toggle_${mode === 'zoom' ? 'on' : 'off'}.png`} alt="" width={40} height={5} className="h-[70%] w-9"/>
+        </div>
       </div>
 
       <div className="relative w-[50vh] h-[50vh] mx-auto overflow-hidden rounded-2xl shadow-md bg-white" onWheel={handleWheelZoom}>
