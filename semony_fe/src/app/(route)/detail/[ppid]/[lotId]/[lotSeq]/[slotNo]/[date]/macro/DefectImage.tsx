@@ -49,18 +49,20 @@ const DefectImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example'
     const yScale = displayHeight / intrinsicHeight;
 
     // 결함 그리기
-    defects.forEach((defect) => {
-      const xPos = defect.gdsX * xScale;
-      const yPos = displayHeight - defect.gdsY * yScale;
-      const defectWidth = defect.xsize * xScale;
-      const defectHeight = defect.ysize * yScale;
-
-      ctx.beginPath();
-      ctx.rect(xPos, yPos - defectHeight, defectWidth, defectHeight);
-      ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
+    if (showDefects) {
+      defects.forEach((defect) => {
+        const xPos = defect.gdsX * xScale;
+        const yPos = displayHeight - defect.gdsY * yScale;
+        const defectWidth = defect.xsize * xScale;
+        const defectHeight = defect.ysize * yScale;
+  
+        ctx.beginPath();
+        ctx.rect(xPos, yPos - defectHeight, defectWidth, defectHeight);
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    }
     
     // 그린 경로 표시
     drawings.forEach((path) => {
@@ -227,7 +229,7 @@ const DefectImage: React.FC<MacroImageProps> = ({ src, alt = 'Macro BMP Example'
     <div>
       <div className="flex  items-center justify-between mx-6">
         <button onClick={toggleDefects} className="font-medium text-sm text-blue-600 rounded-full focus:outline-none z-10 p-2">
-          {showDefects ? '🙈 결함 가리기' : '👀 결함 한 눈에 보기'}
+          {showDefects ? '🙈 결함 가리기' : '👀 결함 한눈에보기'}
         </button>
        
         {mode === 'zoom' && (
