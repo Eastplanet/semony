@@ -1,0 +1,1 @@
+ROOT_PATH = "/var/lib/result"
