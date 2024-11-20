@@ -18,21 +18,19 @@
 따라서 개별적으로 접근하는 불편함을 없애고자 검사 결과를 통합적으로 모니터링하는 시스템을 구축하고자 함
 
 <div style="text-align: center;">
-    <img src="image.png" alt="서비스 소개 이미지" width="500" height="300">
+  <img src="image.png" alt="서비스 소개 이미지" width="500" height="300">
+</div>
+<div style="text-align: center;">
+  <img src="image-2.png" alt="서비스 소개 이미지" width="500" height="300">
+</div>
+<div style="text-align: center;">
+  <img src="image-3.png" alt="서비스 소개 이미지" width="500" height="300">
+</div>
+<div style="text-align: center;">
+  <h2>시스템 아키텍처</h2>
+  <img src="image-5.png" alt="서비스 소개 이미지" width="700" height="300">
 </div>
 
-<div style="text-align: center;">
-    <img src="image-2.png" alt="서비스 소개 이미지" width="500" height="300">
-</div>
-
-<div style="text-align: center;">
-    <img src="image-3.png" alt="서비스 소개 이미지" width="500" height="300">
-</div>
-
-## 시스템 아키텍처
-<div style="text-align: center;">
-    <img src="image-5.png" alt="서비스 소개 이미지" width="700" height="300">
-</div>
 
 ## 주요 기능
 ### 1. 웨이퍼 목록 조회
